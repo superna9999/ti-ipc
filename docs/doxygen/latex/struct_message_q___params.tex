@@ -1,0 +1,32 @@
+\subsection{MessageQ\_\-Params Struct Reference}
+\label{struct_message_q___params}\index{MessageQ\_\-Params@{MessageQ\_\-Params}}
+
+
+Structure defining parameters for the MessageQ module.  
+
+
+
+
+{\ttfamily \#include $<$MessageQ.h$>$}
+
+\subsubsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+Void $\ast$ \hyperlink{struct_message_q___params_a6f428033e1aa39162fd51a6d8ade1c9d}{synchronizer}
+\end{DoxyCompactItemize}
+
+
+\subsubsection{Detailed Description}
+Structure defining parameters for the MessageQ module. 
+
+\subsubsection{Field Documentation}
+\index{MessageQ\_\-Params@{MessageQ\_\-Params}!synchronizer@{synchronizer}}
+\index{synchronizer@{synchronizer}!MessageQ_Params@{MessageQ\_\-Params}}
+\paragraph[{synchronizer}]{\setlength{\rightskip}{0pt plus 5cm}Void$\ast$ {\bf MessageQ\_\-Params::synchronizer}}\hfill\label{struct_message_q___params_a6f428033e1aa39162fd51a6d8ade1c9d}
+Synchronizer instance used to signal IO completion
+
+The synchronizer is used in the \hyperlink{_message_q_8h_aa628f9bf897924f61d6adfba3f82fa8d}{MessageQ\_\-put} and \hyperlink{_message_q_8h_aaeb270f6b50d96f1e1dd134591ffc380}{MessageQ\_\-get} calls. The synchronizer signal is called as part of the \hyperlink{_message_q_8h_aa628f9bf897924f61d6adfba3f82fa8d}{MessageQ\_\-put} call. The synchronizer waits in the \hyperlink{_message_q_8h_aaeb270f6b50d96f1e1dd134591ffc380}{MessageQ\_\-get} if there are no messages present. 
+
+The documentation for this struct was generated from the following file:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{_message_q_8h}{MessageQ.h}\end{DoxyCompactItemize}

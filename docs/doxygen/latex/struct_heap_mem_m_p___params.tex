@@ -1,0 +1,57 @@
+\subsection{HeapMemMP\_\-Params Struct Reference}
+\label{struct_heap_mem_m_p___params}\index{HeapMemMP\_\-Params@{HeapMemMP\_\-Params}}
+
+
+Structure defining parameters for the HeapMemMP module.  
+
+
+
+
+{\ttfamily \#include $<$HeapMemMP.h$>$}
+
+\subsubsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+String \hyperlink{struct_heap_mem_m_p___params_a6b71abc682a2b5503fde320e29a1a5f7}{name}
+\item 
+UInt16 \hyperlink{struct_heap_mem_m_p___params_ad1a5b94d015d0b5b75f091ca9be8a04e}{regionId}
+\item 
+SizeT \hyperlink{struct_heap_mem_m_p___params_a7206d2bd65bf705da74310fd004b67bf}{sharedBufSize}
+\item 
+\hyperlink{_gate_m_p_8h_ad5bb259f928a14e98d973334bc60ebb3}{GateMP\_\-Handle} \hyperlink{struct_heap_mem_m_p___params_ab07964aed674d108f19482a0d35e4e46}{gate}
+\end{DoxyCompactItemize}
+
+
+\subsubsection{Detailed Description}
+Structure defining parameters for the HeapMemMP module. 
+
+\subsubsection{Field Documentation}
+\index{HeapMemMP\_\-Params@{HeapMemMP\_\-Params}!name@{name}}
+\index{name@{name}!HeapMemMP_Params@{HeapMemMP\_\-Params}}
+\paragraph[{name}]{\setlength{\rightskip}{0pt plus 5cm}String {\bf HeapMemMP\_\-Params::name}}\hfill\label{struct_heap_mem_m_p___params_a6b71abc682a2b5503fde320e29a1a5f7}
+Name of this instance.
+
+The name (if not NULL) must be unique among all HeapMemMP instances in the entire system. When creating a new heap, it is necessary to supply an instance name.
+
+The name does not have to be persistent. The supplied string is copied into persistent memory. \index{HeapMemMP\_\-Params@{HeapMemMP\_\-Params}!regionId@{regionId}}
+\index{regionId@{regionId}!HeapMemMP_Params@{HeapMemMP\_\-Params}}
+\paragraph[{regionId}]{\setlength{\rightskip}{0pt plus 5cm}UInt16 {\bf HeapMemMP\_\-Params::regionId}}\hfill\label{struct_heap_mem_m_p___params_ad1a5b94d015d0b5b75f091ca9be8a04e}
+Shared region ID
+
+The index corresponding to the shared region from which shared memory will be allocated. \index{HeapMemMP\_\-Params@{HeapMemMP\_\-Params}!sharedBufSize@{sharedBufSize}}
+\index{sharedBufSize@{sharedBufSize}!HeapMemMP_Params@{HeapMemMP\_\-Params}}
+\paragraph[{sharedBufSize}]{\setlength{\rightskip}{0pt plus 5cm}SizeT {\bf HeapMemMP\_\-Params::sharedBufSize}}\hfill\label{struct_heap_mem_m_p___params_a7206d2bd65bf705da74310fd004b67bf}
+Size of shared buffer
+
+This is the size of the buffer to be used in the HeapMemMP instance. The actual buffer size in the created instance might actually be less than the value supplied in 'sharedBufSize' because of alignment constraints.
+
+It is important to note that the total amount of shared memory required for a HeapMemMP instance will be greater than the size supplied here. Additional space will be consumed by shared instance attributes and alignment-\/related padding. \index{HeapMemMP\_\-Params@{HeapMemMP\_\-Params}!gate@{gate}}
+\index{gate@{gate}!HeapMemMP_Params@{HeapMemMP\_\-Params}}
+\paragraph[{gate}]{\setlength{\rightskip}{0pt plus 5cm}{\bf GateMP\_\-Handle} {\bf HeapMemMP\_\-Params::gate}}\hfill\label{struct_heap_mem_m_p___params_ab07964aed674d108f19482a0d35e4e46}
+GateMP used for critical region management of the shared memory
+
+Using the default value of NULL will result in use of the GateMP system gate for context protection. 
+
+The documentation for this struct was generated from the following file:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{_heap_mem_m_p_8h}{HeapMemMP.h}\end{DoxyCompactItemize}

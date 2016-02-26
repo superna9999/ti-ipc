@@ -1,0 +1,40 @@
+\subsection{HeapMultiBufMP\_\-Bucket Struct Reference}
+\label{struct_heap_multi_buf_m_p___bucket}\index{HeapMultiBufMP\_\-Bucket@{HeapMultiBufMP\_\-Bucket}}
+
+
+Structure for bucket configuration.  
+
+
+
+
+{\ttfamily \#include $<$HeapMultiBufMP.h$>$}
+
+\subsubsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+SizeT \hyperlink{struct_heap_multi_buf_m_p___bucket_a9da93c2ee9285ee0c68781f1f31d5097}{blockSize}
+\item 
+UInt \hyperlink{struct_heap_multi_buf_m_p___bucket_aae58960c7220dbf07d8eb41f09083b1c}{numBlocks}
+\item 
+SizeT \hyperlink{struct_heap_multi_buf_m_p___bucket_a0ca1421d9f65451f797e07811cefd80a}{align}
+\end{DoxyCompactItemize}
+
+
+\subsubsection{Detailed Description}
+Structure for bucket configuration. An array of buckets is a required parameter to create any HeapMultiBufMP instance. The fields of each bucket correspond to the attributes of each buffer in the HeapMultiBufMP. The actual block sizes and alignments may be adjusted per the process described at HeapMultiBufMP\_\-Params::bucketEntries. 
+
+\subsubsection{Field Documentation}
+\index{HeapMultiBufMP\_\-Bucket@{HeapMultiBufMP\_\-Bucket}!blockSize@{blockSize}}
+\index{blockSize@{blockSize}!HeapMultiBufMP_Bucket@{HeapMultiBufMP\_\-Bucket}}
+\paragraph[{blockSize}]{\setlength{\rightskip}{0pt plus 5cm}SizeT {\bf HeapMultiBufMP\_\-Bucket::blockSize}}\hfill\label{struct_heap_multi_buf_m_p___bucket_a9da93c2ee9285ee0c68781f1f31d5097}
+Size of each block in this bucket (in MADUs) \index{HeapMultiBufMP\_\-Bucket@{HeapMultiBufMP\_\-Bucket}!numBlocks@{numBlocks}}
+\index{numBlocks@{numBlocks}!HeapMultiBufMP_Bucket@{HeapMultiBufMP\_\-Bucket}}
+\paragraph[{numBlocks}]{\setlength{\rightskip}{0pt plus 5cm}UInt {\bf HeapMultiBufMP\_\-Bucket::numBlocks}}\hfill\label{struct_heap_multi_buf_m_p___bucket_aae58960c7220dbf07d8eb41f09083b1c}
+Number of blocks of this size \index{HeapMultiBufMP\_\-Bucket@{HeapMultiBufMP\_\-Bucket}!align@{align}}
+\index{align@{align}!HeapMultiBufMP_Bucket@{HeapMultiBufMP\_\-Bucket}}
+\paragraph[{align}]{\setlength{\rightskip}{0pt plus 5cm}SizeT {\bf HeapMultiBufMP\_\-Bucket::align}}\hfill\label{struct_heap_multi_buf_m_p___bucket_a0ca1421d9f65451f797e07811cefd80a}
+Alignment of each block (in MADUs) 
+
+The documentation for this struct was generated from the following file:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{_heap_multi_buf_m_p_8h}{HeapMultiBufMP.h}\end{DoxyCompactItemize}

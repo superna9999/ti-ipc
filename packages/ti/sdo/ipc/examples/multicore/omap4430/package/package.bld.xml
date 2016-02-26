@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  This file conforms to the DTD xdc/bld/build.dtd -->
+<package name="ti.sdo.ipc.examples.multicore.omap4430" version="1, 0, 0, 0" producerId="undefined">
+    <units>
+    </units>
+    <sources>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_core0/release/notify_core0_pem3.c"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_core1/release/notify_core1_pem3.c"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_dsp/release/notify_dsp_pe64T.c"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_core0/release/message_core0_pem3.c"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_core1/release/message_core1_pem3.c"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_dsp/release/message_dsp_pe64T.c"/>
+        <srcFile name="notify_core0.c"/>
+        <srcFile name="notify_core1.c"/>
+        <srcFile name="notify_dsp.c"/>
+        <srcFile name="message_core0.c"/>
+        <srcFile name="message_core1.c"/>
+        <srcFile name="message_dsp.c"/>
+    </sources>
+    <configscripts>
+        <srcFile name="notify_core0.cfg"/>
+        <srcFile name="notify_core1.cfg"/>
+        <srcFile name="notify_dsp.cfg"/>
+        <srcFile name="message_core0.cfg"/>
+        <srcFile name="message_core1.cfg"/>
+        <srcFile name="message_dsp.cfg"/>
+    </configscripts>
+    <makefiles>
+        <srcFile name="package.mak" src="package.bld"/>
+        <srcFile name="package/package.xdc.dep" src="package.xdc"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_core0/release/notify_core0_pem3.mak" src="package.bld"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_core0/release/notify_core0_pem3.oem3.dep" src="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_core0/release/notify_core0_pem3.c"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_core0/release/notify_core0_pem3.dep" src="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_core0/release/notify_core0_pem3.cfg"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_core1/release/notify_core1_pem3.mak" src="package.bld"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_core1/release/notify_core1_pem3.oem3.dep" src="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_core1/release/notify_core1_pem3.c"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_core1/release/notify_core1_pem3.dep" src="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_core1/release/notify_core1_pem3.cfg"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_dsp/release/notify_dsp_pe64T.mak" src="package.bld"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_dsp/release/notify_dsp_pe64T.oe64T.dep" src="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_dsp/release/notify_dsp_pe64T.c"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_dsp/release/notify_dsp_pe64T.dep" src="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_dsp/release/notify_dsp_pe64T.cfg"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_core0/release/message_core0_pem3.mak" src="package.bld"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_core0/release/message_core0_pem3.oem3.dep" src="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_core0/release/message_core0_pem3.c"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_core0/release/message_core0_pem3.dep" src="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_core0/release/message_core0_pem3.cfg"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_core1/release/message_core1_pem3.mak" src="package.bld"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_core1/release/message_core1_pem3.oem3.dep" src="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_core1/release/message_core1_pem3.c"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_core1/release/message_core1_pem3.dep" src="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_core1/release/message_core1_pem3.cfg"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_dsp/release/message_dsp_pe64T.mak" src="package.bld"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_dsp/release/message_dsp_pe64T.oe64T.dep" src="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_dsp/release/message_dsp_pe64T.c"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_dsp/release/message_dsp_pe64T.dep" src="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_dsp/release/message_dsp_pe64T.cfg"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_core0/release/notify_core0.xem3.mak" src="package.bld"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_core0/release/notify_core0/notify_core0.oem3.dep" src="notify_core0.c"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_core1/release/notify_core1.xem3.mak" src="package.bld"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_core1/release/notify_core1/notify_core1.oem3.dep" src="notify_core1.c"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_dsp/release/notify_dsp.xe64T.mak" src="package.bld"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_dsp/release/notify_dsp/notify_dsp.oe64T.dep" src="notify_dsp.c"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_core0/release/message_core0.xem3.mak" src="package.bld"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_core0/release/message_core0/message_core0.oem3.dep" src="message_core0.c"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_core1/release/message_core1.xem3.mak" src="package.bld"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_core1/release/message_core1/message_core1.oem3.dep" src="message_core1.c"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_dsp/release/message_dsp.xe64T.mak" src="package.bld"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_dsp/release/message_dsp/message_dsp.oe64T.dep" src="message_dsp.c"/>
+        <srcFile name="package/rel/ti_sdo_ipc_examples_multicore_omap4430.tar.gz.dep" src="package/rel/ti_sdo_ipc_examples_multicore_omap4430.xdc.inc"/>
+    </makefiles>
+    <targets>
+        <target name="ti.targets.arm.elf.M3"
+            version="ti.targets.arm.elf.M3{1,0,4.9,0"
+            platform="ti.sdo.ipc.examples.platforms.evmC6A8149.vpss"
+            isa="v7M"
+            suffix="em3"
+            rootDir="/db/toolsrc/library/tools/vendors/ti/arm/4.9.0/Linux"
+            os="undefined"
+            rts="ti.targets.arm.rtsarm">
+            <model endian="little"
+                codeModel="thumb2"
+                dataModel="undefined"/>
+        </target>
+        <target name="ti.targets.elf.C64T"
+            version="ti.targets.elf.C64T{1,0,7.2,0"
+            platform="ti.sdo.ipc.examples.platforms.omap4430.dsp"
+            isa="64T"
+            suffix="e64T"
+            rootDir="/db/toolsrc/library/tools/vendors/ti/c6x/7.2.0/Linux"
+            os="undefined"
+            rts="ti.targets.rts6000">
+            <model endian="little"
+                codeModel="undefined"
+                dataModel="undefined"/>
+        </target>
+    </targets>
+    <libraries>
+    </libraries>
+    <configurations>
+    <configuration name="ti_sdo_ipc_examples_platforms_omap4430_core0/release/notify_core0"
+        pname="ti_sdo_ipc_examples_platforms_omap4430_core0/release/notify_core0.pem3"
+        target="ti.targets.arm.elf.M3"
+        platform="ti.sdo.ipc.examples.platforms.omap4430.core0"
+        profile="release"
+        isPartial="false"
+        xCfgScript="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_core0/release/notify_core0_pem3.cfg"
+        xCfgPrefix="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_core0/release/notify_core0_pem3"
+        cfgScript="notify_core0.cfg"
+        />
+    <configuration name="ti_sdo_ipc_examples_platforms_omap4430_core1/release/notify_core1"
+        pname="ti_sdo_ipc_examples_platforms_omap4430_core1/release/notify_core1.pem3"
+        target="ti.targets.arm.elf.M3"
+        platform="ti.sdo.ipc.examples.platforms.omap4430.core1"
+        profile="release"
+        isPartial="false"
+        xCfgScript="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_core1/release/notify_core1_pem3.cfg"
+        xCfgPrefix="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_core1/release/notify_core1_pem3"
+        cfgScript="notify_core1.cfg"
+        />
+    <configuration name="ti_sdo_ipc_examples_platforms_omap4430_dsp/release/notify_dsp"
+        pname="ti_sdo_ipc_examples_platforms_omap4430_dsp/release/notify_dsp.pe64T"
+        target="ti.targets.elf.C64T"
+        platform="ti.sdo.ipc.examples.platforms.omap4430.dsp"
+        profile="release"
+        isPartial="false"
+        xCfgScript="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_dsp/release/notify_dsp_pe64T.cfg"
+        xCfgPrefix="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_dsp/release/notify_dsp_pe64T"
+        cfgScript="notify_dsp.cfg"
+        />
+    <configuration name="ti_sdo_ipc_examples_platforms_omap4430_core0/release/message_core0"
+        pname="ti_sdo_ipc_examples_platforms_omap4430_core0/release/message_core0.pem3"
+        target="ti.targets.arm.elf.M3"
+        platform="ti.sdo.ipc.examples.platforms.omap4430.core0"
+        profile="release"
+        isPartial="false"
+        xCfgScript="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_core0/release/message_core0_pem3.cfg"
+        xCfgPrefix="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_core0/release/message_core0_pem3"
+        cfgScript="message_core0.cfg"
+        />
+    <configuration name="ti_sdo_ipc_examples_platforms_omap4430_core1/release/message_core1"
+        pname="ti_sdo_ipc_examples_platforms_omap4430_core1/release/message_core1.pem3"
+        target="ti.targets.arm.elf.M3"
+        platform="ti.sdo.ipc.examples.platforms.omap4430.core1"
+        profile="release"
+        isPartial="false"
+        xCfgScript="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_core1/release/message_core1_pem3.cfg"
+        xCfgPrefix="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_core1/release/message_core1_pem3"
+        cfgScript="message_core1.cfg"
+        />
+    <configuration name="ti_sdo_ipc_examples_platforms_omap4430_dsp/release/message_dsp"
+        pname="ti_sdo_ipc_examples_platforms_omap4430_dsp/release/message_dsp.pe64T"
+        target="ti.targets.elf.C64T"
+        platform="ti.sdo.ipc.examples.platforms.omap4430.dsp"
+        profile="release"
+        isPartial="false"
+        xCfgScript="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_dsp/release/message_dsp_pe64T.cfg"
+        xCfgPrefix="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_dsp/release/message_dsp_pe64T"
+        cfgScript="message_dsp.cfg"
+        />
+    </configurations>
+    <executables>
+    <executable name="ti_sdo_ipc_examples_platforms_omap4430_core0/release/notify_core0"
+        pname="ti_sdo_ipc_examples_platforms_omap4430_core0/release/notify_core0.xem3"
+        target="ti.targets.arm.elf.M3"
+        platform="ti.sdo.ipc.examples.platforms.omap4430.core0"
+        profile="release"
+        xCfgScript="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_core0/release/notify_core0_pem3.cfg"
+        xCfgPrefix="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_core0/release/notify_core0_pem3"
+        cfgScript="notify_core0.cfg"
+        />
+    <executable name="ti_sdo_ipc_examples_platforms_omap4430_core1/release/notify_core1"
+        pname="ti_sdo_ipc_examples_platforms_omap4430_core1/release/notify_core1.xem3"
+        target="ti.targets.arm.elf.M3"
+        platform="ti.sdo.ipc.examples.platforms.omap4430.core1"
+        profile="release"
+        xCfgScript="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_core1/release/notify_core1_pem3.cfg"
+        xCfgPrefix="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_core1/release/notify_core1_pem3"
+        cfgScript="notify_core1.cfg"
+        />
+    <executable name="ti_sdo_ipc_examples_platforms_omap4430_dsp/release/notify_dsp"
+        pname="ti_sdo_ipc_examples_platforms_omap4430_dsp/release/notify_dsp.xe64T"
+        target="ti.targets.elf.C64T"
+        platform="ti.sdo.ipc.examples.platforms.omap4430.dsp"
+        profile="release"
+        xCfgScript="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_dsp/release/notify_dsp_pe64T.cfg"
+        xCfgPrefix="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_dsp/release/notify_dsp_pe64T"
+        cfgScript="notify_dsp.cfg"
+        />
+    <executable name="ti_sdo_ipc_examples_platforms_omap4430_core0/release/message_core0"
+        pname="ti_sdo_ipc_examples_platforms_omap4430_core0/release/message_core0.xem3"
+        target="ti.targets.arm.elf.M3"
+        platform="ti.sdo.ipc.examples.platforms.omap4430.core0"
+        profile="release"
+        xCfgScript="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_core0/release/message_core0_pem3.cfg"
+        xCfgPrefix="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_core0/release/message_core0_pem3"
+        cfgScript="message_core0.cfg"
+        />
+    <executable name="ti_sdo_ipc_examples_platforms_omap4430_core1/release/message_core1"
+        pname="ti_sdo_ipc_examples_platforms_omap4430_core1/release/message_core1.xem3"
+        target="ti.targets.arm.elf.M3"
+        platform="ti.sdo.ipc.examples.platforms.omap4430.core1"
+        profile="release"
+        xCfgScript="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_core1/release/message_core1_pem3.cfg"
+        xCfgPrefix="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_core1/release/message_core1_pem3"
+        cfgScript="message_core1.cfg"
+        />
+    <executable name="ti_sdo_ipc_examples_platforms_omap4430_dsp/release/message_dsp"
+        pname="ti_sdo_ipc_examples_platforms_omap4430_dsp/release/message_dsp.xe64T"
+        target="ti.targets.elf.C64T"
+        platform="ti.sdo.ipc.examples.platforms.omap4430.dsp"
+        profile="release"
+        xCfgScript="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_dsp/release/message_dsp_pe64T.cfg"
+        xCfgPrefix="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_dsp/release/message_dsp_pe64T"
+        cfgScript="message_dsp.cfg"
+        />
+    </executables>
+    <tests>
+    <test exeName="ti_sdo_ipc_examples_platforms_omap4430_core0/release/notify_core0.xem3"
+        args=""
+        groupName="regress"
+        refOutput="golden/notify_core0.k"
+        refExitCode="0"
+        execArgs="-t%2060"
+        />
+    <test exeName="ti_sdo_ipc_examples_platforms_omap4430_core0/release/notify_core0.xem3"
+        args=""
+        groupName="ti_sdo_ipc_examples_platforms_omap4430_core0/release/notify_core0.xem3"
+        refOutput="undefined"
+        refExitCode="0"
+        execArgs="-t%2060"
+        />
+    <test exeName="ti_sdo_ipc_examples_platforms_omap4430_core1/release/notify_core1.xem3"
+        args=""
+        groupName="regress"
+        refOutput="golden/notify_core1.k"
+        refExitCode="0"
+        execArgs="-t%2060"
+        />
+    <test exeName="ti_sdo_ipc_examples_platforms_omap4430_core1/release/notify_core1.xem3"
+        args=""
+        groupName="ti_sdo_ipc_examples_platforms_omap4430_core1/release/notify_core1.xem3"
+        refOutput="undefined"
+        refExitCode="0"
+        execArgs="-t%2060"
+        />
+    <test exeName="ti_sdo_ipc_examples_platforms_omap4430_dsp/release/notify_dsp.xe64T"
+        args=""
+        groupName="regress"
+        refOutput="golden/notify_dsp.k"
+        refExitCode="0"
+        execArgs="-t%2060"
+        />
+    <test exeName="ti_sdo_ipc_examples_platforms_omap4430_dsp/release/notify_dsp.xe64T"
+        args=""
+        groupName="ti_sdo_ipc_examples_platforms_omap4430_dsp/release/notify_dsp.xe64T"
+        refOutput="undefined"
+        refExitCode="0"
+        execArgs="-t%2060"
+        />
+    <test exeName="ti_sdo_ipc_examples_platforms_omap4430_core0/release/message_core0.xem3"
+        args=""
+        groupName="regress"
+        refOutput="golden/message_core0.k"
+        refExitCode="0"
+        execArgs="-t%2060"
+        />
+    <test exeName="ti_sdo_ipc_examples_platforms_omap4430_core0/release/message_core0.xem3"
+        args=""
+        groupName="ti_sdo_ipc_examples_platforms_omap4430_core0/release/message_core0.xem3"
+        refOutput="undefined"
+        refExitCode="0"
+        execArgs="-t%2060"
+        />
+    <test exeName="ti_sdo_ipc_examples_platforms_omap4430_core1/release/message_core1.xem3"
+        args=""
+        groupName="regress"
+        refOutput="golden/message_core1.k"
+        refExitCode="0"
+        execArgs="-t%2060"
+        />
+    <test exeName="ti_sdo_ipc_examples_platforms_omap4430_core1/release/message_core1.xem3"
+        args=""
+        groupName="ti_sdo_ipc_examples_platforms_omap4430_core1/release/message_core1.xem3"
+        refOutput="undefined"
+        refExitCode="0"
+        execArgs="-t%2060"
+        />
+    <test exeName="ti_sdo_ipc_examples_platforms_omap4430_dsp/release/message_dsp.xe64T"
+        args=""
+        groupName="regress"
+        refOutput="golden/message_dsp.k"
+        refExitCode="0"
+        execArgs="-t%2060"
+        />
+    <test exeName="ti_sdo_ipc_examples_platforms_omap4430_dsp/release/message_dsp.xe64T"
+        args=""
+        groupName="ti_sdo_ipc_examples_platforms_omap4430_dsp/release/message_dsp.xe64T"
+        refOutput="undefined"
+        refExitCode="0"
+        execArgs="-t%2060"
+        />
+    </tests>
+    <releases relDir="package/rel/">
+    <release name="ti_sdo_ipc_examples_multicore_omap4430"
+        pname="../../../../../../../exports/ti_sdo_ipc_examples_multicore_omap4430.tar.gz"
+        label="default"
+        relScript="tisb/release/filters/copyright.rel">
+        <file name="package/package.bld.xml"/>
+        <file name="package/package.ext.xml"/>
+        <file name="package/package.rel.dot"/>
+        <file name="package/build.cfg"/>
+        <file name="package/package.xdc.inc"/>
+        <file name="package.bld"/>
+        <file name="readme.txt"/>
+        <file name="message_core0.k"/>
+        <file name="message_core1.k"/>
+        <file name="message_dsp.k"/>
+        <file name="notify_core0.k"/>
+        <file name="notify_core1.k"/>
+        <file name="notify_dsp.k"/>
+        <file name="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_core0/release/notify_core0_pem3.xdc.inc"/>
+        <file name="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_core0/release/notify_core0_pem3.cfg"/>
+        <file name="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_core0/release/notify_core0_pem3.c"/>
+        <file name="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_core1/release/notify_core1_pem3.xdc.inc"/>
+        <file name="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_core1/release/notify_core1_pem3.cfg"/>
+        <file name="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_core1/release/notify_core1_pem3.c"/>
+        <file name="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_dsp/release/notify_dsp_pe64T.xdc.inc"/>
+        <file name="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_dsp/release/notify_dsp_pe64T.cfg"/>
+        <file name="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_dsp/release/notify_dsp_pe64T.c"/>
+        <file name="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_core0/release/message_core0_pem3.xdc.inc"/>
+        <file name="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_core0/release/message_core0_pem3.cfg"/>
+        <file name="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_core0/release/message_core0_pem3.c"/>
+        <file name="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_core1/release/message_core1_pem3.xdc.inc"/>
+        <file name="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_core1/release/message_core1_pem3.cfg"/>
+        <file name="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_core1/release/message_core1_pem3.c"/>
+        <file name="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_dsp/release/message_dsp_pe64T.xdc.inc"/>
+        <file name="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_dsp/release/message_dsp_pe64T.cfg"/>
+        <file name="package/cfg/ti_sdo_ipc_examples_platforms_omap4430_dsp/release/message_dsp_pe64T.c"/>
+        <file name="notify_core0.c"/>
+        <file name="notify_core1.c"/>
+        <file name="notify_dsp.c"/>
+        <file name="message_core0.c"/>
+        <file name="message_core1.c"/>
+        <file name="message_dsp.c"/>
+    </release>
+    </releases>
+    <repositories>
+    </repositories>
+</package>

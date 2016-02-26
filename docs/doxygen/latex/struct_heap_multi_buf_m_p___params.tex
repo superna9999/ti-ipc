@@ -1,0 +1,81 @@
+\subsection{HeapMultiBufMP\_\-Params Struct Reference}
+\label{struct_heap_multi_buf_m_p___params}\index{HeapMultiBufMP\_\-Params@{HeapMultiBufMP\_\-Params}}
+
+
+Structure defining parameters for the HeapMultiBufMP module.  
+
+
+
+
+{\ttfamily \#include $<$HeapMultiBufMP.h$>$}
+
+
+
+Collaboration diagram for HeapMultiBufMP\_\-Params:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=159pt]{struct_heap_multi_buf_m_p___params__coll__graph}
+\end{center}
+\end{figure}
+\subsubsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{_gate_m_p_8h_ad5bb259f928a14e98d973334bc60ebb3}{GateMP\_\-Handle} \hyperlink{struct_heap_multi_buf_m_p___params_a3c5f4bb4ecfb525299208a686c27cbfd}{gate}
+\item 
+Bool \hyperlink{struct_heap_multi_buf_m_p___params_a3ed83d3de19f3fd04062229fe6c693f7}{exact}
+\item 
+String \hyperlink{struct_heap_multi_buf_m_p___params_ac7a5994ab0dd02e88d3ad16e23b1a548}{name}
+\item 
+Int \hyperlink{struct_heap_multi_buf_m_p___params_a30eef328df3b8f69f50a013defb5fbb1}{numBuckets}
+\item 
+\hyperlink{struct_heap_multi_buf_m_p___bucket}{HeapMultiBufMP\_\-Bucket} $\ast$ \hyperlink{struct_heap_multi_buf_m_p___params_ac130e0ad7fad30d9c759af90984dee8b}{bucketEntries}
+\item 
+UInt16 \hyperlink{struct_heap_multi_buf_m_p___params_aa3c641a64db9b4ff0c93f9a0c265f8d7}{regionId}
+\end{DoxyCompactItemize}
+
+
+\subsubsection{Detailed Description}
+Structure defining parameters for the HeapMultiBufMP module. 
+
+\subsubsection{Field Documentation}
+\index{HeapMultiBufMP\_\-Params@{HeapMultiBufMP\_\-Params}!gate@{gate}}
+\index{gate@{gate}!HeapMultiBufMP_Params@{HeapMultiBufMP\_\-Params}}
+\paragraph[{gate}]{\setlength{\rightskip}{0pt plus 5cm}{\bf GateMP\_\-Handle} {\bf HeapMultiBufMP\_\-Params::gate}}\hfill\label{struct_heap_multi_buf_m_p___params_a3c5f4bb4ecfb525299208a686c27cbfd}
+GateMP used for critical region management of the shared memory
+
+Using the default value of NULL will result in use of the GateMP system gate for context protection. \index{HeapMultiBufMP\_\-Params@{HeapMultiBufMP\_\-Params}!exact@{exact}}
+\index{exact@{exact}!HeapMultiBufMP_Params@{HeapMultiBufMP\_\-Params}}
+\paragraph[{exact}]{\setlength{\rightskip}{0pt plus 5cm}Bool {\bf HeapMultiBufMP\_\-Params::exact}}\hfill\label{struct_heap_multi_buf_m_p___params_a3ed83d3de19f3fd04062229fe6c693f7}
+Use exact matching
+
+Setting this flag will allow allocation only if the requested size is equal to (rather than less than or equal to) a buffer's block size. \index{HeapMultiBufMP\_\-Params@{HeapMultiBufMP\_\-Params}!name@{name}}
+\index{name@{name}!HeapMultiBufMP_Params@{HeapMultiBufMP\_\-Params}}
+\paragraph[{name}]{\setlength{\rightskip}{0pt plus 5cm}String {\bf HeapMultiBufMP\_\-Params::name}}\hfill\label{struct_heap_multi_buf_m_p___params_ac7a5994ab0dd02e88d3ad16e23b1a548}
+Name of this instance.
+
+The name (if not NULL) must be unique among all HeapMultiBufMP instances in the entire system. When creating a new heap, it is necessary to supply an instance name.
+
+The name does not have to be persistent. The supplied string is copied into persistent memory. \index{HeapMultiBufMP\_\-Params@{HeapMultiBufMP\_\-Params}!numBuckets@{numBuckets}}
+\index{numBuckets@{numBuckets}!HeapMultiBufMP_Params@{HeapMultiBufMP\_\-Params}}
+\paragraph[{numBuckets}]{\setlength{\rightskip}{0pt plus 5cm}Int {\bf HeapMultiBufMP\_\-Params::numBuckets}}\hfill\label{struct_heap_multi_buf_m_p___params_a30eef328df3b8f69f50a013defb5fbb1}
+Number of buckets in HeapMultiBufMP\_\-Params::bucketEntries
+
+This parameter is required to create any instance. \index{HeapMultiBufMP\_\-Params@{HeapMultiBufMP\_\-Params}!bucketEntries@{bucketEntries}}
+\index{bucketEntries@{bucketEntries}!HeapMultiBufMP_Params@{HeapMultiBufMP\_\-Params}}
+\paragraph[{bucketEntries}]{\setlength{\rightskip}{0pt plus 5cm}{\bf HeapMultiBufMP\_\-Bucket}$\ast$ {\bf HeapMultiBufMP\_\-Params::bucketEntries}}\hfill\label{struct_heap_multi_buf_m_p___params_ac130e0ad7fad30d9c759af90984dee8b}
+Bucket Entries
+
+The bucket entries are an array of \hyperlink{struct_heap_multi_buf_m_p___bucket}{HeapMultiBufMP\_\-Bucket} whose values correspond to the desired alignment, block size and length for each buffer. It is important to note that the alignments and sizes for each buffer may be adjusted due to cache and alignment related constraints. Buffer sizes are rounded up by their corresponding alignments. Buffer alignments themselves will assume the value of region cache alignment size when the cache size is greater than the requested buffer alignment.
+
+For example, specifying a bucket with \{blockSize: 192, align: 256\} will result in a buffer of blockSize = 256 and alignment = 256. If cache alignment is required, then a bucket of \{blockSize: 96, align: 64\} will result in a buffer of blockSize = 128 and alignment = 128 (assuming cacheSize = 128). \index{HeapMultiBufMP\_\-Params@{HeapMultiBufMP\_\-Params}!regionId@{regionId}}
+\index{regionId@{regionId}!HeapMultiBufMP_Params@{HeapMultiBufMP\_\-Params}}
+\paragraph[{regionId}]{\setlength{\rightskip}{0pt plus 5cm}UInt16 {\bf HeapMultiBufMP\_\-Params::regionId}}\hfill\label{struct_heap_multi_buf_m_p___params_aa3c641a64db9b4ff0c93f9a0c265f8d7}
+Shared region ID
+
+The index corresponding to the shared region from which shared memory will be allocated. 
+
+The documentation for this struct was generated from the following file:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{_heap_multi_buf_m_p_8h}{HeapMultiBufMP.h}\end{DoxyCompactItemize}

@@ -1,0 +1,442 @@
+\subsection{HeapBufMP.h File Reference}
+\label{_heap_buf_m_p_8h}\index{HeapBufMP.h@{HeapBufMP.h}}
+
+
+\subsubsection{Detailed Description}
+Multi-\/processor fixed-\/size buffer heap implementation. ============================================================================
+
+Heap implementation that manages fixed size buffers that can be used in a multiprocessor system with shared memory.
+
+The HeapBufMP manager provides functions to allocate and free storage from a heap of type HeapBufMP which inherits from IHeap. HeapBufMP manages a single fixed-\/size buffer, split into equally sized allocatable blocks.
+
+The HeapBufMP manager is intended as a very fast memory manager which can only allocate blocks of a single size. It is ideal for managing a heap that is only used for allocating a single type of object, or for objects that have very similar sizes.
+
+The HeapBufMP module uses a NameServer instance to store instance information when an instance is created. The name supplied must be unique for all HeapBufMP instances.
+
+The \hyperlink{_heap_buf_m_p_8h_a3bb1b659403d9944bc4b64596b20f1f3}{HeapBufMP\_\-create} call initializes the shared memory as needed. Once an instance is created, a \hyperlink{_heap_buf_m_p_8h_a826facae0861c09d545f18dd503f0f0f}{HeapBufMP\_\-open} can be performed. The open is used to gain access to the same HeapBufMP instance. Generally an instance is created on one processor and opened on the other processor(s).
+
+The open returns a HeapBufMP instance handle like the create, however the open does not modify the shared memory.
+
+The HeapBufMP header should be included in an application as follows: 
+\begin{DoxyCode}
+  #include <ti/ipc/HeapBufMP.h>
+\end{DoxyCode}
+
+
+\begin{DoxyVersion}{Version}
+0.00.01 
+\end{DoxyVersion}
+{\ttfamily \#include $<$ti/ipc/GateMP.h$>$}\par
+Include dependency graph for HeapBufMP.h:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=117pt]{_heap_buf_m_p_8h__incl}
+\end{center}
+\end{figure}
+\subsubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct_heap_buf_m_p___params}{HeapBufMP\_\-Params}
+\begin{DoxyCompactList}\small\item\em Structure defining parameters for the HeapBufMP module. \item\end{DoxyCompactList}\item 
+struct \hyperlink{struct_heap_buf_m_p___extended_stats}{HeapBufMP\_\-ExtendedStats}
+\begin{DoxyCompactList}\small\item\em Stats structure for the HeapBufMP\_\-getExtendedStats API. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsubsection*{Defines}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{_heap_buf_m_p_8h_ae1b0ea5865b0687653171ad2bf3d17b3}{HeapBufMP\_\-S\_\-BUSY}~2
+\begin{DoxyCompactList}\small\item\em The resource is still in use. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_heap_buf_m_p_8h_a8d7ddf7f2176ffd9e11dad5d32545ebb}{HeapBufMP\_\-S\_\-ALREADYSETUP}~1
+\begin{DoxyCompactList}\small\item\em The module has been already setup. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_heap_buf_m_p_8h_ab98593be8c8588e512f38265b4d185f0}{HeapBufMP\_\-S\_\-SUCCESS}~0
+\begin{DoxyCompactList}\small\item\em Operation is successful. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_heap_buf_m_p_8h_afe559bb52af4c143c559d3ca44654520}{HeapBufMP\_\-E\_\-FAIL}~-\/1
+\begin{DoxyCompactList}\small\item\em Generic failure. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_heap_buf_m_p_8h_a3bd067e1c23ed6c94aad604e5a74244d}{HeapBufMP\_\-E\_\-INVALIDARG}~-\/2
+\begin{DoxyCompactList}\small\item\em Argument passed to function is invalid. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_heap_buf_m_p_8h_a7dff5751dc8d83830b7ad130d0e6fe86}{HeapBufMP\_\-E\_\-MEMORY}~-\/3
+\begin{DoxyCompactList}\small\item\em Operation resulted in memory failure. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_heap_buf_m_p_8h_a27b1533d0d529ecdd7d6a7d7090aa5a7}{HeapBufMP\_\-E\_\-ALREADYEXISTS}~-\/4
+\begin{DoxyCompactList}\small\item\em The specified entity already exists. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_heap_buf_m_p_8h_a413c47cfb2257df264b84951abc0409f}{HeapBufMP\_\-E\_\-NOTFOUND}~-\/5
+\begin{DoxyCompactList}\small\item\em Unable to find the specified entity. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_heap_buf_m_p_8h_aa2bf7936fb8db078713544c7ee1197fd}{HeapBufMP\_\-E\_\-TIMEOUT}~-\/6
+\begin{DoxyCompactList}\small\item\em Operation timed out. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_heap_buf_m_p_8h_a72fbd9726f36a122c3462ab151e67518}{HeapBufMP\_\-E\_\-INVALIDSTATE}~-\/7
+\begin{DoxyCompactList}\small\item\em Module is not initialized. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_heap_buf_m_p_8h_a7b0421d7bd809415074b1483f044162f}{HeapBufMP\_\-E\_\-OSFAILURE}~-\/8
+\begin{DoxyCompactList}\small\item\em A failure occurred in an OS-\/specific call. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_heap_buf_m_p_8h_a7354bfdbab3d4d028d0c6d48edd308a7}{HeapBufMP\_\-E\_\-RESOURCE}~-\/9
+\begin{DoxyCompactList}\small\item\em Specified resource is not available. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_heap_buf_m_p_8h_a445c7db0d4aa1939dc33cefe24f6c4df}{HeapBufMP\_\-E\_\-RESTART}~-\/10
+\begin{DoxyCompactList}\small\item\em Operation was interrupted. Please restart the operation. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct HeapBufMP\_\-Object $\ast$ \hyperlink{_heap_buf_m_p_8h_a0dc02cca2abd71fa48bfaf79c1c09ca3}{HeapBufMP\_\-Handle}
+\begin{DoxyCompactList}\small\item\em HeapBufMP\_\-Handle type. \item\end{DoxyCompactList}\item 
+typedef struct \hyperlink{struct_heap_buf_m_p___params}{HeapBufMP\_\-Params} \hyperlink{_heap_buf_m_p_8h_ada60a6b6a4bee75403768e41d07525ff}{HeapBufMP\_\-Params}
+\begin{DoxyCompactList}\small\item\em Structure defining parameters for the HeapBufMP module. \item\end{DoxyCompactList}\item 
+typedef struct \hyperlink{struct_heap_buf_m_p___extended_stats}{HeapBufMP\_\-ExtendedStats} \hyperlink{_heap_buf_m_p_8h_a0a9972756cf113da0ac5f2eb7f647fbe}{HeapBufMP\_\-ExtendedStats}
+\begin{DoxyCompactList}\small\item\em Stats structure for the HeapBufMP\_\-getExtendedStats API. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+Int \hyperlink{_heap_buf_m_p_8h_a53c73d33bd195e23cd90c83a147b330f}{HeapBufMP\_\-close} (\hyperlink{_heap_buf_m_p_8h_a0dc02cca2abd71fa48bfaf79c1c09ca3}{HeapBufMP\_\-Handle} $\ast$handlePtr)
+\begin{DoxyCompactList}\small\item\em Close a HeapBufMP instance. \item\end{DoxyCompactList}\item 
+\hyperlink{_heap_buf_m_p_8h_a0dc02cca2abd71fa48bfaf79c1c09ca3}{HeapBufMP\_\-Handle} \hyperlink{_heap_buf_m_p_8h_a3bb1b659403d9944bc4b64596b20f1f3}{HeapBufMP\_\-create} (const \hyperlink{struct_heap_buf_m_p___params}{HeapBufMP\_\-Params} $\ast$params)
+\begin{DoxyCompactList}\small\item\em Create a HeapBufMP instance. \item\end{DoxyCompactList}\item 
+Int \hyperlink{_heap_buf_m_p_8h_aff10f0e0fc4ec4b88adb2b7422955f96}{HeapBufMP\_\-delete} (\hyperlink{_heap_buf_m_p_8h_a0dc02cca2abd71fa48bfaf79c1c09ca3}{HeapBufMP\_\-Handle} $\ast$handlePtr)
+\begin{DoxyCompactList}\small\item\em Delete a created HeapBufMP instance. \item\end{DoxyCompactList}\item 
+Int \hyperlink{_heap_buf_m_p_8h_a826facae0861c09d545f18dd503f0f0f}{HeapBufMP\_\-open} (String name, \hyperlink{_heap_buf_m_p_8h_a0dc02cca2abd71fa48bfaf79c1c09ca3}{HeapBufMP\_\-Handle} $\ast$handlePtr)
+\begin{DoxyCompactList}\small\item\em Open a created HeapBufMP instance. \item\end{DoxyCompactList}\item 
+Void \hyperlink{_heap_buf_m_p_8h_a81700157982b86ed3aefc72c6f3a7a5f}{HeapBufMP\_\-Params\_\-init} (\hyperlink{struct_heap_buf_m_p___params}{HeapBufMP\_\-Params} $\ast$params)
+\begin{DoxyCompactList}\small\item\em Initialize a HeapBufMP parameters struct. \item\end{DoxyCompactList}\item 
+Void $\ast$ \hyperlink{_heap_buf_m_p_8h_aab507dc414e09bbfe75ceb78458c27ed}{HeapBufMP\_\-alloc} (\hyperlink{_heap_buf_m_p_8h_a0dc02cca2abd71fa48bfaf79c1c09ca3}{HeapBufMP\_\-Handle} handle, SizeT size, SizeT align)
+\begin{DoxyCompactList}\small\item\em Allocate a block of memory of specified size and alignment. \item\end{DoxyCompactList}\item 
+Void \hyperlink{_heap_buf_m_p_8h_a667a26b92e70373b8642ff15e61ad7d0}{HeapBufMP\_\-free} (\hyperlink{_heap_buf_m_p_8h_a0dc02cca2abd71fa48bfaf79c1c09ca3}{HeapBufMP\_\-Handle} handle, Ptr block, SizeT size)
+\begin{DoxyCompactList}\small\item\em Frees a block of memory. \item\end{DoxyCompactList}\item 
+Void \hyperlink{_heap_buf_m_p_8h_a339d8eb929f35742d2ff5b3b5381c57b}{HeapBufMP\_\-getExtendedStats} (\hyperlink{_heap_buf_m_p_8h_a0dc02cca2abd71fa48bfaf79c1c09ca3}{HeapBufMP\_\-Handle} handle, \hyperlink{struct_heap_buf_m_p___extended_stats}{HeapBufMP\_\-ExtendedStats} $\ast$stats)
+\begin{DoxyCompactList}\small\item\em Get extended memory statistics. \item\end{DoxyCompactList}\item 
+Void \hyperlink{_heap_buf_m_p_8h_aed941f6bb592ec1573c646f7c6a4290a}{HeapBufMP\_\-getStats} (\hyperlink{_heap_buf_m_p_8h_a0dc02cca2abd71fa48bfaf79c1c09ca3}{HeapBufMP\_\-Handle} handle, Ptr stats)
+\begin{DoxyCompactList}\small\item\em Get memory statistics. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsubsection{Define Documentation}
+\index{HeapBufMP.h@{HeapBufMP.h}!HeapBufMP\_\-S\_\-BUSY@{HeapBufMP\_\-S\_\-BUSY}}
+\index{HeapBufMP\_\-S\_\-BUSY@{HeapBufMP\_\-S\_\-BUSY}!HeapBufMP.h@{HeapBufMP.h}}
+\paragraph[{HeapBufMP\_\-S\_\-BUSY}]{\setlength{\rightskip}{0pt plus 5cm}\#define HeapBufMP\_\-S\_\-BUSY~2}\hfill\label{_heap_buf_m_p_8h_ae1b0ea5865b0687653171ad2bf3d17b3}
+
+
+The resource is still in use. 
+
+\index{HeapBufMP.h@{HeapBufMP.h}!HeapBufMP\_\-S\_\-ALREADYSETUP@{HeapBufMP\_\-S\_\-ALREADYSETUP}}
+\index{HeapBufMP\_\-S\_\-ALREADYSETUP@{HeapBufMP\_\-S\_\-ALREADYSETUP}!HeapBufMP.h@{HeapBufMP.h}}
+\paragraph[{HeapBufMP\_\-S\_\-ALREADYSETUP}]{\setlength{\rightskip}{0pt plus 5cm}\#define HeapBufMP\_\-S\_\-ALREADYSETUP~1}\hfill\label{_heap_buf_m_p_8h_a8d7ddf7f2176ffd9e11dad5d32545ebb}
+
+
+The module has been already setup. 
+
+\index{HeapBufMP.h@{HeapBufMP.h}!HeapBufMP\_\-S\_\-SUCCESS@{HeapBufMP\_\-S\_\-SUCCESS}}
+\index{HeapBufMP\_\-S\_\-SUCCESS@{HeapBufMP\_\-S\_\-SUCCESS}!HeapBufMP.h@{HeapBufMP.h}}
+\paragraph[{HeapBufMP\_\-S\_\-SUCCESS}]{\setlength{\rightskip}{0pt plus 5cm}\#define HeapBufMP\_\-S\_\-SUCCESS~0}\hfill\label{_heap_buf_m_p_8h_ab98593be8c8588e512f38265b4d185f0}
+
+
+Operation is successful. 
+
+\index{HeapBufMP.h@{HeapBufMP.h}!HeapBufMP\_\-E\_\-FAIL@{HeapBufMP\_\-E\_\-FAIL}}
+\index{HeapBufMP\_\-E\_\-FAIL@{HeapBufMP\_\-E\_\-FAIL}!HeapBufMP.h@{HeapBufMP.h}}
+\paragraph[{HeapBufMP\_\-E\_\-FAIL}]{\setlength{\rightskip}{0pt plus 5cm}\#define HeapBufMP\_\-E\_\-FAIL~-\/1}\hfill\label{_heap_buf_m_p_8h_afe559bb52af4c143c559d3ca44654520}
+
+
+Generic failure. 
+
+\index{HeapBufMP.h@{HeapBufMP.h}!HeapBufMP\_\-E\_\-INVALIDARG@{HeapBufMP\_\-E\_\-INVALIDARG}}
+\index{HeapBufMP\_\-E\_\-INVALIDARG@{HeapBufMP\_\-E\_\-INVALIDARG}!HeapBufMP.h@{HeapBufMP.h}}
+\paragraph[{HeapBufMP\_\-E\_\-INVALIDARG}]{\setlength{\rightskip}{0pt plus 5cm}\#define HeapBufMP\_\-E\_\-INVALIDARG~-\/2}\hfill\label{_heap_buf_m_p_8h_a3bd067e1c23ed6c94aad604e5a74244d}
+
+
+Argument passed to function is invalid. 
+
+\index{HeapBufMP.h@{HeapBufMP.h}!HeapBufMP\_\-E\_\-MEMORY@{HeapBufMP\_\-E\_\-MEMORY}}
+\index{HeapBufMP\_\-E\_\-MEMORY@{HeapBufMP\_\-E\_\-MEMORY}!HeapBufMP.h@{HeapBufMP.h}}
+\paragraph[{HeapBufMP\_\-E\_\-MEMORY}]{\setlength{\rightskip}{0pt plus 5cm}\#define HeapBufMP\_\-E\_\-MEMORY~-\/3}\hfill\label{_heap_buf_m_p_8h_a7dff5751dc8d83830b7ad130d0e6fe86}
+
+
+Operation resulted in memory failure. 
+
+\index{HeapBufMP.h@{HeapBufMP.h}!HeapBufMP\_\-E\_\-ALREADYEXISTS@{HeapBufMP\_\-E\_\-ALREADYEXISTS}}
+\index{HeapBufMP\_\-E\_\-ALREADYEXISTS@{HeapBufMP\_\-E\_\-ALREADYEXISTS}!HeapBufMP.h@{HeapBufMP.h}}
+\paragraph[{HeapBufMP\_\-E\_\-ALREADYEXISTS}]{\setlength{\rightskip}{0pt plus 5cm}\#define HeapBufMP\_\-E\_\-ALREADYEXISTS~-\/4}\hfill\label{_heap_buf_m_p_8h_a27b1533d0d529ecdd7d6a7d7090aa5a7}
+
+
+The specified entity already exists. 
+
+\index{HeapBufMP.h@{HeapBufMP.h}!HeapBufMP\_\-E\_\-NOTFOUND@{HeapBufMP\_\-E\_\-NOTFOUND}}
+\index{HeapBufMP\_\-E\_\-NOTFOUND@{HeapBufMP\_\-E\_\-NOTFOUND}!HeapBufMP.h@{HeapBufMP.h}}
+\paragraph[{HeapBufMP\_\-E\_\-NOTFOUND}]{\setlength{\rightskip}{0pt plus 5cm}\#define HeapBufMP\_\-E\_\-NOTFOUND~-\/5}\hfill\label{_heap_buf_m_p_8h_a413c47cfb2257df264b84951abc0409f}
+
+
+Unable to find the specified entity. 
+
+\index{HeapBufMP.h@{HeapBufMP.h}!HeapBufMP\_\-E\_\-TIMEOUT@{HeapBufMP\_\-E\_\-TIMEOUT}}
+\index{HeapBufMP\_\-E\_\-TIMEOUT@{HeapBufMP\_\-E\_\-TIMEOUT}!HeapBufMP.h@{HeapBufMP.h}}
+\paragraph[{HeapBufMP\_\-E\_\-TIMEOUT}]{\setlength{\rightskip}{0pt plus 5cm}\#define HeapBufMP\_\-E\_\-TIMEOUT~-\/6}\hfill\label{_heap_buf_m_p_8h_aa2bf7936fb8db078713544c7ee1197fd}
+
+
+Operation timed out. 
+
+\index{HeapBufMP.h@{HeapBufMP.h}!HeapBufMP\_\-E\_\-INVALIDSTATE@{HeapBufMP\_\-E\_\-INVALIDSTATE}}
+\index{HeapBufMP\_\-E\_\-INVALIDSTATE@{HeapBufMP\_\-E\_\-INVALIDSTATE}!HeapBufMP.h@{HeapBufMP.h}}
+\paragraph[{HeapBufMP\_\-E\_\-INVALIDSTATE}]{\setlength{\rightskip}{0pt plus 5cm}\#define HeapBufMP\_\-E\_\-INVALIDSTATE~-\/7}\hfill\label{_heap_buf_m_p_8h_a72fbd9726f36a122c3462ab151e67518}
+
+
+Module is not initialized. 
+
+\index{HeapBufMP.h@{HeapBufMP.h}!HeapBufMP\_\-E\_\-OSFAILURE@{HeapBufMP\_\-E\_\-OSFAILURE}}
+\index{HeapBufMP\_\-E\_\-OSFAILURE@{HeapBufMP\_\-E\_\-OSFAILURE}!HeapBufMP.h@{HeapBufMP.h}}
+\paragraph[{HeapBufMP\_\-E\_\-OSFAILURE}]{\setlength{\rightskip}{0pt plus 5cm}\#define HeapBufMP\_\-E\_\-OSFAILURE~-\/8}\hfill\label{_heap_buf_m_p_8h_a7b0421d7bd809415074b1483f044162f}
+
+
+A failure occurred in an OS-\/specific call. 
+
+\index{HeapBufMP.h@{HeapBufMP.h}!HeapBufMP\_\-E\_\-RESOURCE@{HeapBufMP\_\-E\_\-RESOURCE}}
+\index{HeapBufMP\_\-E\_\-RESOURCE@{HeapBufMP\_\-E\_\-RESOURCE}!HeapBufMP.h@{HeapBufMP.h}}
+\paragraph[{HeapBufMP\_\-E\_\-RESOURCE}]{\setlength{\rightskip}{0pt plus 5cm}\#define HeapBufMP\_\-E\_\-RESOURCE~-\/9}\hfill\label{_heap_buf_m_p_8h_a7354bfdbab3d4d028d0c6d48edd308a7}
+
+
+Specified resource is not available. 
+
+\index{HeapBufMP.h@{HeapBufMP.h}!HeapBufMP\_\-E\_\-RESTART@{HeapBufMP\_\-E\_\-RESTART}}
+\index{HeapBufMP\_\-E\_\-RESTART@{HeapBufMP\_\-E\_\-RESTART}!HeapBufMP.h@{HeapBufMP.h}}
+\paragraph[{HeapBufMP\_\-E\_\-RESTART}]{\setlength{\rightskip}{0pt plus 5cm}\#define HeapBufMP\_\-E\_\-RESTART~-\/10}\hfill\label{_heap_buf_m_p_8h_a445c7db0d4aa1939dc33cefe24f6c4df}
+
+
+Operation was interrupted. Please restart the operation. 
+
+
+
+\subsubsection{Typedef Documentation}
+\index{HeapBufMP.h@{HeapBufMP.h}!HeapBufMP\_\-Handle@{HeapBufMP\_\-Handle}}
+\index{HeapBufMP\_\-Handle@{HeapBufMP\_\-Handle}!HeapBufMP.h@{HeapBufMP.h}}
+\paragraph[{HeapBufMP\_\-Handle}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct HeapBufMP\_\-Object$\ast$ {\bf HeapBufMP\_\-Handle}}\hfill\label{_heap_buf_m_p_8h_a0dc02cca2abd71fa48bfaf79c1c09ca3}
+
+
+HeapBufMP\_\-Handle type. 
+
+\index{HeapBufMP.h@{HeapBufMP.h}!HeapBufMP\_\-Params@{HeapBufMP\_\-Params}}
+\index{HeapBufMP\_\-Params@{HeapBufMP\_\-Params}!HeapBufMP.h@{HeapBufMP.h}}
+\paragraph[{HeapBufMP\_\-Params}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf HeapBufMP\_\-Params}  {\bf HeapBufMP\_\-Params}}\hfill\label{_heap_buf_m_p_8h_ada60a6b6a4bee75403768e41d07525ff}
+
+
+Structure defining parameters for the HeapBufMP module. 
+
+\index{HeapBufMP.h@{HeapBufMP.h}!HeapBufMP\_\-ExtendedStats@{HeapBufMP\_\-ExtendedStats}}
+\index{HeapBufMP\_\-ExtendedStats@{HeapBufMP\_\-ExtendedStats}!HeapBufMP.h@{HeapBufMP.h}}
+\paragraph[{HeapBufMP\_\-ExtendedStats}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf HeapBufMP\_\-ExtendedStats}  {\bf HeapBufMP\_\-ExtendedStats}}\hfill\label{_heap_buf_m_p_8h_a0a9972756cf113da0ac5f2eb7f647fbe}
+
+
+Stats structure for the HeapBufMP\_\-getExtendedStats API. 
+
+
+
+\subsubsection{Function Documentation}
+\index{HeapBufMP.h@{HeapBufMP.h}!HeapBufMP\_\-close@{HeapBufMP\_\-close}}
+\index{HeapBufMP\_\-close@{HeapBufMP\_\-close}!HeapBufMP.h@{HeapBufMP.h}}
+\paragraph[{HeapBufMP\_\-close}]{\setlength{\rightskip}{0pt plus 5cm}Int HeapBufMP\_\-close (
+\begin{DoxyParamCaption}
+\item[{{\bf HeapBufMP\_\-Handle} $\ast$}]{ handlePtr}
+\end{DoxyParamCaption}
+)}\hfill\label{_heap_buf_m_p_8h_a53c73d33bd195e23cd90c83a147b330f}
+
+
+Close a HeapBufMP instance. 
+
+Closing an instance will free local memory consumed by the opened instance. All opened instances should be closed before the instance is deleted.
+
+
+\begin{DoxyParams}{Parameters}
+{\em handlePtr} & Pointer to handle returned from \hyperlink{_heap_buf_m_p_8h_a826facae0861c09d545f18dd503f0f0f}{HeapBufMP\_\-open}\\
+\hline
+\end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{_heap_buf_m_p_8h_a826facae0861c09d545f18dd503f0f0f}{HeapBufMP\_\-open} 
+\end{DoxySeeAlso}
+\index{HeapBufMP.h@{HeapBufMP.h}!HeapBufMP\_\-create@{HeapBufMP\_\-create}}
+\index{HeapBufMP\_\-create@{HeapBufMP\_\-create}!HeapBufMP.h@{HeapBufMP.h}}
+\paragraph[{HeapBufMP\_\-create}]{\setlength{\rightskip}{0pt plus 5cm}{\bf HeapBufMP\_\-Handle} HeapBufMP\_\-create (
+\begin{DoxyParamCaption}
+\item[{const {\bf HeapBufMP\_\-Params} $\ast$}]{ params}
+\end{DoxyParamCaption}
+)}\hfill\label{_heap_buf_m_p_8h_a3bb1b659403d9944bc4b64596b20f1f3}
+
+
+Create a HeapBufMP instance. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em params} & HeapBufMP parameters\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+HeapBufMP Handle 
+\end{DoxyReturn}
+\index{HeapBufMP.h@{HeapBufMP.h}!HeapBufMP\_\-delete@{HeapBufMP\_\-delete}}
+\index{HeapBufMP\_\-delete@{HeapBufMP\_\-delete}!HeapBufMP.h@{HeapBufMP.h}}
+\paragraph[{HeapBufMP\_\-delete}]{\setlength{\rightskip}{0pt plus 5cm}Int HeapBufMP\_\-delete (
+\begin{DoxyParamCaption}
+\item[{{\bf HeapBufMP\_\-Handle} $\ast$}]{ handlePtr}
+\end{DoxyParamCaption}
+)}\hfill\label{_heap_buf_m_p_8h_aff10f0e0fc4ec4b88adb2b7422955f96}
+
+
+Delete a created HeapBufMP instance. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em handlePtr} & Pointer to handle to delete. \\
+\hline
+\end{DoxyParams}
+\index{HeapBufMP.h@{HeapBufMP.h}!HeapBufMP\_\-open@{HeapBufMP\_\-open}}
+\index{HeapBufMP\_\-open@{HeapBufMP\_\-open}!HeapBufMP.h@{HeapBufMP.h}}
+\paragraph[{HeapBufMP\_\-open}]{\setlength{\rightskip}{0pt plus 5cm}Int HeapBufMP\_\-open (
+\begin{DoxyParamCaption}
+\item[{String}]{ name, }
+\item[{{\bf HeapBufMP\_\-Handle} $\ast$}]{ handlePtr}
+\end{DoxyParamCaption}
+)}\hfill\label{_heap_buf_m_p_8h_a826facae0861c09d545f18dd503f0f0f}
+
+
+Open a created HeapBufMP instance. 
+
+Once an instance is created, an open can be performed. The open is used to gain access to the same HeapBufMP instance. Generally an instance is created on one processor and opened on the other processor.
+
+The open returns a HeapBufMP instance handle like the create, however the open does not initialize the shared memory. The supplied name is used to identify the created instance.
+
+Call \hyperlink{_heap_buf_m_p_8h_a53c73d33bd195e23cd90c83a147b330f}{HeapBufMP\_\-close} when the opened instance is not longer needed.
+
+
+\begin{DoxyParams}{Parameters}
+{\em name} & Name of created HeapBufMP instance \\
+\hline
+{\em handlePtr} & Pointer to HeapBufMP handle to be opened\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+HeapBufMP status:
+\begin{DoxyItemize}
+\item \hyperlink{_heap_buf_m_p_8h_ab98593be8c8588e512f38265b4d185f0}{HeapBufMP\_\-S\_\-SUCCESS}: Heap successfully opened
+\item \hyperlink{_heap_buf_m_p_8h_a413c47cfb2257df264b84951abc0409f}{HeapBufMP\_\-E\_\-NOTFOUND}: Heap is not yet ready to be opened.
+\item \hyperlink{_heap_buf_m_p_8h_afe559bb52af4c143c559d3ca44654520}{HeapBufMP\_\-E\_\-FAIL}: A general failure has occurred
+\end{DoxyItemize}
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{_heap_buf_m_p_8h_a53c73d33bd195e23cd90c83a147b330f}{HeapBufMP\_\-close} 
+\end{DoxySeeAlso}
+\index{HeapBufMP.h@{HeapBufMP.h}!HeapBufMP\_\-Params\_\-init@{HeapBufMP\_\-Params\_\-init}}
+\index{HeapBufMP\_\-Params\_\-init@{HeapBufMP\_\-Params\_\-init}!HeapBufMP.h@{HeapBufMP.h}}
+\paragraph[{HeapBufMP\_\-Params\_\-init}]{\setlength{\rightskip}{0pt plus 5cm}Void HeapBufMP\_\-Params\_\-init (
+\begin{DoxyParamCaption}
+\item[{{\bf HeapBufMP\_\-Params} $\ast$}]{ params}
+\end{DoxyParamCaption}
+)}\hfill\label{_heap_buf_m_p_8h_a81700157982b86ed3aefc72c6f3a7a5f}
+
+
+Initialize a HeapBufMP parameters struct. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt out}  & {\em params} & Pointer to GateMP parameters \\
+\hline
+\end{DoxyParams}
+\index{HeapBufMP.h@{HeapBufMP.h}!HeapBufMP\_\-alloc@{HeapBufMP\_\-alloc}}
+\index{HeapBufMP\_\-alloc@{HeapBufMP\_\-alloc}!HeapBufMP.h@{HeapBufMP.h}}
+\paragraph[{HeapBufMP\_\-alloc}]{\setlength{\rightskip}{0pt plus 5cm}Void$\ast$ HeapBufMP\_\-alloc (
+\begin{DoxyParamCaption}
+\item[{{\bf HeapBufMP\_\-Handle}}]{ handle, }
+\item[{SizeT}]{ size, }
+\item[{SizeT}]{ align}
+\end{DoxyParamCaption}
+)}\hfill\label{_heap_buf_m_p_8h_aab507dc414e09bbfe75ceb78458c27ed}
+
+
+Allocate a block of memory of specified size and alignment. 
+
+The actual block returned may be larger than requested to satisfy alignment requirements.
+
+HeapBufMP\_\-alloc will lock the heap using the HeapBufMP gate while it traverses the list of free blocks to find a large enough block for the request.
+
+Guidelines for using large heaps and multiple alloc() calls.
+\begin{DoxyItemize}
+\item If possible, allocate larger blocks first. Previous allocations of small memory blocks can reduce the size of the blocks available for larger memory allocations.
+\item Realize that alloc() can fail even if the heap contains a sufficient absolute amount of unalloccated space. This is because the largest free memory block may be smaller than total amount of unallocated memory.
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+{\em handle} & Handle to previously created/opened instance. \\
+\hline
+{\em size} & Size to be allocated (in MADUs) \\
+\hline
+{\em align} & Alignment for allocation (power of 2)\\
+\hline
+\end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{_heap_buf_m_p_8h_a667a26b92e70373b8642ff15e61ad7d0}{HeapBufMP\_\-free} 
+\end{DoxySeeAlso}
+\index{HeapBufMP.h@{HeapBufMP.h}!HeapBufMP\_\-free@{HeapBufMP\_\-free}}
+\index{HeapBufMP\_\-free@{HeapBufMP\_\-free}!HeapBufMP.h@{HeapBufMP.h}}
+\paragraph[{HeapBufMP\_\-free}]{\setlength{\rightskip}{0pt plus 5cm}Void HeapBufMP\_\-free (
+\begin{DoxyParamCaption}
+\item[{{\bf HeapBufMP\_\-Handle}}]{ handle, }
+\item[{Ptr}]{ block, }
+\item[{SizeT}]{ size}
+\end{DoxyParamCaption}
+)}\hfill\label{_heap_buf_m_p_8h_a667a26b92e70373b8642ff15e61ad7d0}
+
+
+Frees a block of memory. 
+
+free() places the memory block specified by addr and size back into the free pool of the heap specified. The newly freed block is combined with any adjacent free blocks. The space is then available for further allocation by alloc().
+
+\hyperlink{_heap_buf_m_p_8h_a667a26b92e70373b8642ff15e61ad7d0}{HeapBufMP\_\-free} will lock the heap using the HeapBufMP gate if one is specified or the system GateMP if not.
+
+
+\begin{DoxyParams}{Parameters}
+{\em handle} & Handle to previously created/opened instance. \\
+\hline
+{\em block} & Block of memory to be freed. \\
+\hline
+{\em size} & Size to be freed (in MADUs)\\
+\hline
+\end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{_heap_buf_m_p_8h_aab507dc414e09bbfe75ceb78458c27ed}{HeapBufMP\_\-alloc} 
+\end{DoxySeeAlso}
+\index{HeapBufMP.h@{HeapBufMP.h}!HeapBufMP\_\-getExtendedStats@{HeapBufMP\_\-getExtendedStats}}
+\index{HeapBufMP\_\-getExtendedStats@{HeapBufMP\_\-getExtendedStats}!HeapBufMP.h@{HeapBufMP.h}}
+\paragraph[{HeapBufMP\_\-getExtendedStats}]{\setlength{\rightskip}{0pt plus 5cm}Void HeapBufMP\_\-getExtendedStats (
+\begin{DoxyParamCaption}
+\item[{{\bf HeapBufMP\_\-Handle}}]{ handle, }
+\item[{{\bf HeapBufMP\_\-ExtendedStats} $\ast$}]{ stats}
+\end{DoxyParamCaption}
+)}\hfill\label{_heap_buf_m_p_8h_a339d8eb929f35742d2ff5b3b5381c57b}
+
+
+Get extended memory statistics. 
+
+This function retrieves the extended statistics for a HeapBufMP instance. It does not retrieve the standard Memory\_\-Stats information. Refer to \hyperlink{struct_heap_buf_m_p___extended_stats}{HeapBufMP\_\-ExtendedStats} for more information regarding what information is returned.
+
+
+\begin{DoxyParams}[1]{Parameters}
+ & {\em handle} & Handle to previously created/opened instance. \\
+\hline
+\mbox{\tt out}  & {\em stats} & ExtendedStats structure\\
+\hline
+\end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+
+\end{DoxySeeAlso}
+\index{HeapBufMP.h@{HeapBufMP.h}!HeapBufMP\_\-getStats@{HeapBufMP\_\-getStats}}
+\index{HeapBufMP\_\-getStats@{HeapBufMP\_\-getStats}!HeapBufMP.h@{HeapBufMP.h}}
+\paragraph[{HeapBufMP\_\-getStats}]{\setlength{\rightskip}{0pt plus 5cm}Void HeapBufMP\_\-getStats (
+\begin{DoxyParamCaption}
+\item[{{\bf HeapBufMP\_\-Handle}}]{ handle, }
+\item[{Ptr}]{ stats}
+\end{DoxyParamCaption}
+)}\hfill\label{_heap_buf_m_p_8h_aed941f6bb592ec1573c646f7c6a4290a}
+
+
+Get memory statistics. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em handle} & Handle to previously created/opened instance. \\
+\hline
+\mbox{\tt out}  & {\em stats} & Memory statistics structure\\
+\hline
+\end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+
+\end{DoxySeeAlso}

@@ -1,0 +1,405 @@
+\subsection{HeapQueueMgr.h File Reference}
+\label{_heap_queue_mgr_8h}\index{HeapQueueMgr.h@{HeapQueueMgr.h}}
+
+
+\subsubsection{Detailed Description}
+Multi-\/processor fixed-\/size buffer heap using hardware queues. ============================================================================
+
+Heap implementation that manages fixed size buffers that can be used in a multiprocessor system with shared memory.
+
+The HeapQueueMgr manager provides functions to allocate and free storage from a heap of type HeapQueueMgr which inherits from IHeap. HeapQueueMgr manages a single fixed-\/size buffer, split into equally sized allocatable blocks.
+
+The HeapQueueMgr manager is intended as a very fast memory manager which can only allocate blocks of a single size. It is ideal for managing a heap that is only used for allocating a single type of object, or for objects that have very similar sizes.
+
+The HeapQueueMgr module uses a NameServer instance to store instance information when an instance is created. The name supplied must be unique for all HeapQueueMgr instances.
+
+The \hyperlink{_heap_queue_mgr_8h_a8acac32c7ae380cdc55b4951f2df0858}{HeapQueueMgr\_\-create} call initializes the shared memory as needed. Once an instance is created, a \hyperlink{_heap_queue_mgr_8h_acb03450cb0411fe7f122e293150ad601}{HeapQueueMgr\_\-open} can be performed. The open is used to gain access to the same HeapQueueMgr instance. Generally an instance is created on one processor and opened on the other processor(s).
+
+The open returns a HeapQueueMgr instance handle like the create, however the open does not modify the shared memory.
+
+The HeapBufQueueMgr header should be included in an application as follows: 
+\begin{DoxyCode}
+  #include <ti/ipc/HeapBufQueueMgr.h>
+\end{DoxyCode}
+
+
+\begin{DoxyVersion}{Version}
+0.00.01 
+\end{DoxyVersion}
+{\ttfamily \#include $<$ti/ipc/GateMP.h$>$}\par
+Include dependency graph for HeapQueueMgr.h:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=125pt]{_heap_queue_mgr_8h__incl}
+\end{center}
+\end{figure}
+\subsubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct_heap_queue_mgr___params}{HeapQueueMgr\_\-Params}
+\begin{DoxyCompactList}\small\item\em Structure defining parameters for the HeapQueueMgr module. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsubsection*{Defines}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{_heap_queue_mgr_8h_a8c8548b774b12881b04ad5605794fe74}{HeapQueueMgr\_\-S\_\-BUSY}~2
+\begin{DoxyCompactList}\small\item\em The resource is still in use. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_heap_queue_mgr_8h_aa426084287fd3ff6fdbf269c462c1f67}{HeapQueueMgr\_\-S\_\-ALREADYSETUP}~1
+\begin{DoxyCompactList}\small\item\em The module has been already setup. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_heap_queue_mgr_8h_ae391285fa01b20f0bafde23b9f35e86b}{HeapQueueMgr\_\-S\_\-SUCCESS}~0
+\begin{DoxyCompactList}\small\item\em Operation is successful. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_heap_queue_mgr_8h_a6f142c013f3391abb45f411629099c33}{HeapQueueMgr\_\-E\_\-FAIL}~-\/1
+\begin{DoxyCompactList}\small\item\em Generic failure. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_heap_queue_mgr_8h_ac6cff9be3f3674d1b3a5103c8d398d9e}{HeapQueueMgr\_\-E\_\-INVALIDARG}~-\/2
+\begin{DoxyCompactList}\small\item\em Argument passed to function is invalid. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_heap_queue_mgr_8h_a072526eb43df0d3bd8bacf5fe555a29c}{HeapQueueMgr\_\-E\_\-MEMORY}~-\/3
+\begin{DoxyCompactList}\small\item\em Operation resulted in memory failure. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_heap_queue_mgr_8h_aba2ac065bd410225bc597a439b655fb8}{HeapQueueMgr\_\-E\_\-ALREADYEXISTS}~-\/4
+\begin{DoxyCompactList}\small\item\em The specified entity already exists. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_heap_queue_mgr_8h_af0906a7b1837e6d71d79abafccecb041}{HeapQueueMgr\_\-E\_\-NOTFOUND}~-\/5
+\begin{DoxyCompactList}\small\item\em Unable to find the specified entity. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_heap_queue_mgr_8h_ae4b75e9be7a3b3f2dcf018b0363dd6a2}{HeapQueueMgr\_\-E\_\-TIMEOUT}~-\/6
+\begin{DoxyCompactList}\small\item\em Operation timed out. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_heap_queue_mgr_8h_a30319897d366fc31285bb82bc57c1f8f}{HeapQueueMgr\_\-E\_\-INVALIDSTATE}~-\/7
+\begin{DoxyCompactList}\small\item\em Module is not initialized. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_heap_queue_mgr_8h_abd0ef27ce9d730cb6c3f2623e77d61db}{HeapQueueMgr\_\-E\_\-OSFAILURE}~-\/8
+\begin{DoxyCompactList}\small\item\em A failure occurred in an OS-\/specific call. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_heap_queue_mgr_8h_a660d36c45ecb943232a0bd1082e982d9}{HeapQueueMgr\_\-E\_\-RESOURCE}~-\/9
+\begin{DoxyCompactList}\small\item\em Specified resource is not available. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_heap_queue_mgr_8h_ab4dcefa9809961eb06ab98bb60e58aa4}{HeapQueueMgr\_\-E\_\-RESTART}~-\/10
+\begin{DoxyCompactList}\small\item\em Operation was interrupted. Please restart the operation. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct HeapQueueMgr\_\-Object $\ast$ \hyperlink{_heap_queue_mgr_8h_a2ef82b5fb989b7b4bfddf91e742e65a8}{HeapQueueMgr\_\-Handle}
+\begin{DoxyCompactList}\small\item\em HeapQueueMgr\_\-Handle type. \item\end{DoxyCompactList}\item 
+typedef struct \hyperlink{struct_heap_queue_mgr___params}{HeapQueueMgr\_\-Params} \hyperlink{_heap_queue_mgr_8h_afc98922caa4949f131731d63867e9f81}{HeapQueueMgr\_\-Params}
+\begin{DoxyCompactList}\small\item\em Structure defining parameters for the HeapQueueMgr module. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+Int \hyperlink{_heap_queue_mgr_8h_a5504d99b2fc663369c3c01b0cc8453c9}{HeapQueueMgr\_\-close} (\hyperlink{_heap_queue_mgr_8h_a2ef82b5fb989b7b4bfddf91e742e65a8}{HeapQueueMgr\_\-Handle} $\ast$handlePtr)
+\begin{DoxyCompactList}\small\item\em Close a HeapQueueMgr instance. \item\end{DoxyCompactList}\item 
+\hyperlink{_heap_queue_mgr_8h_a2ef82b5fb989b7b4bfddf91e742e65a8}{HeapQueueMgr\_\-Handle} \hyperlink{_heap_queue_mgr_8h_a8acac32c7ae380cdc55b4951f2df0858}{HeapQueueMgr\_\-create} (const \hyperlink{struct_heap_queue_mgr___params}{HeapQueueMgr\_\-Params} $\ast$params)
+\begin{DoxyCompactList}\small\item\em Create a HeapQueueMgr instance. \item\end{DoxyCompactList}\item 
+Int \hyperlink{_heap_queue_mgr_8h_ae76096039417c2ba37cc42482ee40962}{HeapQueueMgr\_\-delete} (\hyperlink{_heap_queue_mgr_8h_a2ef82b5fb989b7b4bfddf91e742e65a8}{HeapQueueMgr\_\-Handle} $\ast$handlePtr)
+\begin{DoxyCompactList}\small\item\em Delete a created HeapQueueMgr instance. \item\end{DoxyCompactList}\item 
+Int \hyperlink{_heap_queue_mgr_8h_acb03450cb0411fe7f122e293150ad601}{HeapQueueMgr\_\-open} (String name, \hyperlink{_heap_queue_mgr_8h_a2ef82b5fb989b7b4bfddf91e742e65a8}{HeapQueueMgr\_\-Handle} $\ast$handlePtr)
+\begin{DoxyCompactList}\small\item\em Open a created HeapQueueMgr instance. \item\end{DoxyCompactList}\item 
+Void \hyperlink{_heap_queue_mgr_8h_a8e9fe991867f09bd9b7ea7360ee0490c}{HeapQueueMgr\_\-Params\_\-init} (\hyperlink{struct_heap_queue_mgr___params}{HeapQueueMgr\_\-Params} $\ast$params)
+\begin{DoxyCompactList}\small\item\em Initialize a HeapQueueMgr parameters struct. \item\end{DoxyCompactList}\item 
+Void $\ast$ \hyperlink{_heap_queue_mgr_8h_a5fe6ffb8e88a0b62a51039af8290bea5}{HeapQueueMgr\_\-alloc} (\hyperlink{_heap_queue_mgr_8h_a2ef82b5fb989b7b4bfddf91e742e65a8}{HeapQueueMgr\_\-Handle} handle, SizeT size, SizeT align)
+\begin{DoxyCompactList}\small\item\em Allocate a block of memory of specified size and alignment. \item\end{DoxyCompactList}\item 
+Void \hyperlink{_heap_queue_mgr_8h_ac3c19816640b1de59f5fbc791fbaf41b}{HeapQueueMgr\_\-free} (\hyperlink{_heap_queue_mgr_8h_a2ef82b5fb989b7b4bfddf91e742e65a8}{HeapQueueMgr\_\-Handle} handle, Ptr block, SizeT size)
+\begin{DoxyCompactList}\small\item\em Frees a block of memory. \item\end{DoxyCompactList}\item 
+Void \hyperlink{_heap_queue_mgr_8h_a5d9144c993be46318b73d76055a68d9f}{HeapQueueMgr\_\-getStats} (\hyperlink{_heap_queue_mgr_8h_a2ef82b5fb989b7b4bfddf91e742e65a8}{HeapQueueMgr\_\-Handle} handle, Ptr stats)
+\begin{DoxyCompactList}\small\item\em Get memory statistics. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsubsection{Define Documentation}
+\index{HeapQueueMgr.h@{HeapQueueMgr.h}!HeapQueueMgr\_\-S\_\-BUSY@{HeapQueueMgr\_\-S\_\-BUSY}}
+\index{HeapQueueMgr\_\-S\_\-BUSY@{HeapQueueMgr\_\-S\_\-BUSY}!HeapQueueMgr.h@{HeapQueueMgr.h}}
+\paragraph[{HeapQueueMgr\_\-S\_\-BUSY}]{\setlength{\rightskip}{0pt plus 5cm}\#define HeapQueueMgr\_\-S\_\-BUSY~2}\hfill\label{_heap_queue_mgr_8h_a8c8548b774b12881b04ad5605794fe74}
+
+
+The resource is still in use. 
+
+\index{HeapQueueMgr.h@{HeapQueueMgr.h}!HeapQueueMgr\_\-S\_\-ALREADYSETUP@{HeapQueueMgr\_\-S\_\-ALREADYSETUP}}
+\index{HeapQueueMgr\_\-S\_\-ALREADYSETUP@{HeapQueueMgr\_\-S\_\-ALREADYSETUP}!HeapQueueMgr.h@{HeapQueueMgr.h}}
+\paragraph[{HeapQueueMgr\_\-S\_\-ALREADYSETUP}]{\setlength{\rightskip}{0pt plus 5cm}\#define HeapQueueMgr\_\-S\_\-ALREADYSETUP~1}\hfill\label{_heap_queue_mgr_8h_aa426084287fd3ff6fdbf269c462c1f67}
+
+
+The module has been already setup. 
+
+\index{HeapQueueMgr.h@{HeapQueueMgr.h}!HeapQueueMgr\_\-S\_\-SUCCESS@{HeapQueueMgr\_\-S\_\-SUCCESS}}
+\index{HeapQueueMgr\_\-S\_\-SUCCESS@{HeapQueueMgr\_\-S\_\-SUCCESS}!HeapQueueMgr.h@{HeapQueueMgr.h}}
+\paragraph[{HeapQueueMgr\_\-S\_\-SUCCESS}]{\setlength{\rightskip}{0pt plus 5cm}\#define HeapQueueMgr\_\-S\_\-SUCCESS~0}\hfill\label{_heap_queue_mgr_8h_ae391285fa01b20f0bafde23b9f35e86b}
+
+
+Operation is successful. 
+
+\index{HeapQueueMgr.h@{HeapQueueMgr.h}!HeapQueueMgr\_\-E\_\-FAIL@{HeapQueueMgr\_\-E\_\-FAIL}}
+\index{HeapQueueMgr\_\-E\_\-FAIL@{HeapQueueMgr\_\-E\_\-FAIL}!HeapQueueMgr.h@{HeapQueueMgr.h}}
+\paragraph[{HeapQueueMgr\_\-E\_\-FAIL}]{\setlength{\rightskip}{0pt plus 5cm}\#define HeapQueueMgr\_\-E\_\-FAIL~-\/1}\hfill\label{_heap_queue_mgr_8h_a6f142c013f3391abb45f411629099c33}
+
+
+Generic failure. 
+
+\index{HeapQueueMgr.h@{HeapQueueMgr.h}!HeapQueueMgr\_\-E\_\-INVALIDARG@{HeapQueueMgr\_\-E\_\-INVALIDARG}}
+\index{HeapQueueMgr\_\-E\_\-INVALIDARG@{HeapQueueMgr\_\-E\_\-INVALIDARG}!HeapQueueMgr.h@{HeapQueueMgr.h}}
+\paragraph[{HeapQueueMgr\_\-E\_\-INVALIDARG}]{\setlength{\rightskip}{0pt plus 5cm}\#define HeapQueueMgr\_\-E\_\-INVALIDARG~-\/2}\hfill\label{_heap_queue_mgr_8h_ac6cff9be3f3674d1b3a5103c8d398d9e}
+
+
+Argument passed to function is invalid. 
+
+\index{HeapQueueMgr.h@{HeapQueueMgr.h}!HeapQueueMgr\_\-E\_\-MEMORY@{HeapQueueMgr\_\-E\_\-MEMORY}}
+\index{HeapQueueMgr\_\-E\_\-MEMORY@{HeapQueueMgr\_\-E\_\-MEMORY}!HeapQueueMgr.h@{HeapQueueMgr.h}}
+\paragraph[{HeapQueueMgr\_\-E\_\-MEMORY}]{\setlength{\rightskip}{0pt plus 5cm}\#define HeapQueueMgr\_\-E\_\-MEMORY~-\/3}\hfill\label{_heap_queue_mgr_8h_a072526eb43df0d3bd8bacf5fe555a29c}
+
+
+Operation resulted in memory failure. 
+
+\index{HeapQueueMgr.h@{HeapQueueMgr.h}!HeapQueueMgr\_\-E\_\-ALREADYEXISTS@{HeapQueueMgr\_\-E\_\-ALREADYEXISTS}}
+\index{HeapQueueMgr\_\-E\_\-ALREADYEXISTS@{HeapQueueMgr\_\-E\_\-ALREADYEXISTS}!HeapQueueMgr.h@{HeapQueueMgr.h}}
+\paragraph[{HeapQueueMgr\_\-E\_\-ALREADYEXISTS}]{\setlength{\rightskip}{0pt plus 5cm}\#define HeapQueueMgr\_\-E\_\-ALREADYEXISTS~-\/4}\hfill\label{_heap_queue_mgr_8h_aba2ac065bd410225bc597a439b655fb8}
+
+
+The specified entity already exists. 
+
+\index{HeapQueueMgr.h@{HeapQueueMgr.h}!HeapQueueMgr\_\-E\_\-NOTFOUND@{HeapQueueMgr\_\-E\_\-NOTFOUND}}
+\index{HeapQueueMgr\_\-E\_\-NOTFOUND@{HeapQueueMgr\_\-E\_\-NOTFOUND}!HeapQueueMgr.h@{HeapQueueMgr.h}}
+\paragraph[{HeapQueueMgr\_\-E\_\-NOTFOUND}]{\setlength{\rightskip}{0pt plus 5cm}\#define HeapQueueMgr\_\-E\_\-NOTFOUND~-\/5}\hfill\label{_heap_queue_mgr_8h_af0906a7b1837e6d71d79abafccecb041}
+
+
+Unable to find the specified entity. 
+
+\index{HeapQueueMgr.h@{HeapQueueMgr.h}!HeapQueueMgr\_\-E\_\-TIMEOUT@{HeapQueueMgr\_\-E\_\-TIMEOUT}}
+\index{HeapQueueMgr\_\-E\_\-TIMEOUT@{HeapQueueMgr\_\-E\_\-TIMEOUT}!HeapQueueMgr.h@{HeapQueueMgr.h}}
+\paragraph[{HeapQueueMgr\_\-E\_\-TIMEOUT}]{\setlength{\rightskip}{0pt plus 5cm}\#define HeapQueueMgr\_\-E\_\-TIMEOUT~-\/6}\hfill\label{_heap_queue_mgr_8h_ae4b75e9be7a3b3f2dcf018b0363dd6a2}
+
+
+Operation timed out. 
+
+\index{HeapQueueMgr.h@{HeapQueueMgr.h}!HeapQueueMgr\_\-E\_\-INVALIDSTATE@{HeapQueueMgr\_\-E\_\-INVALIDSTATE}}
+\index{HeapQueueMgr\_\-E\_\-INVALIDSTATE@{HeapQueueMgr\_\-E\_\-INVALIDSTATE}!HeapQueueMgr.h@{HeapQueueMgr.h}}
+\paragraph[{HeapQueueMgr\_\-E\_\-INVALIDSTATE}]{\setlength{\rightskip}{0pt plus 5cm}\#define HeapQueueMgr\_\-E\_\-INVALIDSTATE~-\/7}\hfill\label{_heap_queue_mgr_8h_a30319897d366fc31285bb82bc57c1f8f}
+
+
+Module is not initialized. 
+
+\index{HeapQueueMgr.h@{HeapQueueMgr.h}!HeapQueueMgr\_\-E\_\-OSFAILURE@{HeapQueueMgr\_\-E\_\-OSFAILURE}}
+\index{HeapQueueMgr\_\-E\_\-OSFAILURE@{HeapQueueMgr\_\-E\_\-OSFAILURE}!HeapQueueMgr.h@{HeapQueueMgr.h}}
+\paragraph[{HeapQueueMgr\_\-E\_\-OSFAILURE}]{\setlength{\rightskip}{0pt plus 5cm}\#define HeapQueueMgr\_\-E\_\-OSFAILURE~-\/8}\hfill\label{_heap_queue_mgr_8h_abd0ef27ce9d730cb6c3f2623e77d61db}
+
+
+A failure occurred in an OS-\/specific call. 
+
+\index{HeapQueueMgr.h@{HeapQueueMgr.h}!HeapQueueMgr\_\-E\_\-RESOURCE@{HeapQueueMgr\_\-E\_\-RESOURCE}}
+\index{HeapQueueMgr\_\-E\_\-RESOURCE@{HeapQueueMgr\_\-E\_\-RESOURCE}!HeapQueueMgr.h@{HeapQueueMgr.h}}
+\paragraph[{HeapQueueMgr\_\-E\_\-RESOURCE}]{\setlength{\rightskip}{0pt plus 5cm}\#define HeapQueueMgr\_\-E\_\-RESOURCE~-\/9}\hfill\label{_heap_queue_mgr_8h_a660d36c45ecb943232a0bd1082e982d9}
+
+
+Specified resource is not available. 
+
+\index{HeapQueueMgr.h@{HeapQueueMgr.h}!HeapQueueMgr\_\-E\_\-RESTART@{HeapQueueMgr\_\-E\_\-RESTART}}
+\index{HeapQueueMgr\_\-E\_\-RESTART@{HeapQueueMgr\_\-E\_\-RESTART}!HeapQueueMgr.h@{HeapQueueMgr.h}}
+\paragraph[{HeapQueueMgr\_\-E\_\-RESTART}]{\setlength{\rightskip}{0pt plus 5cm}\#define HeapQueueMgr\_\-E\_\-RESTART~-\/10}\hfill\label{_heap_queue_mgr_8h_ab4dcefa9809961eb06ab98bb60e58aa4}
+
+
+Operation was interrupted. Please restart the operation. 
+
+
+
+\subsubsection{Typedef Documentation}
+\index{HeapQueueMgr.h@{HeapQueueMgr.h}!HeapQueueMgr\_\-Handle@{HeapQueueMgr\_\-Handle}}
+\index{HeapQueueMgr\_\-Handle@{HeapQueueMgr\_\-Handle}!HeapQueueMgr.h@{HeapQueueMgr.h}}
+\paragraph[{HeapQueueMgr\_\-Handle}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct HeapQueueMgr\_\-Object$\ast$ {\bf HeapQueueMgr\_\-Handle}}\hfill\label{_heap_queue_mgr_8h_a2ef82b5fb989b7b4bfddf91e742e65a8}
+
+
+HeapQueueMgr\_\-Handle type. 
+
+\index{HeapQueueMgr.h@{HeapQueueMgr.h}!HeapQueueMgr\_\-Params@{HeapQueueMgr\_\-Params}}
+\index{HeapQueueMgr\_\-Params@{HeapQueueMgr\_\-Params}!HeapQueueMgr.h@{HeapQueueMgr.h}}
+\paragraph[{HeapQueueMgr\_\-Params}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf HeapQueueMgr\_\-Params}  {\bf HeapQueueMgr\_\-Params}}\hfill\label{_heap_queue_mgr_8h_afc98922caa4949f131731d63867e9f81}
+
+
+Structure defining parameters for the HeapQueueMgr module. 
+
+
+
+\subsubsection{Function Documentation}
+\index{HeapQueueMgr.h@{HeapQueueMgr.h}!HeapQueueMgr\_\-close@{HeapQueueMgr\_\-close}}
+\index{HeapQueueMgr\_\-close@{HeapQueueMgr\_\-close}!HeapQueueMgr.h@{HeapQueueMgr.h}}
+\paragraph[{HeapQueueMgr\_\-close}]{\setlength{\rightskip}{0pt plus 5cm}Int HeapQueueMgr\_\-close (
+\begin{DoxyParamCaption}
+\item[{{\bf HeapQueueMgr\_\-Handle} $\ast$}]{ handlePtr}
+\end{DoxyParamCaption}
+)}\hfill\label{_heap_queue_mgr_8h_a5504d99b2fc663369c3c01b0cc8453c9}
+
+
+Close a HeapQueueMgr instance. 
+
+Closing an instance will free local memory consumed by the opened instance. All opened instances should be closed before the instance is deleted.
+
+
+\begin{DoxyParams}{Parameters}
+{\em handlePtr} & Pointer to handle returned from \hyperlink{_heap_queue_mgr_8h_acb03450cb0411fe7f122e293150ad601}{HeapQueueMgr\_\-open}\\
+\hline
+\end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{_heap_queue_mgr_8h_acb03450cb0411fe7f122e293150ad601}{HeapQueueMgr\_\-open} 
+\end{DoxySeeAlso}
+\index{HeapQueueMgr.h@{HeapQueueMgr.h}!HeapQueueMgr\_\-create@{HeapQueueMgr\_\-create}}
+\index{HeapQueueMgr\_\-create@{HeapQueueMgr\_\-create}!HeapQueueMgr.h@{HeapQueueMgr.h}}
+\paragraph[{HeapQueueMgr\_\-create}]{\setlength{\rightskip}{0pt plus 5cm}{\bf HeapQueueMgr\_\-Handle} HeapQueueMgr\_\-create (
+\begin{DoxyParamCaption}
+\item[{const {\bf HeapQueueMgr\_\-Params} $\ast$}]{ params}
+\end{DoxyParamCaption}
+)}\hfill\label{_heap_queue_mgr_8h_a8acac32c7ae380cdc55b4951f2df0858}
+
+
+Create a HeapQueueMgr instance. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em params} & HeapQueueMgr parameters\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+HeapQueueMgr Handle 
+\end{DoxyReturn}
+\index{HeapQueueMgr.h@{HeapQueueMgr.h}!HeapQueueMgr\_\-delete@{HeapQueueMgr\_\-delete}}
+\index{HeapQueueMgr\_\-delete@{HeapQueueMgr\_\-delete}!HeapQueueMgr.h@{HeapQueueMgr.h}}
+\paragraph[{HeapQueueMgr\_\-delete}]{\setlength{\rightskip}{0pt plus 5cm}Int HeapQueueMgr\_\-delete (
+\begin{DoxyParamCaption}
+\item[{{\bf HeapQueueMgr\_\-Handle} $\ast$}]{ handlePtr}
+\end{DoxyParamCaption}
+)}\hfill\label{_heap_queue_mgr_8h_ae76096039417c2ba37cc42482ee40962}
+
+
+Delete a created HeapQueueMgr instance. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em handlePtr} & Pointer to handle to delete. \\
+\hline
+\end{DoxyParams}
+\index{HeapQueueMgr.h@{HeapQueueMgr.h}!HeapQueueMgr\_\-open@{HeapQueueMgr\_\-open}}
+\index{HeapQueueMgr\_\-open@{HeapQueueMgr\_\-open}!HeapQueueMgr.h@{HeapQueueMgr.h}}
+\paragraph[{HeapQueueMgr\_\-open}]{\setlength{\rightskip}{0pt plus 5cm}Int HeapQueueMgr\_\-open (
+\begin{DoxyParamCaption}
+\item[{String}]{ name, }
+\item[{{\bf HeapQueueMgr\_\-Handle} $\ast$}]{ handlePtr}
+\end{DoxyParamCaption}
+)}\hfill\label{_heap_queue_mgr_8h_acb03450cb0411fe7f122e293150ad601}
+
+
+Open a created HeapQueueMgr instance. 
+
+Once an instance is created, an open can be performed. The open is used to gain access to the same HeapQueueMgr instance. Generally an instance is created on one processor and opened on the other processor.
+
+The open returns a HeapQueueMgr instance handle like the create, however the open does not initialize the shared memory. The supplied name is used to identify the created instance.
+
+Call \hyperlink{_heap_queue_mgr_8h_a5504d99b2fc663369c3c01b0cc8453c9}{HeapQueueMgr\_\-close} when the opened instance is not longer needed.
+
+
+\begin{DoxyParams}{Parameters}
+{\em name} & Name of created HeapQueueMgr instance \\
+\hline
+{\em handlePtr} & Pointer to HeapQueueMgr handle to be opened\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+HeapQueueMgr status:
+\begin{DoxyItemize}
+\item \hyperlink{_heap_queue_mgr_8h_ae391285fa01b20f0bafde23b9f35e86b}{HeapQueueMgr\_\-S\_\-SUCCESS}: Heap successfully opened
+\item \hyperlink{_heap_queue_mgr_8h_af0906a7b1837e6d71d79abafccecb041}{HeapQueueMgr\_\-E\_\-NOTFOUND}: Heap is not yet ready to be opened.
+\item \hyperlink{_heap_queue_mgr_8h_a6f142c013f3391abb45f411629099c33}{HeapQueueMgr\_\-E\_\-FAIL}: A general failure has occurred
+\end{DoxyItemize}
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{_heap_queue_mgr_8h_a5504d99b2fc663369c3c01b0cc8453c9}{HeapQueueMgr\_\-close} 
+\end{DoxySeeAlso}
+\index{HeapQueueMgr.h@{HeapQueueMgr.h}!HeapQueueMgr\_\-Params\_\-init@{HeapQueueMgr\_\-Params\_\-init}}
+\index{HeapQueueMgr\_\-Params\_\-init@{HeapQueueMgr\_\-Params\_\-init}!HeapQueueMgr.h@{HeapQueueMgr.h}}
+\paragraph[{HeapQueueMgr\_\-Params\_\-init}]{\setlength{\rightskip}{0pt plus 5cm}Void HeapQueueMgr\_\-Params\_\-init (
+\begin{DoxyParamCaption}
+\item[{{\bf HeapQueueMgr\_\-Params} $\ast$}]{ params}
+\end{DoxyParamCaption}
+)}\hfill\label{_heap_queue_mgr_8h_a8e9fe991867f09bd9b7ea7360ee0490c}
+
+
+Initialize a HeapQueueMgr parameters struct. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt out}  & {\em params} & Pointer to GateMP parameters \\
+\hline
+\end{DoxyParams}
+\index{HeapQueueMgr.h@{HeapQueueMgr.h}!HeapQueueMgr\_\-alloc@{HeapQueueMgr\_\-alloc}}
+\index{HeapQueueMgr\_\-alloc@{HeapQueueMgr\_\-alloc}!HeapQueueMgr.h@{HeapQueueMgr.h}}
+\paragraph[{HeapQueueMgr\_\-alloc}]{\setlength{\rightskip}{0pt plus 5cm}Void$\ast$ HeapQueueMgr\_\-alloc (
+\begin{DoxyParamCaption}
+\item[{{\bf HeapQueueMgr\_\-Handle}}]{ handle, }
+\item[{SizeT}]{ size, }
+\item[{SizeT}]{ align}
+\end{DoxyParamCaption}
+)}\hfill\label{_heap_queue_mgr_8h_a5fe6ffb8e88a0b62a51039af8290bea5}
+
+
+Allocate a block of memory of specified size and alignment. 
+
+The actual block returned may be larger than requested to satisfy alignment requirements.
+
+HeapQueueMgr\_\-alloc will lock the heap using the HeapQueueMgr gate while it traverses the list of free blocks to find a large enough block for the request.
+
+Guidelines for using large heaps and multiple alloc() calls.
+\begin{DoxyItemize}
+\item If possible, allocate larger blocks first. Previous allocations of small memory blocks can reduce the size of the blocks available for larger memory allocations.
+\item Realize that alloc() can fail even if the heap contains a sufficient absolute amount of unalloccated space. This is because the largest free memory block may be smaller than total amount of unallocated memory.
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+{\em handle} & Handle to previously created/opened instance. \\
+\hline
+{\em size} & Size to be allocated (in MADUs) \\
+\hline
+{\em align} & Alignment for allocation (power of 2)\\
+\hline
+\end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{_heap_queue_mgr_8h_ac3c19816640b1de59f5fbc791fbaf41b}{HeapQueueMgr\_\-free} 
+\end{DoxySeeAlso}
+\index{HeapQueueMgr.h@{HeapQueueMgr.h}!HeapQueueMgr\_\-free@{HeapQueueMgr\_\-free}}
+\index{HeapQueueMgr\_\-free@{HeapQueueMgr\_\-free}!HeapQueueMgr.h@{HeapQueueMgr.h}}
+\paragraph[{HeapQueueMgr\_\-free}]{\setlength{\rightskip}{0pt plus 5cm}Void HeapQueueMgr\_\-free (
+\begin{DoxyParamCaption}
+\item[{{\bf HeapQueueMgr\_\-Handle}}]{ handle, }
+\item[{Ptr}]{ block, }
+\item[{SizeT}]{ size}
+\end{DoxyParamCaption}
+)}\hfill\label{_heap_queue_mgr_8h_ac3c19816640b1de59f5fbc791fbaf41b}
+
+
+Frees a block of memory. 
+
+free() places the memory block specified by addr and size back into the free pool of the heap specified. The newly freed block is combined with any adjacent free blocks. The space is then available for further allocation by alloc().
+
+\hyperlink{_heap_queue_mgr_8h_ac3c19816640b1de59f5fbc791fbaf41b}{HeapQueueMgr\_\-free} will lock the heap using the HeapQueueMgr gate if one is specified or the system GateMP if not.
+
+
+\begin{DoxyParams}{Parameters}
+{\em handle} & Handle to previously created/opened instance. \\
+\hline
+{\em block} & Block of memory to be freed. \\
+\hline
+{\em size} & Size to be freed (in MADUs)\\
+\hline
+\end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{_heap_queue_mgr_8h_a5fe6ffb8e88a0b62a51039af8290bea5}{HeapQueueMgr\_\-alloc} 
+\end{DoxySeeAlso}
+\index{HeapQueueMgr.h@{HeapQueueMgr.h}!HeapQueueMgr\_\-getStats@{HeapQueueMgr\_\-getStats}}
+\index{HeapQueueMgr\_\-getStats@{HeapQueueMgr\_\-getStats}!HeapQueueMgr.h@{HeapQueueMgr.h}}
+\paragraph[{HeapQueueMgr\_\-getStats}]{\setlength{\rightskip}{0pt plus 5cm}Void HeapQueueMgr\_\-getStats (
+\begin{DoxyParamCaption}
+\item[{{\bf HeapQueueMgr\_\-Handle}}]{ handle, }
+\item[{Ptr}]{ stats}
+\end{DoxyParamCaption}
+)}\hfill\label{_heap_queue_mgr_8h_a5d9144c993be46318b73d76055a68d9f}
+
+
+Get memory statistics. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em handle} & Handle to previously created/opened instance. \\
+\hline
+\mbox{\tt out}  & {\em stats} & Memory statistics structure\\
+\hline
+\end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+
+\end{DoxySeeAlso}

@@ -1,0 +1,48 @@
+\subsection{ListMP\_\-Params Struct Reference}
+\label{struct_list_m_p___params}\index{ListMP\_\-Params@{ListMP\_\-Params}}
+
+
+Structure defining parameter structure for \hyperlink{_list_m_p_8h_a71fdd7f30d377065fb70dd095a186d3e}{ListMP\_\-create()}.  
+
+
+
+
+{\ttfamily \#include $<$ListMP.h$>$}
+
+\subsubsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{_gate_m_p_8h_ad5bb259f928a14e98d973334bc60ebb3}{GateMP\_\-Handle} \hyperlink{struct_list_m_p___params_a4808f5c75029b059fa388a33e158c2f4}{gate}
+\item 
+String \hyperlink{struct_list_m_p___params_a4ac70f37c8b5584fa115d6d7f412daba}{name}
+\item 
+UInt16 \hyperlink{struct_list_m_p___params_af812a3b0ea4698b841bfbf83eada903a}{regionId}
+\end{DoxyCompactItemize}
+
+
+\subsubsection{Detailed Description}
+Structure defining parameter structure for \hyperlink{_list_m_p_8h_a71fdd7f30d377065fb70dd095a186d3e}{ListMP\_\-create()}. 
+
+\subsubsection{Field Documentation}
+\index{ListMP\_\-Params@{ListMP\_\-Params}!gate@{gate}}
+\index{gate@{gate}!ListMP_Params@{ListMP\_\-Params}}
+\paragraph[{gate}]{\setlength{\rightskip}{0pt plus 5cm}{\bf GateMP\_\-Handle} {\bf ListMP\_\-Params::gate}}\hfill\label{struct_list_m_p___params_a4808f5c75029b059fa388a33e158c2f4}
+GateMP instance for critical region management of shared memory
+
+Using the default value of NULL will result in use of the GateMP system gate for context protection. \index{ListMP\_\-Params@{ListMP\_\-Params}!name@{name}}
+\index{name@{name}!ListMP_Params@{ListMP\_\-Params}}
+\paragraph[{name}]{\setlength{\rightskip}{0pt plus 5cm}String {\bf ListMP\_\-Params::name}}\hfill\label{struct_list_m_p___params_a4ac70f37c8b5584fa115d6d7f412daba}
+Name of the instance
+
+The name (if not NULL) must be unique among all ListMP instances in the entire system. When creating a new heap, it is necessary to supply an instance name.
+
+The name does not have to be persistent. The supplied string is copied into persistent memory. \index{ListMP\_\-Params@{ListMP\_\-Params}!regionId@{regionId}}
+\index{regionId@{regionId}!ListMP_Params@{ListMP\_\-Params}}
+\paragraph[{regionId}]{\setlength{\rightskip}{0pt plus 5cm}UInt16 {\bf ListMP\_\-Params::regionId}}\hfill\label{struct_list_m_p___params_af812a3b0ea4698b841bfbf83eada903a}
+SharedRegion ID.
+
+The ID corresponding to the index of the shared region in which this shared instance is to be placed. This is used in create() only when name is not null. 
+
+The documentation for this struct was generated from the following file:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{_list_m_p_8h}{ListMP.h}\end{DoxyCompactItemize}

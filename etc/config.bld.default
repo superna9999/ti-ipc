@@ -1,0 +1,113 @@
+/*
+ *  ======== config.bld ========
+ *  Sample Build configuration script
+ */
+
+//Use CCS5.x
+var rootDirPre = "C:/ccs/ccsv5/tools/compiler/";
+var rootDirPost = "";
+
+//Use CCS4.x
+//var rootDirPre = "C:/Program Files/Texas Instruments/CCSv4/tools/compiler/";
+//var rootDirPost = "";
+
+//Use CCS3.3
+//var rootDirPre = "C:/CCStudio_v3.3/";
+//var rootDirPost = "/cgtools";
+
+//Setup for C64P target
+var C64P = xdc.useModule('ti.targets.C64P');
+C64P.rootDir = rootDirPre + "C6000" + rootDirPost;
+C64P.ccOpts.suffix += " -mi10 -mo ";
+//set default platform and list of all interested platforms for c64P
+C64P.platforms = [
+                     "ti.sdo.ipc.examples.platforms.evmDM6446.dsp",
+                     "ti.sdo.ipc.examples.platforms.evm6472.core0",
+                     "ti.sdo.ipc.examples.platforms.evm6474.core0",
+                     "ti.sdo.ipc.examples.platforms.omap3530.dsp",
+                 ];
+C64P.platform = C64P.platforms[0];
+
+//Setup for C674 target
+var C674 = xdc.useModule('ti.targets.C674');
+C674.rootDir = rootDirPre + "C6000" + rootDirPost;
+C674.ccOpts.suffix += " -mi10 -mo ";
+//set default platform and list of all interested platforms for c674
+C674.platforms = [
+                    "ti.sdo.ipc.examples.platforms.evmTI816X.dsp",
+                    "ti.sdo.ipc.examples.platforms.evmTI814X.dsp",
+                    "ti.sdo.ipc.examples.platforms.evmDA830.dsp",
+                    "ti.sdo.ipc.examples.platforms.evmOMAPL138.dsp",
+                ];
+C674.platform = C674.platforms[0];
+
+//Setup for C66 target
+var C66 = xdc.useModule('ti.targets.elf.C66');
+C66.rootDir = rootDirPre + "C6000" + rootDirPost;
+C66.ccOpts.suffix += " -mi10 -mo ";
+//set default platform and list of all interested platforms for c674
+C66.platforms = [
+                     "ti.sdo.ipc.examples.platforms.evm6670.core0",
+                     "ti.sdo.ipc.examples.platforms.evm6678.core0",
+                ];
+C66.platform = C66.platforms[0];
+
+//Setup for C64T target
+var C64T = xdc.useModule('ti.targets.elf.C64T');
+C64T.rootDir = rootDirPre + "C6000" + rootDirPost;
+C64T.ccOpts.suffix += " -mi10 -mo ";
+//set default platform and list of all interested platforms for c64T
+C64T.platforms = [
+                    "ti.sdo.ipc.examples.platforms.omap4430.dsp",
+                ];
+C64T.platform = C64T.platforms[0];
+
+//Setup for ARM target
+var Arm9 = xdc.useModule('ti.targets.arm.elf.Arm9');
+Arm9.rootDir =  rootDirPre + "tms470" + rootDirPost;
+Arm9.ccOpts.suffix += " -ms ";
+//set default platform and list of all interested platforms for Arm9
+Arm9.platforms = [
+                    "ti.sdo.ipc.examples.platforms.evmDM6446.arm",
+                    "ti.sdo.ipc.examples.platforms.evmDA830.arm",
+                    "ti.sdo.ipc.examples.platforms.evmOMAPL138.arm",
+                 ];
+Arm9.platform = Arm9.platforms[0];
+
+//Setup for M3 target
+var M3 = xdc.useModule('ti.targets.arm.elf.M3');
+M3.rootDir =  rootDirPre + "tms470" + rootDirPost;
+M3.ccOpts.suffix += " -ms ";
+//set default platform and list of all interested platforms for M3
+M3.platforms = [
+                  "ti.sdo.ipc.examples.platforms.evmTI816X.video",
+                  "ti.sdo.ipc.examples.platforms.evmTI816X.vpss",
+                  "ti.sdo.ipc.examples.platforms.evmTI814X.video",
+                  "ti.sdo.ipc.examples.platforms.evmTI814X.vpss",
+                  "ti.sdo.ipc.examples.platforms.omap4430.core0",
+                  "ti.sdo.ipc.examples.platforms.omap4430.core1",
+               ];
+M3.platform = M3.platforms[0];
+
+//Setup for A8F target
+var A8F = xdc.useModule('ti.targets.arm.elf.A8F');
+A8F.rootDir =  rootDirPre + "tms470" + rootDirPost;
+A8F.ccOpts.suffix += " -ms ";
+//set default platform and list of all interested platforms for A8F
+A8F.platforms = [
+                  "ti.sdo.ipc.examples.platforms.evmTI816X.host",
+                  "ti.sdo.ipc.examples.platforms.evmTI814X.host",
+                  "ti.sdo.ipc.examples.platforms.omap3530.host",
+               ];
+A8F.platform = A8F.platforms[0];
+
+//Uncomment the require targets
+Build.targets = [
+                    //C64P,
+                    //C674,
+                    //C64T,
+                    //C66,
+                    //Arm9,
+                    //M3,
+                    //A8F,
+                ];

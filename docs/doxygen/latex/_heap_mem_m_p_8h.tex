@@ -1,0 +1,457 @@
+\subsection{HeapMemMP.h File Reference}
+\label{_heap_mem_m_p_8h}\index{HeapMemMP.h@{HeapMemMP.h}}
+
+
+\subsubsection{Detailed Description}
+Multi-\/processor variable size buffer heap implementation. ============================================================================
+
+HeapMemMP is a heap implementation that manages variable size buffers that can be used in a multiprocessor system with shared memory. HeapMemMP manages a single buffer in shared memory from which blocks of user-\/ specified length are allocated and freed.
+
+The HeapMemMP module uses a NameServer instance to store instance information when an instance is created. The name supplied must be unique for all HeapMemMP instances.
+
+The \hyperlink{_heap_mem_m_p_8h_a3ee79b7e84e8eaef048c919be45e0a7c}{HeapMemMP\_\-create} call initializes the shared memory as needed. Once an instance is created, an \hyperlink{_heap_mem_m_p_8h_a05598b30cd1a93e88e59cea962d1e976}{HeapMemMP\_\-open} can be performed. The open is used to gain access to the same HeapMemMP instance. Generally an instance is created on one processor and opened on the other processor(s).
+
+The open returns a HeapMemMP instance handle like the create, however the open does not modify the shared memory.
+
+Because HeapMemMP is a variable-\/size heap implementation, it is also used by the SharedRegion module to manage shared memory in each shared region. When any shared memory IPC instance is created in a particular shared region, the HeapMemMP that manages shared memory in the shared region allocates shared memory for the instance.
+
+The HeapMemMP header should be included in an application as follows: 
+\begin{DoxyCode}
+  #include <ti/ipc/HeapMemMP.h>
+\end{DoxyCode}
+
+
+\begin{DoxyVersion}{Version}
+0.00.01
+\end{DoxyVersion}
+============================================================================ {\ttfamily \#include $<$ti/ipc/GateMP.h$>$}\par
+Include dependency graph for HeapMemMP.h:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=117pt]{_heap_mem_m_p_8h__incl}
+\end{center}
+\end{figure}
+\subsubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct_heap_mem_m_p___params}{HeapMemMP\_\-Params}
+\begin{DoxyCompactList}\small\item\em Structure defining parameters for the HeapMemMP module. \item\end{DoxyCompactList}\item 
+struct \hyperlink{struct_heap_mem_m_p___extended_stats}{HeapMemMP\_\-ExtendedStats}
+\begin{DoxyCompactList}\small\item\em Stats structure for the HeapMemMP\_\-getExtendedStats API. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsubsection*{Defines}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{_heap_mem_m_p_8h_a992f6b5e02a835e5a5116fe2f968bdfe}{HeapMemMP\_\-S\_\-BUSY}~2
+\begin{DoxyCompactList}\small\item\em The resource is still in use. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_heap_mem_m_p_8h_a62e81fa297f6eb3a9cbc154170fbd608}{HeapMemMP\_\-S\_\-ALREADYSETUP}~1
+\begin{DoxyCompactList}\small\item\em The module has been already setup. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_heap_mem_m_p_8h_a220e8086edc8314cef6034e584b41c93}{HeapMemMP\_\-S\_\-SUCCESS}~0
+\begin{DoxyCompactList}\small\item\em Operation is successful. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_heap_mem_m_p_8h_a080d0886b807af624599a98987a4470b}{HeapMemMP\_\-E\_\-FAIL}~-\/1
+\begin{DoxyCompactList}\small\item\em Generic failure. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_heap_mem_m_p_8h_ac9be05da1907e0e8d229ddba4d68af96}{HeapMemMP\_\-E\_\-INVALIDARG}~-\/2
+\begin{DoxyCompactList}\small\item\em Argument passed to function is invalid. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_heap_mem_m_p_8h_ae16b106a9e2b1d56da7aa7310d6b4fc6}{HeapMemMP\_\-E\_\-MEMORY}~-\/3
+\begin{DoxyCompactList}\small\item\em Operation resulted in memory failure. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_heap_mem_m_p_8h_a5c0844490d41dbf13f3746f6ff3b0fbb}{HeapMemMP\_\-E\_\-ALREADYEXISTS}~-\/4
+\begin{DoxyCompactList}\small\item\em The specified entity already exists. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_heap_mem_m_p_8h_aeee2167e40995fa214c8b26407937513}{HeapMemMP\_\-E\_\-NOTFOUND}~-\/5
+\begin{DoxyCompactList}\small\item\em Unable to find the specified entity. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_heap_mem_m_p_8h_a59e36864ebc19f31f38801cd4f6b8927}{HeapMemMP\_\-E\_\-TIMEOUT}~-\/6
+\begin{DoxyCompactList}\small\item\em Operation timed out. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_heap_mem_m_p_8h_ae59ad8c5c037aef22e16cf90beabc93c}{HeapMemMP\_\-E\_\-INVALIDSTATE}~-\/7
+\begin{DoxyCompactList}\small\item\em Module is not initialized. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_heap_mem_m_p_8h_a125464679440a2d5ec7f80e9a40035c1}{HeapMemMP\_\-E\_\-OSFAILURE}~-\/8
+\begin{DoxyCompactList}\small\item\em A failure occurred in an OS-\/specific call. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_heap_mem_m_p_8h_a59a512963c177b9e026486d270c3556f}{HeapMemMP\_\-E\_\-RESOURCE}~-\/9
+\begin{DoxyCompactList}\small\item\em Specified resource is not available. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_heap_mem_m_p_8h_a50fc296659efef22fea5863af26930d5}{HeapMemMP\_\-E\_\-RESTART}~-\/10
+\begin{DoxyCompactList}\small\item\em Operation was interrupted. Please restart the operation. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct HeapMemMP\_\-Object $\ast$ \hyperlink{_heap_mem_m_p_8h_a9aa6360e22c2f5f387c5aba52a1a8522}{HeapMemMP\_\-Handle}
+\begin{DoxyCompactList}\small\item\em HeapMemMP\_\-Handle type. \item\end{DoxyCompactList}\item 
+typedef struct \hyperlink{struct_heap_mem_m_p___params}{HeapMemMP\_\-Params} \hyperlink{_heap_mem_m_p_8h_a888191d73ac615e5335b1add34db69e8}{HeapMemMP\_\-Params}
+\begin{DoxyCompactList}\small\item\em Structure defining parameters for the HeapMemMP module. \item\end{DoxyCompactList}\item 
+typedef struct \hyperlink{struct_heap_mem_m_p___extended_stats}{HeapMemMP\_\-ExtendedStats} \hyperlink{_heap_mem_m_p_8h_a366cf280eda1086a46528b999b035618}{HeapMemMP\_\-ExtendedStats}
+\begin{DoxyCompactList}\small\item\em Stats structure for the HeapMemMP\_\-getExtendedStats API. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+Int \hyperlink{_heap_mem_m_p_8h_ac3fcc6ef980577f060f738f3485013f1}{HeapMemMP\_\-close} (\hyperlink{_heap_mem_m_p_8h_a9aa6360e22c2f5f387c5aba52a1a8522}{HeapMemMP\_\-Handle} $\ast$handlePtr)
+\begin{DoxyCompactList}\small\item\em Close a HeapMemMP instance. \item\end{DoxyCompactList}\item 
+\hyperlink{_heap_mem_m_p_8h_a9aa6360e22c2f5f387c5aba52a1a8522}{HeapMemMP\_\-Handle} \hyperlink{_heap_mem_m_p_8h_a3ee79b7e84e8eaef048c919be45e0a7c}{HeapMemMP\_\-create} (const \hyperlink{struct_heap_mem_m_p___params}{HeapMemMP\_\-Params} $\ast$params)
+\begin{DoxyCompactList}\small\item\em Create a HeapMemMP instance. \item\end{DoxyCompactList}\item 
+Int \hyperlink{_heap_mem_m_p_8h_a0041a019dcc514bf6de66997a3383a02}{HeapMemMP\_\-delete} (\hyperlink{_heap_mem_m_p_8h_a9aa6360e22c2f5f387c5aba52a1a8522}{HeapMemMP\_\-Handle} $\ast$handlePtr)
+\begin{DoxyCompactList}\small\item\em Delete a created HeapMemMP instance. \item\end{DoxyCompactList}\item 
+Int \hyperlink{_heap_mem_m_p_8h_a05598b30cd1a93e88e59cea962d1e976}{HeapMemMP\_\-open} (String name, \hyperlink{_heap_mem_m_p_8h_a9aa6360e22c2f5f387c5aba52a1a8522}{HeapMemMP\_\-Handle} $\ast$handlePtr)
+\begin{DoxyCompactList}\small\item\em Open a created HeapMemMP instance. \item\end{DoxyCompactList}\item 
+Void \hyperlink{_heap_mem_m_p_8h_ade4b085199639e1184e221725e03a962}{HeapMemMP\_\-Params\_\-init} (\hyperlink{struct_heap_mem_m_p___params}{HeapMemMP\_\-Params} $\ast$params)
+\begin{DoxyCompactList}\small\item\em Initialize a HeapMemMP parameters struct. \item\end{DoxyCompactList}\item 
+Void $\ast$ \hyperlink{_heap_mem_m_p_8h_a04ab3af78110251e5f22f9bc9a961a95}{HeapMemMP\_\-alloc} (\hyperlink{_heap_mem_m_p_8h_a9aa6360e22c2f5f387c5aba52a1a8522}{HeapMemMP\_\-Handle} handle, SizeT size, SizeT align)
+\begin{DoxyCompactList}\small\item\em Allocate a block of memory of specified size and alignment. \item\end{DoxyCompactList}\item 
+Void \hyperlink{_heap_mem_m_p_8h_af424678d0776b662701672c9b737e0bc}{HeapMemMP\_\-free} (\hyperlink{_heap_mem_m_p_8h_a9aa6360e22c2f5f387c5aba52a1a8522}{HeapMemMP\_\-Handle} handle, Ptr block, SizeT size)
+\begin{DoxyCompactList}\small\item\em Frees a block of memory. \item\end{DoxyCompactList}\item 
+Void \hyperlink{_heap_mem_m_p_8h_a1ee8a7319a0ed2344dea9d7b1bbbd3ee}{HeapMemMP\_\-getExtendedStats} (\hyperlink{_heap_mem_m_p_8h_a9aa6360e22c2f5f387c5aba52a1a8522}{HeapMemMP\_\-Handle} handle, \hyperlink{struct_heap_mem_m_p___extended_stats}{HeapMemMP\_\-ExtendedStats} $\ast$stats)
+\begin{DoxyCompactList}\small\item\em Get extended memory statistics. \item\end{DoxyCompactList}\item 
+Void \hyperlink{_heap_mem_m_p_8h_a5ce7746f4d08dd3fb94e692f6f544b67}{HeapMemMP\_\-getStats} (\hyperlink{_heap_mem_m_p_8h_a9aa6360e22c2f5f387c5aba52a1a8522}{HeapMemMP\_\-Handle} handle, Ptr stats)
+\begin{DoxyCompactList}\small\item\em Get memory statistics. \item\end{DoxyCompactList}\item 
+Void \hyperlink{_heap_mem_m_p_8h_a8a610d9bdd7650bf42d52841915a42a0}{HeapMemMP\_\-restore} (\hyperlink{_heap_mem_m_p_8h_a9aa6360e22c2f5f387c5aba52a1a8522}{HeapMemMP\_\-Handle} handle)
+\begin{DoxyCompactList}\small\item\em Restore an instance to it's original created state. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsubsection{Define Documentation}
+\index{HeapMemMP.h@{HeapMemMP.h}!HeapMemMP\_\-S\_\-BUSY@{HeapMemMP\_\-S\_\-BUSY}}
+\index{HeapMemMP\_\-S\_\-BUSY@{HeapMemMP\_\-S\_\-BUSY}!HeapMemMP.h@{HeapMemMP.h}}
+\paragraph[{HeapMemMP\_\-S\_\-BUSY}]{\setlength{\rightskip}{0pt plus 5cm}\#define HeapMemMP\_\-S\_\-BUSY~2}\hfill\label{_heap_mem_m_p_8h_a992f6b5e02a835e5a5116fe2f968bdfe}
+
+
+The resource is still in use. 
+
+\index{HeapMemMP.h@{HeapMemMP.h}!HeapMemMP\_\-S\_\-ALREADYSETUP@{HeapMemMP\_\-S\_\-ALREADYSETUP}}
+\index{HeapMemMP\_\-S\_\-ALREADYSETUP@{HeapMemMP\_\-S\_\-ALREADYSETUP}!HeapMemMP.h@{HeapMemMP.h}}
+\paragraph[{HeapMemMP\_\-S\_\-ALREADYSETUP}]{\setlength{\rightskip}{0pt plus 5cm}\#define HeapMemMP\_\-S\_\-ALREADYSETUP~1}\hfill\label{_heap_mem_m_p_8h_a62e81fa297f6eb3a9cbc154170fbd608}
+
+
+The module has been already setup. 
+
+\index{HeapMemMP.h@{HeapMemMP.h}!HeapMemMP\_\-S\_\-SUCCESS@{HeapMemMP\_\-S\_\-SUCCESS}}
+\index{HeapMemMP\_\-S\_\-SUCCESS@{HeapMemMP\_\-S\_\-SUCCESS}!HeapMemMP.h@{HeapMemMP.h}}
+\paragraph[{HeapMemMP\_\-S\_\-SUCCESS}]{\setlength{\rightskip}{0pt plus 5cm}\#define HeapMemMP\_\-S\_\-SUCCESS~0}\hfill\label{_heap_mem_m_p_8h_a220e8086edc8314cef6034e584b41c93}
+
+
+Operation is successful. 
+
+\index{HeapMemMP.h@{HeapMemMP.h}!HeapMemMP\_\-E\_\-FAIL@{HeapMemMP\_\-E\_\-FAIL}}
+\index{HeapMemMP\_\-E\_\-FAIL@{HeapMemMP\_\-E\_\-FAIL}!HeapMemMP.h@{HeapMemMP.h}}
+\paragraph[{HeapMemMP\_\-E\_\-FAIL}]{\setlength{\rightskip}{0pt plus 5cm}\#define HeapMemMP\_\-E\_\-FAIL~-\/1}\hfill\label{_heap_mem_m_p_8h_a080d0886b807af624599a98987a4470b}
+
+
+Generic failure. 
+
+\index{HeapMemMP.h@{HeapMemMP.h}!HeapMemMP\_\-E\_\-INVALIDARG@{HeapMemMP\_\-E\_\-INVALIDARG}}
+\index{HeapMemMP\_\-E\_\-INVALIDARG@{HeapMemMP\_\-E\_\-INVALIDARG}!HeapMemMP.h@{HeapMemMP.h}}
+\paragraph[{HeapMemMP\_\-E\_\-INVALIDARG}]{\setlength{\rightskip}{0pt plus 5cm}\#define HeapMemMP\_\-E\_\-INVALIDARG~-\/2}\hfill\label{_heap_mem_m_p_8h_ac9be05da1907e0e8d229ddba4d68af96}
+
+
+Argument passed to function is invalid. 
+
+\index{HeapMemMP.h@{HeapMemMP.h}!HeapMemMP\_\-E\_\-MEMORY@{HeapMemMP\_\-E\_\-MEMORY}}
+\index{HeapMemMP\_\-E\_\-MEMORY@{HeapMemMP\_\-E\_\-MEMORY}!HeapMemMP.h@{HeapMemMP.h}}
+\paragraph[{HeapMemMP\_\-E\_\-MEMORY}]{\setlength{\rightskip}{0pt plus 5cm}\#define HeapMemMP\_\-E\_\-MEMORY~-\/3}\hfill\label{_heap_mem_m_p_8h_ae16b106a9e2b1d56da7aa7310d6b4fc6}
+
+
+Operation resulted in memory failure. 
+
+\index{HeapMemMP.h@{HeapMemMP.h}!HeapMemMP\_\-E\_\-ALREADYEXISTS@{HeapMemMP\_\-E\_\-ALREADYEXISTS}}
+\index{HeapMemMP\_\-E\_\-ALREADYEXISTS@{HeapMemMP\_\-E\_\-ALREADYEXISTS}!HeapMemMP.h@{HeapMemMP.h}}
+\paragraph[{HeapMemMP\_\-E\_\-ALREADYEXISTS}]{\setlength{\rightskip}{0pt plus 5cm}\#define HeapMemMP\_\-E\_\-ALREADYEXISTS~-\/4}\hfill\label{_heap_mem_m_p_8h_a5c0844490d41dbf13f3746f6ff3b0fbb}
+
+
+The specified entity already exists. 
+
+\index{HeapMemMP.h@{HeapMemMP.h}!HeapMemMP\_\-E\_\-NOTFOUND@{HeapMemMP\_\-E\_\-NOTFOUND}}
+\index{HeapMemMP\_\-E\_\-NOTFOUND@{HeapMemMP\_\-E\_\-NOTFOUND}!HeapMemMP.h@{HeapMemMP.h}}
+\paragraph[{HeapMemMP\_\-E\_\-NOTFOUND}]{\setlength{\rightskip}{0pt plus 5cm}\#define HeapMemMP\_\-E\_\-NOTFOUND~-\/5}\hfill\label{_heap_mem_m_p_8h_aeee2167e40995fa214c8b26407937513}
+
+
+Unable to find the specified entity. 
+
+\index{HeapMemMP.h@{HeapMemMP.h}!HeapMemMP\_\-E\_\-TIMEOUT@{HeapMemMP\_\-E\_\-TIMEOUT}}
+\index{HeapMemMP\_\-E\_\-TIMEOUT@{HeapMemMP\_\-E\_\-TIMEOUT}!HeapMemMP.h@{HeapMemMP.h}}
+\paragraph[{HeapMemMP\_\-E\_\-TIMEOUT}]{\setlength{\rightskip}{0pt plus 5cm}\#define HeapMemMP\_\-E\_\-TIMEOUT~-\/6}\hfill\label{_heap_mem_m_p_8h_a59e36864ebc19f31f38801cd4f6b8927}
+
+
+Operation timed out. 
+
+\index{HeapMemMP.h@{HeapMemMP.h}!HeapMemMP\_\-E\_\-INVALIDSTATE@{HeapMemMP\_\-E\_\-INVALIDSTATE}}
+\index{HeapMemMP\_\-E\_\-INVALIDSTATE@{HeapMemMP\_\-E\_\-INVALIDSTATE}!HeapMemMP.h@{HeapMemMP.h}}
+\paragraph[{HeapMemMP\_\-E\_\-INVALIDSTATE}]{\setlength{\rightskip}{0pt plus 5cm}\#define HeapMemMP\_\-E\_\-INVALIDSTATE~-\/7}\hfill\label{_heap_mem_m_p_8h_ae59ad8c5c037aef22e16cf90beabc93c}
+
+
+Module is not initialized. 
+
+\index{HeapMemMP.h@{HeapMemMP.h}!HeapMemMP\_\-E\_\-OSFAILURE@{HeapMemMP\_\-E\_\-OSFAILURE}}
+\index{HeapMemMP\_\-E\_\-OSFAILURE@{HeapMemMP\_\-E\_\-OSFAILURE}!HeapMemMP.h@{HeapMemMP.h}}
+\paragraph[{HeapMemMP\_\-E\_\-OSFAILURE}]{\setlength{\rightskip}{0pt plus 5cm}\#define HeapMemMP\_\-E\_\-OSFAILURE~-\/8}\hfill\label{_heap_mem_m_p_8h_a125464679440a2d5ec7f80e9a40035c1}
+
+
+A failure occurred in an OS-\/specific call. 
+
+\index{HeapMemMP.h@{HeapMemMP.h}!HeapMemMP\_\-E\_\-RESOURCE@{HeapMemMP\_\-E\_\-RESOURCE}}
+\index{HeapMemMP\_\-E\_\-RESOURCE@{HeapMemMP\_\-E\_\-RESOURCE}!HeapMemMP.h@{HeapMemMP.h}}
+\paragraph[{HeapMemMP\_\-E\_\-RESOURCE}]{\setlength{\rightskip}{0pt plus 5cm}\#define HeapMemMP\_\-E\_\-RESOURCE~-\/9}\hfill\label{_heap_mem_m_p_8h_a59a512963c177b9e026486d270c3556f}
+
+
+Specified resource is not available. 
+
+\index{HeapMemMP.h@{HeapMemMP.h}!HeapMemMP\_\-E\_\-RESTART@{HeapMemMP\_\-E\_\-RESTART}}
+\index{HeapMemMP\_\-E\_\-RESTART@{HeapMemMP\_\-E\_\-RESTART}!HeapMemMP.h@{HeapMemMP.h}}
+\paragraph[{HeapMemMP\_\-E\_\-RESTART}]{\setlength{\rightskip}{0pt plus 5cm}\#define HeapMemMP\_\-E\_\-RESTART~-\/10}\hfill\label{_heap_mem_m_p_8h_a50fc296659efef22fea5863af26930d5}
+
+
+Operation was interrupted. Please restart the operation. 
+
+
+
+\subsubsection{Typedef Documentation}
+\index{HeapMemMP.h@{HeapMemMP.h}!HeapMemMP\_\-Handle@{HeapMemMP\_\-Handle}}
+\index{HeapMemMP\_\-Handle@{HeapMemMP\_\-Handle}!HeapMemMP.h@{HeapMemMP.h}}
+\paragraph[{HeapMemMP\_\-Handle}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct HeapMemMP\_\-Object$\ast$ {\bf HeapMemMP\_\-Handle}}\hfill\label{_heap_mem_m_p_8h_a9aa6360e22c2f5f387c5aba52a1a8522}
+
+
+HeapMemMP\_\-Handle type. 
+
+\index{HeapMemMP.h@{HeapMemMP.h}!HeapMemMP\_\-Params@{HeapMemMP\_\-Params}}
+\index{HeapMemMP\_\-Params@{HeapMemMP\_\-Params}!HeapMemMP.h@{HeapMemMP.h}}
+\paragraph[{HeapMemMP\_\-Params}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf HeapMemMP\_\-Params}  {\bf HeapMemMP\_\-Params}}\hfill\label{_heap_mem_m_p_8h_a888191d73ac615e5335b1add34db69e8}
+
+
+Structure defining parameters for the HeapMemMP module. 
+
+\index{HeapMemMP.h@{HeapMemMP.h}!HeapMemMP\_\-ExtendedStats@{HeapMemMP\_\-ExtendedStats}}
+\index{HeapMemMP\_\-ExtendedStats@{HeapMemMP\_\-ExtendedStats}!HeapMemMP.h@{HeapMemMP.h}}
+\paragraph[{HeapMemMP\_\-ExtendedStats}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf HeapMemMP\_\-ExtendedStats}  {\bf HeapMemMP\_\-ExtendedStats}}\hfill\label{_heap_mem_m_p_8h_a366cf280eda1086a46528b999b035618}
+
+
+Stats structure for the HeapMemMP\_\-getExtendedStats API. 
+
+
+
+\subsubsection{Function Documentation}
+\index{HeapMemMP.h@{HeapMemMP.h}!HeapMemMP\_\-close@{HeapMemMP\_\-close}}
+\index{HeapMemMP\_\-close@{HeapMemMP\_\-close}!HeapMemMP.h@{HeapMemMP.h}}
+\paragraph[{HeapMemMP\_\-close}]{\setlength{\rightskip}{0pt plus 5cm}Int HeapMemMP\_\-close (
+\begin{DoxyParamCaption}
+\item[{{\bf HeapMemMP\_\-Handle} $\ast$}]{ handlePtr}
+\end{DoxyParamCaption}
+)}\hfill\label{_heap_mem_m_p_8h_ac3fcc6ef980577f060f738f3485013f1}
+
+
+Close a HeapMemMP instance. 
+
+Closing an instance will free local memory consumed by the opened instance. All opened instances should be closed before the instance is deleted.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in,out}  & {\em handlePtr} & Pointer to handle returned from \hyperlink{_heap_mem_m_p_8h_a05598b30cd1a93e88e59cea962d1e976}{HeapMemMP\_\-open} \\
+\hline
+\end{DoxyParams}
+\index{HeapMemMP.h@{HeapMemMP.h}!HeapMemMP\_\-create@{HeapMemMP\_\-create}}
+\index{HeapMemMP\_\-create@{HeapMemMP\_\-create}!HeapMemMP.h@{HeapMemMP.h}}
+\paragraph[{HeapMemMP\_\-create}]{\setlength{\rightskip}{0pt plus 5cm}{\bf HeapMemMP\_\-Handle} HeapMemMP\_\-create (
+\begin{DoxyParamCaption}
+\item[{const {\bf HeapMemMP\_\-Params} $\ast$}]{ params}
+\end{DoxyParamCaption}
+)}\hfill\label{_heap_mem_m_p_8h_a3ee79b7e84e8eaef048c919be45e0a7c}
+
+
+Create a HeapMemMP instance. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em params} & HeapMemMP parameters\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+HeapMemMP Handle 
+\end{DoxyReturn}
+\index{HeapMemMP.h@{HeapMemMP.h}!HeapMemMP\_\-delete@{HeapMemMP\_\-delete}}
+\index{HeapMemMP\_\-delete@{HeapMemMP\_\-delete}!HeapMemMP.h@{HeapMemMP.h}}
+\paragraph[{HeapMemMP\_\-delete}]{\setlength{\rightskip}{0pt plus 5cm}Int HeapMemMP\_\-delete (
+\begin{DoxyParamCaption}
+\item[{{\bf HeapMemMP\_\-Handle} $\ast$}]{ handlePtr}
+\end{DoxyParamCaption}
+)}\hfill\label{_heap_mem_m_p_8h_a0041a019dcc514bf6de66997a3383a02}
+
+
+Delete a created HeapMemMP instance. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in,out}  & {\em handlePtr} & Pointer to handle to delete. \\
+\hline
+\end{DoxyParams}
+\index{HeapMemMP.h@{HeapMemMP.h}!HeapMemMP\_\-open@{HeapMemMP\_\-open}}
+\index{HeapMemMP\_\-open@{HeapMemMP\_\-open}!HeapMemMP.h@{HeapMemMP.h}}
+\paragraph[{HeapMemMP\_\-open}]{\setlength{\rightskip}{0pt plus 5cm}Int HeapMemMP\_\-open (
+\begin{DoxyParamCaption}
+\item[{String}]{ name, }
+\item[{{\bf HeapMemMP\_\-Handle} $\ast$}]{ handlePtr}
+\end{DoxyParamCaption}
+)}\hfill\label{_heap_mem_m_p_8h_a05598b30cd1a93e88e59cea962d1e976}
+
+
+Open a created HeapMemMP instance. 
+
+Once an instance is created, an open can be performed. The open is used to gain access to the same HeapMemMP instance. Generally an instance is created on one processor and opened on the other processor.
+
+The open returns a HeapMemMP instance handle like the create, however the open does not initialize the shared memory. The supplied name is used to identify the created instance.
+
+Call \hyperlink{_heap_mem_m_p_8h_ac3fcc6ef980577f060f738f3485013f1}{HeapMemMP\_\-close} when the opened instance is not longer needed.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em name} & Name of created HeapMemMP instance \\
+\hline
+\mbox{\tt out}  & {\em handlePtr} & Pointer to HeapMemMP handle to be opened\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+HeapMemMP status:
+\begin{DoxyItemize}
+\item \hyperlink{_heap_mem_m_p_8h_a220e8086edc8314cef6034e584b41c93}{HeapMemMP\_\-S\_\-SUCCESS}: Heap successfully opened
+\item \hyperlink{_heap_mem_m_p_8h_aeee2167e40995fa214c8b26407937513}{HeapMemMP\_\-E\_\-NOTFOUND}: Heap is not yet ready to be opened.
+\item \hyperlink{_heap_mem_m_p_8h_a080d0886b807af624599a98987a4470b}{HeapMemMP\_\-E\_\-FAIL}: A general failure has occurred
+\end{DoxyItemize}
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{_heap_mem_m_p_8h_ac3fcc6ef980577f060f738f3485013f1}{HeapMemMP\_\-close} 
+\end{DoxySeeAlso}
+\index{HeapMemMP.h@{HeapMemMP.h}!HeapMemMP\_\-Params\_\-init@{HeapMemMP\_\-Params\_\-init}}
+\index{HeapMemMP\_\-Params\_\-init@{HeapMemMP\_\-Params\_\-init}!HeapMemMP.h@{HeapMemMP.h}}
+\paragraph[{HeapMemMP\_\-Params\_\-init}]{\setlength{\rightskip}{0pt plus 5cm}Void HeapMemMP\_\-Params\_\-init (
+\begin{DoxyParamCaption}
+\item[{{\bf HeapMemMP\_\-Params} $\ast$}]{ params}
+\end{DoxyParamCaption}
+)}\hfill\label{_heap_mem_m_p_8h_ade4b085199639e1184e221725e03a962}
+
+
+Initialize a HeapMemMP parameters struct. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt out}  & {\em params} & Pointer to GateMP parameters \\
+\hline
+\end{DoxyParams}
+\index{HeapMemMP.h@{HeapMemMP.h}!HeapMemMP\_\-alloc@{HeapMemMP\_\-alloc}}
+\index{HeapMemMP\_\-alloc@{HeapMemMP\_\-alloc}!HeapMemMP.h@{HeapMemMP.h}}
+\paragraph[{HeapMemMP\_\-alloc}]{\setlength{\rightskip}{0pt plus 5cm}Void$\ast$ HeapMemMP\_\-alloc (
+\begin{DoxyParamCaption}
+\item[{{\bf HeapMemMP\_\-Handle}}]{ handle, }
+\item[{SizeT}]{ size, }
+\item[{SizeT}]{ align}
+\end{DoxyParamCaption}
+)}\hfill\label{_heap_mem_m_p_8h_a04ab3af78110251e5f22f9bc9a961a95}
+
+
+Allocate a block of memory of specified size and alignment. 
+
+The actual block returned may be larger than requested to satisfy alignment requirements.
+
+HeapMemMP\_\-alloc will lock the heap using the HeapMemMP gate while it traverses the list of free blocks to find a large enough block for the request.
+
+Guidelines for using large heaps and multiple alloc() calls.
+\begin{DoxyItemize}
+\item If possible, allocate larger blocks first. Previous allocations of small memory blocks can reduce the size of the blocks available for larger memory allocations.
+\item Realize that alloc() can fail even if the heap contains a sufficient absolute amount of unalloccated space. This is because the largest free memory block may be smaller than total amount of unallocated memory.
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em handle} & Handle to previously created/opened instance. \\
+\hline
+\mbox{\tt in}  & {\em size} & Size to be allocated (in MADUs) \\
+\hline
+\mbox{\tt in}  & {\em align} & Alignment for allocation (power of 2)\\
+\hline
+\end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{_heap_mem_m_p_8h_af424678d0776b662701672c9b737e0bc}{HeapMemMP\_\-free} 
+\end{DoxySeeAlso}
+\index{HeapMemMP.h@{HeapMemMP.h}!HeapMemMP\_\-free@{HeapMemMP\_\-free}}
+\index{HeapMemMP\_\-free@{HeapMemMP\_\-free}!HeapMemMP.h@{HeapMemMP.h}}
+\paragraph[{HeapMemMP\_\-free}]{\setlength{\rightskip}{0pt plus 5cm}Void HeapMemMP\_\-free (
+\begin{DoxyParamCaption}
+\item[{{\bf HeapMemMP\_\-Handle}}]{ handle, }
+\item[{Ptr}]{ block, }
+\item[{SizeT}]{ size}
+\end{DoxyParamCaption}
+)}\hfill\label{_heap_mem_m_p_8h_af424678d0776b662701672c9b737e0bc}
+
+
+Frees a block of memory. 
+
+free() places the memory block specified by addr and size back into the free pool of the heap specified. The newly freed block is combined with any adjacent free blocks. The space is then available for further allocation by alloc().
+
+\hyperlink{_heap_mem_m_p_8h_af424678d0776b662701672c9b737e0bc}{HeapMemMP\_\-free} will lock the heap using the HeapMemMP gate if one is specified or the system GateMP if not.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em handle} & Handle to previously created/opened instance. \\
+\hline
+\mbox{\tt in}  & {\em block} & Block of memory to be freed. \\
+\hline
+\mbox{\tt in}  & {\em size} & Size to be freed (in MADUs)\\
+\hline
+\end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{_heap_mem_m_p_8h_a04ab3af78110251e5f22f9bc9a961a95}{HeapMemMP\_\-alloc} 
+\end{DoxySeeAlso}
+\index{HeapMemMP.h@{HeapMemMP.h}!HeapMemMP\_\-getExtendedStats@{HeapMemMP\_\-getExtendedStats}}
+\index{HeapMemMP\_\-getExtendedStats@{HeapMemMP\_\-getExtendedStats}!HeapMemMP.h@{HeapMemMP.h}}
+\paragraph[{HeapMemMP\_\-getExtendedStats}]{\setlength{\rightskip}{0pt plus 5cm}Void HeapMemMP\_\-getExtendedStats (
+\begin{DoxyParamCaption}
+\item[{{\bf HeapMemMP\_\-Handle}}]{ handle, }
+\item[{{\bf HeapMemMP\_\-ExtendedStats} $\ast$}]{ stats}
+\end{DoxyParamCaption}
+)}\hfill\label{_heap_mem_m_p_8h_a1ee8a7319a0ed2344dea9d7b1bbbd3ee}
+
+
+Get extended memory statistics. 
+
+This function retrieves extended statistics for a HeapMemMP instance. Refer to \hyperlink{struct_heap_mem_m_p___extended_stats}{HeapMemMP\_\-ExtendedStats} for more information regarding what information is returned.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em handle} & Handle to previously created/opened instance. \\
+\hline
+\mbox{\tt out}  & {\em stats} & ExtendedStats structure\\
+\hline
+\end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+
+\end{DoxySeeAlso}
+\index{HeapMemMP.h@{HeapMemMP.h}!HeapMemMP\_\-getStats@{HeapMemMP\_\-getStats}}
+\index{HeapMemMP\_\-getStats@{HeapMemMP\_\-getStats}!HeapMemMP.h@{HeapMemMP.h}}
+\paragraph[{HeapMemMP\_\-getStats}]{\setlength{\rightskip}{0pt plus 5cm}Void HeapMemMP\_\-getStats (
+\begin{DoxyParamCaption}
+\item[{{\bf HeapMemMP\_\-Handle}}]{ handle, }
+\item[{Ptr}]{ stats}
+\end{DoxyParamCaption}
+)}\hfill\label{_heap_mem_m_p_8h_a5ce7746f4d08dd3fb94e692f6f544b67}
+
+
+Get memory statistics. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em handle} & Handle to previously created/opened instance. \\
+\hline
+\mbox{\tt out}  & {\em stats} & Memory statistics structure\\
+\hline
+\end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+
+\end{DoxySeeAlso}
+\index{HeapMemMP.h@{HeapMemMP.h}!HeapMemMP\_\-restore@{HeapMemMP\_\-restore}}
+\index{HeapMemMP\_\-restore@{HeapMemMP\_\-restore}!HeapMemMP.h@{HeapMemMP.h}}
+\paragraph[{HeapMemMP\_\-restore}]{\setlength{\rightskip}{0pt plus 5cm}Void HeapMemMP\_\-restore (
+\begin{DoxyParamCaption}
+\item[{{\bf HeapMemMP\_\-Handle}}]{ handle}
+\end{DoxyParamCaption}
+)}\hfill\label{_heap_mem_m_p_8h_a8a610d9bdd7650bf42d52841915a42a0}
+
+
+Restore an instance to it's original created state. 
+
+This function restores an instance to its original created state. Any memory previously allocated from the heap is no longer valid after this API is called. This function does not check whether there is allocated memory or not.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em handle} & Handle to previously created/opened instance. \\
+\hline
+\end{DoxyParams}

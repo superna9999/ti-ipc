@@ -1,0 +1,82 @@
+\subsection{HeapBufMP\_\-Params Struct Reference}
+\label{struct_heap_buf_m_p___params}\index{HeapBufMP\_\-Params@{HeapBufMP\_\-Params}}
+
+
+Structure defining parameters for the HeapBufMP module.  
+
+
+
+
+{\ttfamily \#include $<$HeapBufMP.h$>$}
+
+\subsubsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+String \hyperlink{struct_heap_buf_m_p___params_aaefdf87660dc3b0a57d33f10791dcc02}{name}
+\item 
+UInt16 \hyperlink{struct_heap_buf_m_p___params_a22f33c326f94898613b8d40335be4eee}{regionId}
+\item 
+SizeT \hyperlink{struct_heap_buf_m_p___params_afc5038de12c1e9bf75d642c1081b74ac}{blockSize}
+\item 
+UInt \hyperlink{struct_heap_buf_m_p___params_a4e85da751892052ed1fddc3376f64d9d}{numBlocks}
+\item 
+SizeT \hyperlink{struct_heap_buf_m_p___params_a0b16778e64598aca34ee44c746374203}{align}
+\item 
+Bool \hyperlink{struct_heap_buf_m_p___params_a1ebbb52b6985282c23f534da4ac27eaa}{exact}
+\item 
+\hyperlink{_gate_m_p_8h_ad5bb259f928a14e98d973334bc60ebb3}{GateMP\_\-Handle} \hyperlink{struct_heap_buf_m_p___params_a3b1ef95defb6c91953bd53050489644e}{gate}
+\end{DoxyCompactItemize}
+
+
+\subsubsection{Detailed Description}
+Structure defining parameters for the HeapBufMP module. 
+
+\subsubsection{Field Documentation}
+\index{HeapBufMP\_\-Params@{HeapBufMP\_\-Params}!name@{name}}
+\index{name@{name}!HeapBufMP_Params@{HeapBufMP\_\-Params}}
+\paragraph[{name}]{\setlength{\rightskip}{0pt plus 5cm}String {\bf HeapBufMP\_\-Params::name}}\hfill\label{struct_heap_buf_m_p___params_aaefdf87660dc3b0a57d33f10791dcc02}
+Name of this instance.
+
+The name (if not NULL) must be unique among all HeapBufMP instances in the entire system. When creating a new heap, it is necessary to supply an instance name.
+
+The name does not have to be persistent. The supplied string is copied into persistent memory. \index{HeapBufMP\_\-Params@{HeapBufMP\_\-Params}!regionId@{regionId}}
+\index{regionId@{regionId}!HeapBufMP_Params@{HeapBufMP\_\-Params}}
+\paragraph[{regionId}]{\setlength{\rightskip}{0pt plus 5cm}UInt16 {\bf HeapBufMP\_\-Params::regionId}}\hfill\label{struct_heap_buf_m_p___params_a22f33c326f94898613b8d40335be4eee}
+Shared region ID
+
+The index corresponding to the shared region from which shared memory will be allocated. \index{HeapBufMP\_\-Params@{HeapBufMP\_\-Params}!blockSize@{blockSize}}
+\index{blockSize@{blockSize}!HeapBufMP_Params@{HeapBufMP\_\-Params}}
+\paragraph[{blockSize}]{\setlength{\rightskip}{0pt plus 5cm}SizeT {\bf HeapBufMP\_\-Params::blockSize}}\hfill\label{struct_heap_buf_m_p___params_afc5038de12c1e9bf75d642c1081b74ac}
+Size (in MAUs) of each block.
+
+HeapBufMP will round the blockSize up to the nearest multiple of the alignment, so the actual blockSize may be larger. When creating a HeapBufMP dynamically, this needs to be taken into account to determine the proper buffer size to pass in.
+
+Required parameter.
+
+The default size of the blocks is 0 MAUs. \index{HeapBufMP\_\-Params@{HeapBufMP\_\-Params}!numBlocks@{numBlocks}}
+\index{numBlocks@{numBlocks}!HeapBufMP_Params@{HeapBufMP\_\-Params}}
+\paragraph[{numBlocks}]{\setlength{\rightskip}{0pt plus 5cm}UInt {\bf HeapBufMP\_\-Params::numBlocks}}\hfill\label{struct_heap_buf_m_p___params_a4e85da751892052ed1fddc3376f64d9d}
+Number of fixed-\/size blocks.
+
+This is a required parameter for all new HeapBufMP instances. \index{HeapBufMP\_\-Params@{HeapBufMP\_\-Params}!align@{align}}
+\index{align@{align}!HeapBufMP_Params@{HeapBufMP\_\-Params}}
+\paragraph[{align}]{\setlength{\rightskip}{0pt plus 5cm}SizeT {\bf HeapBufMP\_\-Params::align}}\hfill\label{struct_heap_buf_m_p___params_a0b16778e64598aca34ee44c746374203}
+Alignment (in MAUs) of each block.
+
+The alignment must be a power of 2. If the value 0 is specified, the value will be changed to meet minimum structure alignment requirements and the cache alignment size of the region in which the heap will be placed. Therefore, the actual alignment may be larger.
+
+The default alignment is 0. \index{HeapBufMP\_\-Params@{HeapBufMP\_\-Params}!exact@{exact}}
+\index{exact@{exact}!HeapBufMP_Params@{HeapBufMP\_\-Params}}
+\paragraph[{exact}]{\setlength{\rightskip}{0pt plus 5cm}Bool {\bf HeapBufMP\_\-Params::exact}}\hfill\label{struct_heap_buf_m_p___params_a1ebbb52b6985282c23f534da4ac27eaa}
+Use exact matching
+
+Setting this flag will allow allocation only if the requested size is equal to (rather than less than or equal to) the buffer's block size. \index{HeapBufMP\_\-Params@{HeapBufMP\_\-Params}!gate@{gate}}
+\index{gate@{gate}!HeapBufMP_Params@{HeapBufMP\_\-Params}}
+\paragraph[{gate}]{\setlength{\rightskip}{0pt plus 5cm}{\bf GateMP\_\-Handle} {\bf HeapBufMP\_\-Params::gate}}\hfill\label{struct_heap_buf_m_p___params_a3b1ef95defb6c91953bd53050489644e}
+GateMP used for critical region management of the shared memory
+
+Using the default value of NULL will result in use of the GateMP system gate for context protection. 
+
+The documentation for this struct was generated from the following file:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{_heap_buf_m_p_8h}{HeapBufMP.h}\end{DoxyCompactItemize}

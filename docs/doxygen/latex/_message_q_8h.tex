@@ -1,0 +1,1093 @@
+\subsection{MessageQ.h File Reference}
+\label{_message_q_8h}\index{MessageQ.h@{MessageQ.h}}
+
+
+\subsubsection{Detailed Description}
+MessageQ Manager. ============================================================================
+
+The MessageQ module supports the structured sending and receiving of variable length messages. This module can be used for homogeneous (DSP to DSP) or heterogeneous (Arm to DSP) multi-\/processor messaging.
+
+MessageQ provides more sophisticated messaging than other modules. It is typically used for complex situations such as multi-\/processor messaging.
+
+The following are key features of the MessageQ module:
+\begin{DoxyItemize}
+\item Writers and readers can be relocated to another processor with no runtime code changes.
+\item Timeouts are allowed when receiving messages.
+\item Readers can determine the writer and reply back.
+\item Receiving a message is deterministic when the timeout is zero.
+\item Messages can reside on any message queue.
+\item Supports zero-\/copy transfers.
+\item Can send and receive from any type of thread.
+\item Notification mechanism is specified by application.
+\item Allows QoS (quality of service) on message buffer pools. For example, using specific buffer pools for specific message queues.
+\end{DoxyItemize}
+
+Messages are sent and received by being placed on and removed from a message queue. A reader is a thread that gets (reads) messages from a message queue. A writer is a thread that puts (writes) a message to a message queue. Each message queue has one reader and can have many writers. A thread may read from or write to multiple message queues.
+
+Conceptually, the reader thread owns a message queue. The reader thread creates a message queue. The writer threads open a created message queue to get access to them.
+
+Message queues are identified by a system-\/wide unique name. Internally, MessageQ uses the NameServer module for managing these names. The names are used for opening a message queue.
+
+Messages must be allocated from the MessageQ module. Once a message is allocated, it can be sent to any message queue. Once a message is sent, the writer loses ownership of the message and should not attempt to modify the message. Once the reader receives the message, it owns the message. It may either free the message or re-\/use the message.
+
+Messages in a message queue can be of variable length. The only requirement is that the first field in the definition of a message must be a \#\hyperlink{struct_message_q___msg_header}{MessageQ\_\-MsgHeader} structure. For example: 
+\begin{DoxyCode}
+  typedef struct MyMsg {
+      MessageQ_MsgHeader header;
+      ...
+  } MyMsg;
+\end{DoxyCode}
+
+
+The MessageQ API uses the \hyperlink{struct_message_q___msg_header}{MessageQ\_\-MsgHeader} internally. Your application should not modify or directly access the fields in the \hyperlink{struct_message_q___msg_header}{MessageQ\_\-MsgHeader}.
+
+All messages sent via the MessageQ module must be allocated from a heap. The heap can also be used for other memory allocation not related to MessageQ.
+
+An application can use multiple heaps. The purpose of having multiple heaps is to allow an application to regulate its message usage. For example, an application can allocate critical messages from one heap of fast on-\/chip memory and non-\/critical messages from another heap of slower external memory.
+
+The \hyperlink{_message_q_8h_ab74ba85e9c7ebbb1a888df871fd2a6c6}{MessageQ\_\-registerHeap} API is used to assign a MessageQ heapId to a heap. When allocating a message, the heapId is used, not the heap handle. This heapId is actually placed into the message (part of the \#\hyperlink{struct_message_q___msg_header}{MessageQ\_\-MsgHeader}). Care must be taken when assigning heapIds. Refer to the \hyperlink{_message_q_8h_ab74ba85e9c7ebbb1a888df871fd2a6c6}{MessageQ\_\-registerHeap} API description for more details.
+
+MessageQ also supports the usage of messages that are not allocated via the \hyperlink{_message_q_8h_ad8de6381a05a4d8a672d06a3b5676a24}{MessageQ\_\-alloc} function. Please refer to the \hyperlink{_message_q_8h_a5b627fa66c267f53cccb0a960fe23a64}{MessageQ\_\-staticMsgInit} function description for more details.
+
+MessageQ supports reads/writes of different thread models. This is accomplished by having the creator of the message queue specify a synchronizer via the MessageQ\_\-Params::synchronizer configuration parameter. The synchronizer is signaled whenever the \hyperlink{_message_q_8h_aa628f9bf897924f61d6adfba3f82fa8d}{MessageQ\_\-put} is called. The synchronizer waits if \hyperlink{_message_q_8h_aaeb270f6b50d96f1e1dd134591ffc380}{MessageQ\_\-get} is called and there are no messages.
+
+Since ISyncs are binary, the reader must drain the message queue of all messages before waiting for another signal. For example, if the reader was a SYSBIOS Swi, the synchronizer instance could be a SyncSwi. If a \hyperlink{_message_q_8h_aa628f9bf897924f61d6adfba3f82fa8d}{MessageQ\_\-put} was called, the Swi\_\-post() would be called. The Swi would run and it must call \hyperlink{_message_q_8h_aaeb270f6b50d96f1e1dd134591ffc380}{MessageQ\_\-get} until no messages are returned.
+
+The MessageQ header should be included in an application as follows: 
+\begin{DoxyCode}
+  #include <ti/ipc/MessageQ.h>
+\end{DoxyCode}
+
+
+\begin{DoxyVersion}{Version}
+0.00.01
+\end{DoxyVersion}
+============================================================================ {\ttfamily \#include $<$ti/ipc/MultiProc.h$>$}\par
+Include dependency graph for MessageQ.h:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=123pt]{_message_q_8h__incl}
+\end{center}
+\end{figure}
+\subsubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct_message_q___params}{MessageQ\_\-Params}
+\begin{DoxyCompactList}\small\item\em Structure defining parameters for the MessageQ module. \item\end{DoxyCompactList}\item 
+struct \hyperlink{struct_message_q___msg_header}{MessageQ\_\-MsgHeader}
+\begin{DoxyCompactList}\small\item\em Required first field in every message. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsubsection*{Defines}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{_message_q_8h_aaccc1e5cf87160e123d1eee033d2ad75}{MessageQ\_\-S\_\-BUSY}~2
+\begin{DoxyCompactList}\small\item\em The resource is still in use. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_message_q_8h_ae4bc8b4de93c57b77110dc473b16108f}{MessageQ\_\-S\_\-ALREADYSETUP}~1
+\begin{DoxyCompactList}\small\item\em The module has been already setup. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_message_q_8h_a1643901e74764002f880ccc408691de6}{MessageQ\_\-S\_\-SUCCESS}~0
+\begin{DoxyCompactList}\small\item\em Operation is successful. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_message_q_8h_a19b5749722c26050d2e56c2104f982fe}{MessageQ\_\-E\_\-FAIL}~-\/1
+\begin{DoxyCompactList}\small\item\em Operation is not successful. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_message_q_8h_a1855a3c9b16a1fff0e24b82beaa3dd58}{MessageQ\_\-E\_\-INVALIDARG}~-\/2
+\begin{DoxyCompactList}\small\item\em There is an invalid argument. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_message_q_8h_a1205c1ab4a71a4850d836ff6aa6bbfeb}{MessageQ\_\-E\_\-MEMORY}~-\/3
+\begin{DoxyCompactList}\small\item\em Operation resulted in memory failure. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_message_q_8h_ad8d156d79a68fada5951aef246dcda0d}{MessageQ\_\-E\_\-ALREADYEXISTS}~-\/4
+\begin{DoxyCompactList}\small\item\em The specified entity already exists. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_message_q_8h_ab629c8afd0ce8a14f60ee791fdb7c3e4}{MessageQ\_\-E\_\-NOTFOUND}~-\/5
+\begin{DoxyCompactList}\small\item\em Unable to find the specified entity. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_message_q_8h_a7aa8fb2d3e83b747e767f1c117a657c7}{MessageQ\_\-E\_\-TIMEOUT}~-\/6
+\begin{DoxyCompactList}\small\item\em Operation timed out. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_message_q_8h_a52b7b795b2970498c39d71647a11685b}{MessageQ\_\-E\_\-INVALIDSTATE}~-\/7
+\begin{DoxyCompactList}\small\item\em Module is not initialized. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_message_q_8h_a8a0891b652f3cd1a15ebdd7a4d030d09}{MessageQ\_\-E\_\-OSFAILURE}~-\/8
+\begin{DoxyCompactList}\small\item\em A failure occurred in an OS-\/specific call. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_message_q_8h_af713143259d456df28379635afbbb398}{MessageQ\_\-E\_\-RESOURCE}~-\/9
+\begin{DoxyCompactList}\small\item\em Specified resource is not available. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_message_q_8h_a955261f8c7412eab163bff9349591927}{MessageQ\_\-E\_\-RESTART}~-\/10
+\begin{DoxyCompactList}\small\item\em Operation was interrupted. Please restart the operation. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_message_q_8h_abb81e5b9fa7bd062de50e485cd812455}{MessageQ\_\-E\_\-INVALIDMSG}~-\/11
+\begin{DoxyCompactList}\small\item\em An invalid message was encountered. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_message_q_8h_af8e0e7cec06ca6f23694547f0c3737e0}{MessageQ\_\-E\_\-NOTOWNER}~-\/12
+\begin{DoxyCompactList}\small\item\em Not the owner. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_message_q_8h_a13e31752ee00b731e2cb9a49d101409b}{MessageQ\_\-E\_\-REMOTEACTIVE}~-\/13
+\begin{DoxyCompactList}\small\item\em Operation resulted in error. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_message_q_8h_a1d39a4db7701897b3160afdba7ba8827}{MessageQ\_\-E\_\-INVALIDHEAPID}~-\/14
+\begin{DoxyCompactList}\small\item\em An invalid heap id was encountered. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_message_q_8h_a00768dde3394e2ec03ee7b7b077fdac5}{MessageQ\_\-E\_\-INVALIDPROCID}~-\/15
+\begin{DoxyCompactList}\small\item\em An invalid MultiProc id was encountered. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_message_q_8h_aaa9c3ea12ca80e1d3ee4d0d2e30df7aa}{MessageQ\_\-E\_\-MAXREACHED}~-\/16
+\begin{DoxyCompactList}\small\item\em The max has been reached. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_message_q_8h_a62a3fe6b3b29f33cb5b148ca7c0e4a17}{MessageQ\_\-E\_\-UNREGISTEREDHEAPID}~-\/17
+\begin{DoxyCompactList}\small\item\em Attempting to use an unregistered heap id. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_message_q_8h_a0802e8f4b461e84ddef5a8241432c00b}{MessageQ\_\-E\_\-CANNOTFREESTATICMSG}~-\/18
+\begin{DoxyCompactList}\small\item\em Trying to free a statically initialized message. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_message_q_8h_a320bbc58b6a523f70d9866a54d176b44}{MessageQ\_\-E\_\-UNBLOCKED}~-\/19
+\begin{DoxyCompactList}\small\item\em MessageQ was unblocked. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_message_q_8h_a9218a5f44331562bea6284890689c2b5}{MessageQ\_\-FOREVER}~$\sim$(0)
+\begin{DoxyCompactList}\small\item\em Used as the timeout value to specify wait forever. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_message_q_8h_a370a69d26238b17087490483350a0731}{MessageQ\_\-INVALIDMSGID}~0xffff
+\begin{DoxyCompactList}\small\item\em Invalid message id. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_message_q_8h_aa4a5fa703505bd746c9f954a2ffcd43e}{MessageQ\_\-INVALIDMESSAGEQ}~0xffff
+\begin{DoxyCompactList}\small\item\em Invalid message queue. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_message_q_8h_a3cde3037a7d7bd3a7cf4291b939200c8}{MessageQ\_\-PRIORITYMASK}~0x3
+\begin{DoxyCompactList}\small\item\em Mask to extract priority setting. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_message_q_8h_a6e60f683b011d8c960790b1f395d092b}{MessageQ\_\-getDstQueue}(msg)
+\begin{DoxyCompactList}\small\item\em Extract the destination queue from a message. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_message_q_8h_a12f1040474ebdb289f08205ecb30fd18}{MessageQ\_\-getMsgId}(msg)~(((\hyperlink{struct_message_q___msg_header}{MessageQ\_\-Msg}) (msg))-\/$>$msgId)
+\begin{DoxyCompactList}\small\item\em Retrieves the message ID of a message. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_message_q_8h_a8e3e82ba789ac47279fd35a4cf76d786}{MessageQ\_\-getMsgSize}(msg)~(((\hyperlink{struct_message_q___msg_header}{MessageQ\_\-Msg}) (msg))-\/$>$msgSize)
+\begin{DoxyCompactList}\small\item\em Returns the size of the specified message. This function is helpful when re-\/using a message. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_message_q_8h_ad5fc8c9c78eaa4d37d26c8b371b82765}{MessageQ\_\-getMsgPri}(msg)~((((\hyperlink{struct_message_q___msg_header}{MessageQ\_\-Msg}) (msg))-\/$>$flags \& MessageQ\_\-PRIORITYMASK))
+\begin{DoxyCompactList}\small\item\em Gets the message priority of a message. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_message_q_8h_a108ddf7170cf6f9fde0bb991768c33d0}{MessageQ\_\-getProcId}(queueId)~((UInt16)((queueId) $>$$>$ 16))
+\begin{DoxyCompactList}\small\item\em Returns the MultiProc processor id on which the queue resides. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_message_q_8h_a8af7731e0ea02352febe0f055438c5e5}{MessageQ\_\-getReplyQueue}(msg)
+\begin{DoxyCompactList}\small\item\em Retrieves the embedded source message queue from a message. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_message_q_8h_a1aa25d3081a17945aecf1b4c23cef49c}{MessageQ\_\-setMsgId}(msg, id)~((\hyperlink{struct_message_q___msg_header}{MessageQ\_\-Msg}) (msg))-\/$>$msgId = (id)
+\begin{DoxyCompactList}\small\item\em Sets the message id in a message. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_message_q_8h_abff2e5c8a9729a8ac1f429679534c611}{MessageQ\_\-setMsgPri}(msg, priority)~(((\hyperlink{struct_message_q___msg_header}{MessageQ\_\-Msg}) (msg))-\/$>$flags = ((priority) \& MessageQ\_\-PRIORITYMASK))
+\begin{DoxyCompactList}\small\item\em Sets the message priority of a message. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef UInt32 \hyperlink{_message_q_8h_a34dd32b58cf0476c2d90e3f702843297}{MessageQ\_\-QueueId}
+\begin{DoxyCompactList}\small\item\em Type used with MessageQ\_\-\mbox{[}open/set/get\mbox{]}ReplyQueue and MessageQ\_\-put. \item\end{DoxyCompactList}\item 
+typedef UInt16 \hyperlink{_message_q_8h_a22a5f41fd82f03f7c14f45dab647bada}{MessageQ\_\-QueueIndex}
+\begin{DoxyCompactList}\small\item\em Local queue index. \item\end{DoxyCompactList}\item 
+typedef struct MessageQ\_\-Object $\ast$ \hyperlink{_message_q_8h_a1d584ce08733ca864d81e1e64a41cf7a}{MessageQ\_\-Handle}
+\begin{DoxyCompactList}\small\item\em MessageQ\_\-Handle type. \item\end{DoxyCompactList}\item 
+typedef \hyperlink{struct_message_q___msg_header}{MessageQ\_\-MsgHeader} $\ast$ \hyperlink{_message_q_8h_ab675d3cdd0443a1ad05658d375458204}{MessageQ\_\-Msg}
+\begin{DoxyCompactList}\small\item\em Typedef for ease of use. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{_message_q_8h_a01e825f1f15fa12643eabea99ca76248}{MessageQ\_\-Priority} \{ \par
+\hyperlink{_message_q_8h_a01e825f1f15fa12643eabea99ca76248a12365e9d70b3fc967dc147e2f8a0d4fb}{MessageQ\_\-NORMALPRI} =  0, 
+\par
+\hyperlink{_message_q_8h_a01e825f1f15fa12643eabea99ca76248ae06ba6f7cd0cafb89a56b1224693755d}{MessageQ\_\-HIGHPRI} =  1, 
+\par
+\hyperlink{_message_q_8h_a01e825f1f15fa12643eabea99ca76248a3baaafcfd52556f649576a8c08748d03}{MessageQ\_\-RESERVEDPRI} =  2, 
+\par
+\hyperlink{_message_q_8h_a01e825f1f15fa12643eabea99ca76248a18496bc5d4650cd4eb8db0c399d95399}{MessageQ\_\-URGENTPRI} =  3
+ \}
+\begin{DoxyCompactList}\small\item\em Message priority. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+Void \hyperlink{_message_q_8h_a896b64c7afc22be66f1a6c3aa157537f}{MessageQ\_\-Params\_\-init} (\hyperlink{struct_message_q___params}{MessageQ\_\-Params} $\ast$params)
+\begin{DoxyCompactList}\small\item\em Initialize \hyperlink{struct_message_q___params}{MessageQ\_\-Params}. \item\end{DoxyCompactList}\item 
+\hyperlink{_message_q_8h_a1d584ce08733ca864d81e1e64a41cf7a}{MessageQ\_\-Handle} \hyperlink{_message_q_8h_a1f2be1c6bf60aa6e220cf5805052f727}{MessageQ\_\-create} (String name, const \hyperlink{struct_message_q___params}{MessageQ\_\-Params} $\ast$params)
+\begin{DoxyCompactList}\small\item\em Create a MessageQ instance. \item\end{DoxyCompactList}\item 
+Int \hyperlink{_message_q_8h_a10986c1a6b64d3ca07c38d1521ea16cd}{MessageQ\_\-delete} (\hyperlink{_message_q_8h_a1d584ce08733ca864d81e1e64a41cf7a}{MessageQ\_\-Handle} $\ast$handlePtr)
+\begin{DoxyCompactList}\small\item\em Delete a created MessageQ instance. \item\end{DoxyCompactList}\item 
+Int \hyperlink{_message_q_8h_af9e6bd0c1dbb236eb4a618211bf15325}{MessageQ\_\-open} (String name, \hyperlink{_message_q_8h_a34dd32b58cf0476c2d90e3f702843297}{MessageQ\_\-QueueId} $\ast$queueId)
+\begin{DoxyCompactList}\small\item\em Open a message queue. \item\end{DoxyCompactList}\item 
+Int \hyperlink{_message_q_8h_ab2cdb25f8e9fec3fe3f17a43c0b85bed}{MessageQ\_\-close} (\hyperlink{_message_q_8h_a34dd32b58cf0476c2d90e3f702843297}{MessageQ\_\-QueueId} $\ast$queueId)
+\begin{DoxyCompactList}\small\item\em Close the opened handle. \item\end{DoxyCompactList}\item 
+\hyperlink{struct_message_q___msg_header}{MessageQ\_\-Msg} \hyperlink{_message_q_8h_ad8de6381a05a4d8a672d06a3b5676a24}{MessageQ\_\-alloc} (UInt16 heapId, UInt32 size)
+\begin{DoxyCompactList}\small\item\em Allocates a message from the heap. \item\end{DoxyCompactList}\item 
+Int \hyperlink{_message_q_8h_ac7ac95bf02e7366b353e728b15d76852}{MessageQ\_\-free} (\hyperlink{struct_message_q___msg_header}{MessageQ\_\-Msg} msg)
+\begin{DoxyCompactList}\small\item\em Frees a message back to the heap. \item\end{DoxyCompactList}\item 
+Int \hyperlink{_message_q_8h_ab74ba85e9c7ebbb1a888df871fd2a6c6}{MessageQ\_\-registerHeap} (Ptr heap, UInt16 heapId)
+\begin{DoxyCompactList}\small\item\em Register a heap with MessageQ. \item\end{DoxyCompactList}\item 
+Int \hyperlink{_message_q_8h_a4258fb35928047e54b625009c86ec4ba}{MessageQ\_\-unregisterHeap} (UInt16 heapId)
+\begin{DoxyCompactList}\small\item\em Unregister a heap with MessageQ. \item\end{DoxyCompactList}\item 
+Void \hyperlink{_message_q_8h_a74dc311c0b89f6fcbb309a5a98ab349f}{MessageQ\_\-setMsgTrace} (\hyperlink{struct_message_q___msg_header}{MessageQ\_\-Msg} msg, Bool traceFlag)
+\begin{DoxyCompactList}\small\item\em Sets the message tracing flag on a given message. \item\end{DoxyCompactList}\item 
+Void \hyperlink{_message_q_8h_a5b627fa66c267f53cccb0a960fe23a64}{MessageQ\_\-staticMsgInit} (\hyperlink{struct_message_q___msg_header}{MessageQ\_\-Msg} msg, UInt32 size)
+\begin{DoxyCompactList}\small\item\em Initializes a message not obtained from MessageQ\_\-alloc. \item\end{DoxyCompactList}\item 
+Int \hyperlink{_message_q_8h_aaeb270f6b50d96f1e1dd134591ffc380}{MessageQ\_\-get} (\hyperlink{_message_q_8h_a1d584ce08733ca864d81e1e64a41cf7a}{MessageQ\_\-Handle} handle, \hyperlink{struct_message_q___msg_header}{MessageQ\_\-Msg} $\ast$msg, UInt timeout)
+\begin{DoxyCompactList}\small\item\em Gets a message from the message queue. \item\end{DoxyCompactList}\item 
+Int \hyperlink{_message_q_8h_aa628f9bf897924f61d6adfba3f82fa8d}{MessageQ\_\-put} (\hyperlink{_message_q_8h_a34dd32b58cf0476c2d90e3f702843297}{MessageQ\_\-QueueId} queueId, \hyperlink{struct_message_q___msg_header}{MessageQ\_\-Msg} msg)
+\begin{DoxyCompactList}\small\item\em Place a message onto a message queue. \item\end{DoxyCompactList}\item 
+Int \hyperlink{_message_q_8h_a5e2f02d046b2bb16dce6b41f9b4c5ad3}{MessageQ\_\-count} (\hyperlink{_message_q_8h_a1d584ce08733ca864d81e1e64a41cf7a}{MessageQ\_\-Handle} handle)
+\begin{DoxyCompactList}\small\item\em Returns the number of messages in a message queue. \item\end{DoxyCompactList}\item 
+UInt32 \hyperlink{_message_q_8h_af9d9030e493a5a6f961d84900e313623}{MessageQ\_\-getQueueId} (\hyperlink{_message_q_8h_a1d584ce08733ca864d81e1e64a41cf7a}{MessageQ\_\-Handle} handle)
+\begin{DoxyCompactList}\small\item\em Returns the QueueId associated with the handle. \item\end{DoxyCompactList}\item 
+Void \hyperlink{_message_q_8h_a2532f1ebf44ae91a8fd8f63a49e44802}{MessageQ\_\-setReplyQueue} (\hyperlink{_message_q_8h_a1d584ce08733ca864d81e1e64a41cf7a}{MessageQ\_\-Handle} handle, \hyperlink{struct_message_q___msg_header}{MessageQ\_\-Msg} msg)
+\begin{DoxyCompactList}\small\item\em Embeds a source message queue into a message. \item\end{DoxyCompactList}\item 
+Void \hyperlink{_message_q_8h_ae9491bc9f790e267836f27ad2e31d7de}{MessageQ\_\-unblock} (\hyperlink{_message_q_8h_a1d584ce08733ca864d81e1e64a41cf7a}{MessageQ\_\-Handle} handle)
+\begin{DoxyCompactList}\small\item\em Unblocks a MessageQ. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsubsection{Define Documentation}
+\index{MessageQ.h@{MessageQ.h}!MessageQ\_\-S\_\-BUSY@{MessageQ\_\-S\_\-BUSY}}
+\index{MessageQ\_\-S\_\-BUSY@{MessageQ\_\-S\_\-BUSY}!MessageQ.h@{MessageQ.h}}
+\paragraph[{MessageQ\_\-S\_\-BUSY}]{\setlength{\rightskip}{0pt plus 5cm}\#define MessageQ\_\-S\_\-BUSY~2}\hfill\label{_message_q_8h_aaccc1e5cf87160e123d1eee033d2ad75}
+
+
+The resource is still in use. 
+
+\index{MessageQ.h@{MessageQ.h}!MessageQ\_\-S\_\-ALREADYSETUP@{MessageQ\_\-S\_\-ALREADYSETUP}}
+\index{MessageQ\_\-S\_\-ALREADYSETUP@{MessageQ\_\-S\_\-ALREADYSETUP}!MessageQ.h@{MessageQ.h}}
+\paragraph[{MessageQ\_\-S\_\-ALREADYSETUP}]{\setlength{\rightskip}{0pt plus 5cm}\#define MessageQ\_\-S\_\-ALREADYSETUP~1}\hfill\label{_message_q_8h_ae4bc8b4de93c57b77110dc473b16108f}
+
+
+The module has been already setup. 
+
+\index{MessageQ.h@{MessageQ.h}!MessageQ\_\-S\_\-SUCCESS@{MessageQ\_\-S\_\-SUCCESS}}
+\index{MessageQ\_\-S\_\-SUCCESS@{MessageQ\_\-S\_\-SUCCESS}!MessageQ.h@{MessageQ.h}}
+\paragraph[{MessageQ\_\-S\_\-SUCCESS}]{\setlength{\rightskip}{0pt plus 5cm}\#define MessageQ\_\-S\_\-SUCCESS~0}\hfill\label{_message_q_8h_a1643901e74764002f880ccc408691de6}
+
+
+Operation is successful. 
+
+\index{MessageQ.h@{MessageQ.h}!MessageQ\_\-E\_\-FAIL@{MessageQ\_\-E\_\-FAIL}}
+\index{MessageQ\_\-E\_\-FAIL@{MessageQ\_\-E\_\-FAIL}!MessageQ.h@{MessageQ.h}}
+\paragraph[{MessageQ\_\-E\_\-FAIL}]{\setlength{\rightskip}{0pt plus 5cm}\#define MessageQ\_\-E\_\-FAIL~-\/1}\hfill\label{_message_q_8h_a19b5749722c26050d2e56c2104f982fe}
+
+
+Operation is not successful. 
+
+\index{MessageQ.h@{MessageQ.h}!MessageQ\_\-E\_\-INVALIDARG@{MessageQ\_\-E\_\-INVALIDARG}}
+\index{MessageQ\_\-E\_\-INVALIDARG@{MessageQ\_\-E\_\-INVALIDARG}!MessageQ.h@{MessageQ.h}}
+\paragraph[{MessageQ\_\-E\_\-INVALIDARG}]{\setlength{\rightskip}{0pt plus 5cm}\#define MessageQ\_\-E\_\-INVALIDARG~-\/2}\hfill\label{_message_q_8h_a1855a3c9b16a1fff0e24b82beaa3dd58}
+
+
+There is an invalid argument. 
+
+\index{MessageQ.h@{MessageQ.h}!MessageQ\_\-E\_\-MEMORY@{MessageQ\_\-E\_\-MEMORY}}
+\index{MessageQ\_\-E\_\-MEMORY@{MessageQ\_\-E\_\-MEMORY}!MessageQ.h@{MessageQ.h}}
+\paragraph[{MessageQ\_\-E\_\-MEMORY}]{\setlength{\rightskip}{0pt plus 5cm}\#define MessageQ\_\-E\_\-MEMORY~-\/3}\hfill\label{_message_q_8h_a1205c1ab4a71a4850d836ff6aa6bbfeb}
+
+
+Operation resulted in memory failure. 
+
+\index{MessageQ.h@{MessageQ.h}!MessageQ\_\-E\_\-ALREADYEXISTS@{MessageQ\_\-E\_\-ALREADYEXISTS}}
+\index{MessageQ\_\-E\_\-ALREADYEXISTS@{MessageQ\_\-E\_\-ALREADYEXISTS}!MessageQ.h@{MessageQ.h}}
+\paragraph[{MessageQ\_\-E\_\-ALREADYEXISTS}]{\setlength{\rightskip}{0pt plus 5cm}\#define MessageQ\_\-E\_\-ALREADYEXISTS~-\/4}\hfill\label{_message_q_8h_ad8d156d79a68fada5951aef246dcda0d}
+
+
+The specified entity already exists. 
+
+\index{MessageQ.h@{MessageQ.h}!MessageQ\_\-E\_\-NOTFOUND@{MessageQ\_\-E\_\-NOTFOUND}}
+\index{MessageQ\_\-E\_\-NOTFOUND@{MessageQ\_\-E\_\-NOTFOUND}!MessageQ.h@{MessageQ.h}}
+\paragraph[{MessageQ\_\-E\_\-NOTFOUND}]{\setlength{\rightskip}{0pt plus 5cm}\#define MessageQ\_\-E\_\-NOTFOUND~-\/5}\hfill\label{_message_q_8h_ab629c8afd0ce8a14f60ee791fdb7c3e4}
+
+
+Unable to find the specified entity. 
+
+\index{MessageQ.h@{MessageQ.h}!MessageQ\_\-E\_\-TIMEOUT@{MessageQ\_\-E\_\-TIMEOUT}}
+\index{MessageQ\_\-E\_\-TIMEOUT@{MessageQ\_\-E\_\-TIMEOUT}!MessageQ.h@{MessageQ.h}}
+\paragraph[{MessageQ\_\-E\_\-TIMEOUT}]{\setlength{\rightskip}{0pt plus 5cm}\#define MessageQ\_\-E\_\-TIMEOUT~-\/6}\hfill\label{_message_q_8h_a7aa8fb2d3e83b747e767f1c117a657c7}
+
+
+Operation timed out. 
+
+\index{MessageQ.h@{MessageQ.h}!MessageQ\_\-E\_\-INVALIDSTATE@{MessageQ\_\-E\_\-INVALIDSTATE}}
+\index{MessageQ\_\-E\_\-INVALIDSTATE@{MessageQ\_\-E\_\-INVALIDSTATE}!MessageQ.h@{MessageQ.h}}
+\paragraph[{MessageQ\_\-E\_\-INVALIDSTATE}]{\setlength{\rightskip}{0pt plus 5cm}\#define MessageQ\_\-E\_\-INVALIDSTATE~-\/7}\hfill\label{_message_q_8h_a52b7b795b2970498c39d71647a11685b}
+
+
+Module is not initialized. 
+
+\index{MessageQ.h@{MessageQ.h}!MessageQ\_\-E\_\-OSFAILURE@{MessageQ\_\-E\_\-OSFAILURE}}
+\index{MessageQ\_\-E\_\-OSFAILURE@{MessageQ\_\-E\_\-OSFAILURE}!MessageQ.h@{MessageQ.h}}
+\paragraph[{MessageQ\_\-E\_\-OSFAILURE}]{\setlength{\rightskip}{0pt plus 5cm}\#define MessageQ\_\-E\_\-OSFAILURE~-\/8}\hfill\label{_message_q_8h_a8a0891b652f3cd1a15ebdd7a4d030d09}
+
+
+A failure occurred in an OS-\/specific call. 
+
+\index{MessageQ.h@{MessageQ.h}!MessageQ\_\-E\_\-RESOURCE@{MessageQ\_\-E\_\-RESOURCE}}
+\index{MessageQ\_\-E\_\-RESOURCE@{MessageQ\_\-E\_\-RESOURCE}!MessageQ.h@{MessageQ.h}}
+\paragraph[{MessageQ\_\-E\_\-RESOURCE}]{\setlength{\rightskip}{0pt plus 5cm}\#define MessageQ\_\-E\_\-RESOURCE~-\/9}\hfill\label{_message_q_8h_af713143259d456df28379635afbbb398}
+
+
+Specified resource is not available. 
+
+\index{MessageQ.h@{MessageQ.h}!MessageQ\_\-E\_\-RESTART@{MessageQ\_\-E\_\-RESTART}}
+\index{MessageQ\_\-E\_\-RESTART@{MessageQ\_\-E\_\-RESTART}!MessageQ.h@{MessageQ.h}}
+\paragraph[{MessageQ\_\-E\_\-RESTART}]{\setlength{\rightskip}{0pt plus 5cm}\#define MessageQ\_\-E\_\-RESTART~-\/10}\hfill\label{_message_q_8h_a955261f8c7412eab163bff9349591927}
+
+
+Operation was interrupted. Please restart the operation. 
+
+\index{MessageQ.h@{MessageQ.h}!MessageQ\_\-E\_\-INVALIDMSG@{MessageQ\_\-E\_\-INVALIDMSG}}
+\index{MessageQ\_\-E\_\-INVALIDMSG@{MessageQ\_\-E\_\-INVALIDMSG}!MessageQ.h@{MessageQ.h}}
+\paragraph[{MessageQ\_\-E\_\-INVALIDMSG}]{\setlength{\rightskip}{0pt plus 5cm}\#define MessageQ\_\-E\_\-INVALIDMSG~-\/11}\hfill\label{_message_q_8h_abb81e5b9fa7bd062de50e485cd812455}
+
+
+An invalid message was encountered. 
+
+\index{MessageQ.h@{MessageQ.h}!MessageQ\_\-E\_\-NOTOWNER@{MessageQ\_\-E\_\-NOTOWNER}}
+\index{MessageQ\_\-E\_\-NOTOWNER@{MessageQ\_\-E\_\-NOTOWNER}!MessageQ.h@{MessageQ.h}}
+\paragraph[{MessageQ\_\-E\_\-NOTOWNER}]{\setlength{\rightskip}{0pt plus 5cm}\#define MessageQ\_\-E\_\-NOTOWNER~-\/12}\hfill\label{_message_q_8h_af8e0e7cec06ca6f23694547f0c3737e0}
+
+
+Not the owner. 
+
+\index{MessageQ.h@{MessageQ.h}!MessageQ\_\-E\_\-REMOTEACTIVE@{MessageQ\_\-E\_\-REMOTEACTIVE}}
+\index{MessageQ\_\-E\_\-REMOTEACTIVE@{MessageQ\_\-E\_\-REMOTEACTIVE}!MessageQ.h@{MessageQ.h}}
+\paragraph[{MessageQ\_\-E\_\-REMOTEACTIVE}]{\setlength{\rightskip}{0pt plus 5cm}\#define MessageQ\_\-E\_\-REMOTEACTIVE~-\/13}\hfill\label{_message_q_8h_a13e31752ee00b731e2cb9a49d101409b}
+
+
+Operation resulted in error. 
+
+\index{MessageQ.h@{MessageQ.h}!MessageQ\_\-E\_\-INVALIDHEAPID@{MessageQ\_\-E\_\-INVALIDHEAPID}}
+\index{MessageQ\_\-E\_\-INVALIDHEAPID@{MessageQ\_\-E\_\-INVALIDHEAPID}!MessageQ.h@{MessageQ.h}}
+\paragraph[{MessageQ\_\-E\_\-INVALIDHEAPID}]{\setlength{\rightskip}{0pt plus 5cm}\#define MessageQ\_\-E\_\-INVALIDHEAPID~-\/14}\hfill\label{_message_q_8h_a1d39a4db7701897b3160afdba7ba8827}
+
+
+An invalid heap id was encountered. 
+
+\index{MessageQ.h@{MessageQ.h}!MessageQ\_\-E\_\-INVALIDPROCID@{MessageQ\_\-E\_\-INVALIDPROCID}}
+\index{MessageQ\_\-E\_\-INVALIDPROCID@{MessageQ\_\-E\_\-INVALIDPROCID}!MessageQ.h@{MessageQ.h}}
+\paragraph[{MessageQ\_\-E\_\-INVALIDPROCID}]{\setlength{\rightskip}{0pt plus 5cm}\#define MessageQ\_\-E\_\-INVALIDPROCID~-\/15}\hfill\label{_message_q_8h_a00768dde3394e2ec03ee7b7b077fdac5}
+
+
+An invalid MultiProc id was encountered. 
+
+\index{MessageQ.h@{MessageQ.h}!MessageQ\_\-E\_\-MAXREACHED@{MessageQ\_\-E\_\-MAXREACHED}}
+\index{MessageQ\_\-E\_\-MAXREACHED@{MessageQ\_\-E\_\-MAXREACHED}!MessageQ.h@{MessageQ.h}}
+\paragraph[{MessageQ\_\-E\_\-MAXREACHED}]{\setlength{\rightskip}{0pt plus 5cm}\#define MessageQ\_\-E\_\-MAXREACHED~-\/16}\hfill\label{_message_q_8h_aaa9c3ea12ca80e1d3ee4d0d2e30df7aa}
+
+
+The max has been reached. 
+
+\index{MessageQ.h@{MessageQ.h}!MessageQ\_\-E\_\-UNREGISTEREDHEAPID@{MessageQ\_\-E\_\-UNREGISTEREDHEAPID}}
+\index{MessageQ\_\-E\_\-UNREGISTEREDHEAPID@{MessageQ\_\-E\_\-UNREGISTEREDHEAPID}!MessageQ.h@{MessageQ.h}}
+\paragraph[{MessageQ\_\-E\_\-UNREGISTEREDHEAPID}]{\setlength{\rightskip}{0pt plus 5cm}\#define MessageQ\_\-E\_\-UNREGISTEREDHEAPID~-\/17}\hfill\label{_message_q_8h_a62a3fe6b3b29f33cb5b148ca7c0e4a17}
+
+
+Attempting to use an unregistered heap id. 
+
+\index{MessageQ.h@{MessageQ.h}!MessageQ\_\-E\_\-CANNOTFREESTATICMSG@{MessageQ\_\-E\_\-CANNOTFREESTATICMSG}}
+\index{MessageQ\_\-E\_\-CANNOTFREESTATICMSG@{MessageQ\_\-E\_\-CANNOTFREESTATICMSG}!MessageQ.h@{MessageQ.h}}
+\paragraph[{MessageQ\_\-E\_\-CANNOTFREESTATICMSG}]{\setlength{\rightskip}{0pt plus 5cm}\#define MessageQ\_\-E\_\-CANNOTFREESTATICMSG~-\/18}\hfill\label{_message_q_8h_a0802e8f4b461e84ddef5a8241432c00b}
+
+
+Trying to free a statically initialized message. 
+
+\index{MessageQ.h@{MessageQ.h}!MessageQ\_\-E\_\-UNBLOCKED@{MessageQ\_\-E\_\-UNBLOCKED}}
+\index{MessageQ\_\-E\_\-UNBLOCKED@{MessageQ\_\-E\_\-UNBLOCKED}!MessageQ.h@{MessageQ.h}}
+\paragraph[{MessageQ\_\-E\_\-UNBLOCKED}]{\setlength{\rightskip}{0pt plus 5cm}\#define MessageQ\_\-E\_\-UNBLOCKED~-\/19}\hfill\label{_message_q_8h_a320bbc58b6a523f70d9866a54d176b44}
+
+
+MessageQ was unblocked. 
+
+\index{MessageQ.h@{MessageQ.h}!MessageQ\_\-FOREVER@{MessageQ\_\-FOREVER}}
+\index{MessageQ\_\-FOREVER@{MessageQ\_\-FOREVER}!MessageQ.h@{MessageQ.h}}
+\paragraph[{MessageQ\_\-FOREVER}]{\setlength{\rightskip}{0pt plus 5cm}\#define MessageQ\_\-FOREVER~$\sim$(0)}\hfill\label{_message_q_8h_a9218a5f44331562bea6284890689c2b5}
+
+
+Used as the timeout value to specify wait forever. 
+
+\index{MessageQ.h@{MessageQ.h}!MessageQ\_\-INVALIDMSGID@{MessageQ\_\-INVALIDMSGID}}
+\index{MessageQ\_\-INVALIDMSGID@{MessageQ\_\-INVALIDMSGID}!MessageQ.h@{MessageQ.h}}
+\paragraph[{MessageQ\_\-INVALIDMSGID}]{\setlength{\rightskip}{0pt plus 5cm}\#define MessageQ\_\-INVALIDMSGID~0xffff}\hfill\label{_message_q_8h_a370a69d26238b17087490483350a0731}
+
+
+Invalid message id. 
+
+\index{MessageQ.h@{MessageQ.h}!MessageQ\_\-INVALIDMESSAGEQ@{MessageQ\_\-INVALIDMESSAGEQ}}
+\index{MessageQ\_\-INVALIDMESSAGEQ@{MessageQ\_\-INVALIDMESSAGEQ}!MessageQ.h@{MessageQ.h}}
+\paragraph[{MessageQ\_\-INVALIDMESSAGEQ}]{\setlength{\rightskip}{0pt plus 5cm}\#define MessageQ\_\-INVALIDMESSAGEQ~0xffff}\hfill\label{_message_q_8h_aa4a5fa703505bd746c9f954a2ffcd43e}
+
+
+Invalid message queue. 
+
+\index{MessageQ.h@{MessageQ.h}!MessageQ\_\-PRIORITYMASK@{MessageQ\_\-PRIORITYMASK}}
+\index{MessageQ\_\-PRIORITYMASK@{MessageQ\_\-PRIORITYMASK}!MessageQ.h@{MessageQ.h}}
+\paragraph[{MessageQ\_\-PRIORITYMASK}]{\setlength{\rightskip}{0pt plus 5cm}\#define MessageQ\_\-PRIORITYMASK~0x3}\hfill\label{_message_q_8h_a3cde3037a7d7bd3a7cf4291b939200c8}
+
+
+Mask to extract priority setting. 
+
+\index{MessageQ.h@{MessageQ.h}!MessageQ\_\-getDstQueue@{MessageQ\_\-getDstQueue}}
+\index{MessageQ\_\-getDstQueue@{MessageQ\_\-getDstQueue}!MessageQ.h@{MessageQ.h}}
+\paragraph[{MessageQ\_\-getDstQueue}]{\setlength{\rightskip}{0pt plus 5cm}\#define MessageQ\_\-getDstQueue(
+\begin{DoxyParamCaption}
+\item[{}]{msg}
+\end{DoxyParamCaption}
+)}\hfill\label{_message_q_8h_a6e60f683b011d8c960790b1f395d092b}
+{\bfseries Value:}
+\begin{DoxyCode}
+((msg)->dstId == (MessageQ_QueueIndex)MessageQ_INVALIDMESSAGEQ) ?     \
+            (MessageQ_QueueId)MessageQ_INVALIDMESSAGEQ :                      \
+            (MessageQ_QueueId)(((MessageQ_QueueId)MultiProc_self() << 16u)    \
+            | (((MessageQ_Msg)(msg))->dstId))
+\end{DoxyCode}
+
+
+Extract the destination queue from a message. 
+
+Can only be used on the same processor where the destination queue resides. This function should only be used by Message Queue Transport writers.
+
+
+\begin{DoxyParams}{Parameters}
+{\em msg} & Message\\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em Destination-\/Queue-\/ID} & Destination message queue. \\
+\hline
+\end{DoxyRetVals}
+\index{MessageQ.h@{MessageQ.h}!MessageQ\_\-getMsgId@{MessageQ\_\-getMsgId}}
+\index{MessageQ\_\-getMsgId@{MessageQ\_\-getMsgId}!MessageQ.h@{MessageQ.h}}
+\paragraph[{MessageQ\_\-getMsgId}]{\setlength{\rightskip}{0pt plus 5cm}\#define MessageQ\_\-getMsgId(
+\begin{DoxyParamCaption}
+\item[{}]{msg}
+\end{DoxyParamCaption}
+)~((({\bf MessageQ\_\-Msg}) (msg))-\/$>$msgId)}\hfill\label{_message_q_8h_a12f1040474ebdb289f08205ecb30fd18}
+
+
+Retrieves the message ID of a message. 
+
+This function retrieves the message ID from the message. The \hyperlink{_message_q_8h_a1aa25d3081a17945aecf1b4c23cef49c}{MessageQ\_\-setMsgId} function is used to insert the message ID.
+
+The message id is part of the \hyperlink{struct_message_q___msg_header}{MessageQ\_\-MsgHeader} header and is in every MessageQ message. All message ids are initialized to \hyperlink{_message_q_8h_a370a69d26238b17087490483350a0731}{MessageQ\_\-INVALIDMSGID} in the \hyperlink{_message_q_8h_ad8de6381a05a4d8a672d06a3b5676a24}{MessageQ\_\-alloc} and \hyperlink{_message_q_8h_a5b627fa66c267f53cccb0a960fe23a64}{MessageQ\_\-staticMsgInit} calls.
+
+
+\begin{DoxyParams}{Parameters}
+{\em msg} & Message\\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em size} & Message ID from the message \\
+\hline
+\end{DoxyRetVals}
+\index{MessageQ.h@{MessageQ.h}!MessageQ\_\-getMsgSize@{MessageQ\_\-getMsgSize}}
+\index{MessageQ\_\-getMsgSize@{MessageQ\_\-getMsgSize}!MessageQ.h@{MessageQ.h}}
+\paragraph[{MessageQ\_\-getMsgSize}]{\setlength{\rightskip}{0pt plus 5cm}\#define MessageQ\_\-getMsgSize(
+\begin{DoxyParamCaption}
+\item[{}]{msg}
+\end{DoxyParamCaption}
+)~((({\bf MessageQ\_\-Msg}) (msg))-\/$>$msgSize)}\hfill\label{_message_q_8h_a8e3e82ba789ac47279fd35a4cf76d786}
+
+
+Returns the size of the specified message. This function is helpful when re-\/using a message. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em msg} & Message\\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em size} & Size of the message \\
+\hline
+\end{DoxyRetVals}
+\index{MessageQ.h@{MessageQ.h}!MessageQ\_\-getMsgPri@{MessageQ\_\-getMsgPri}}
+\index{MessageQ\_\-getMsgPri@{MessageQ\_\-getMsgPri}!MessageQ.h@{MessageQ.h}}
+\paragraph[{MessageQ\_\-getMsgPri}]{\setlength{\rightskip}{0pt plus 5cm}\#define MessageQ\_\-getMsgPri(
+\begin{DoxyParamCaption}
+\item[{}]{msg}
+\end{DoxyParamCaption}
+)~(((({\bf MessageQ\_\-Msg}) (msg))-\/$>$flags \& MessageQ\_\-PRIORITYMASK))}\hfill\label{_message_q_8h_ad5fc8c9c78eaa4d37d26c8b371b82765}
+
+
+Gets the message priority of a message. 
+
+
+\begin{DoxyRetVals}{Return values}
+{\em priority} & Priority of the message \\
+\hline
+\end{DoxyRetVals}
+\index{MessageQ.h@{MessageQ.h}!MessageQ\_\-getProcId@{MessageQ\_\-getProcId}}
+\index{MessageQ\_\-getProcId@{MessageQ\_\-getProcId}!MessageQ.h@{MessageQ.h}}
+\paragraph[{MessageQ\_\-getProcId}]{\setlength{\rightskip}{0pt plus 5cm}\#define MessageQ\_\-getProcId(
+\begin{DoxyParamCaption}
+\item[{}]{queueId}
+\end{DoxyParamCaption}
+)~((UInt16)((queueId) $>$$>$ 16))}\hfill\label{_message_q_8h_a108ddf7170cf6f9fde0bb991768c33d0}
+
+
+Returns the MultiProc processor id on which the queue resides. 
+
+Message queues reside on the processor that created them. This function allows the caller to determined on which processor the queue resides.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em queueId} & Unique id that identifies the queue\\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em procId} & The MultiProc id on which the queue resides \\
+\hline
+\end{DoxyRetVals}
+\index{MessageQ.h@{MessageQ.h}!MessageQ\_\-getReplyQueue@{MessageQ\_\-getReplyQueue}}
+\index{MessageQ\_\-getReplyQueue@{MessageQ\_\-getReplyQueue}!MessageQ.h@{MessageQ.h}}
+\paragraph[{MessageQ\_\-getReplyQueue}]{\setlength{\rightskip}{0pt plus 5cm}\#define MessageQ\_\-getReplyQueue(
+\begin{DoxyParamCaption}
+\item[{}]{msg}
+\end{DoxyParamCaption}
+)}\hfill\label{_message_q_8h_a8af7731e0ea02352febe0f055438c5e5}
+{\bfseries Value:}
+\begin{DoxyCode}
+(MessageQ_QueueId)((((MessageQ_Msg) (msg))->replyProc << 16u) \
+                | ((MessageQ_Msg)(msg))->replyId)
+\end{DoxyCode}
+
+
+Retrieves the embedded source message queue from a message. 
+
+This function along with the \hyperlink{_message_q_8h_a2532f1ebf44ae91a8fd8f63a49e44802}{MessageQ\_\-setReplyQueue}\} function can be used instead of the open function. The sender of a message can embed a messageQ into the message with the \hyperlink{_message_q_8h_a2532f1ebf44ae91a8fd8f63a49e44802}{MessageQ\_\-setReplyQueue} function. The receiver of the message can extract the message queue ID with this function.
+
+This method is particularing useful in a client/server relationship where the server does not want to know who the clients are. The clients can embed their message queue into the message to the server and the server extracts it and uses it to reply.
+
+
+\begin{DoxyParams}{Parameters}
+{\em msg} & Message\\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em Reply-\/Queue} & Reply Message Queue ID \\
+\hline
+\end{DoxyRetVals}
+\index{MessageQ.h@{MessageQ.h}!MessageQ\_\-setMsgId@{MessageQ\_\-setMsgId}}
+\index{MessageQ\_\-setMsgId@{MessageQ\_\-setMsgId}!MessageQ.h@{MessageQ.h}}
+\paragraph[{MessageQ\_\-setMsgId}]{\setlength{\rightskip}{0pt plus 5cm}\#define MessageQ\_\-setMsgId(
+\begin{DoxyParamCaption}
+\item[{}]{msg, }
+\item[{}]{id}
+\end{DoxyParamCaption}
+)~(({\bf MessageQ\_\-Msg}) (msg))-\/$>$msgId = (id)}\hfill\label{_message_q_8h_a1aa25d3081a17945aecf1b4c23cef49c}
+
+
+Sets the message id in a message. 
+
+This function sets the message ID in the message. The \hyperlink{_message_q_8h_a12f1040474ebdb289f08205ecb30fd18}{MessageQ\_\-getMsgId} function is used to retrieve the message ID. The message id is part of the \hyperlink{struct_message_q___msg_header}{MessageQ\_\-MsgHeader} header and is in every MessageQ message. All message ids are initialized to \hyperlink{_message_q_8h_a370a69d26238b17087490483350a0731}{MessageQ\_\-INVALIDMSGID} in the \hyperlink{_message_q_8h_ad8de6381a05a4d8a672d06a3b5676a24}{MessageQ\_\-alloc} and \hyperlink{_message_q_8h_a5b627fa66c267f53cccb0a960fe23a64}{MessageQ\_\-staticMsgInit} calls.
+
+
+\begin{DoxyParams}{Parameters}
+{\em msg} & Message \\
+\hline
+{\em id} & Message id \\
+\hline
+\end{DoxyParams}
+\index{MessageQ.h@{MessageQ.h}!MessageQ\_\-setMsgPri@{MessageQ\_\-setMsgPri}}
+\index{MessageQ\_\-setMsgPri@{MessageQ\_\-setMsgPri}!MessageQ.h@{MessageQ.h}}
+\paragraph[{MessageQ\_\-setMsgPri}]{\setlength{\rightskip}{0pt plus 5cm}\#define MessageQ\_\-setMsgPri(
+\begin{DoxyParamCaption}
+\item[{}]{msg, }
+\item[{}]{priority}
+\end{DoxyParamCaption}
+)~((({\bf MessageQ\_\-Msg}) (msg))-\/$>$flags = ((priority) \& MessageQ\_\-PRIORITYMASK))}\hfill\label{_message_q_8h_abff2e5c8a9729a8ac1f429679534c611}
+
+
+Sets the message priority of a message. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em msg} & Message \\
+\hline
+{\em priority} & Priority of message to be set. \\
+\hline
+\end{DoxyParams}
+
+
+\subsubsection{Typedef Documentation}
+\index{MessageQ.h@{MessageQ.h}!MessageQ\_\-QueueId@{MessageQ\_\-QueueId}}
+\index{MessageQ\_\-QueueId@{MessageQ\_\-QueueId}!MessageQ.h@{MessageQ.h}}
+\paragraph[{MessageQ\_\-QueueId}]{\setlength{\rightskip}{0pt plus 5cm}typedef UInt32 {\bf MessageQ\_\-QueueId}}\hfill\label{_message_q_8h_a34dd32b58cf0476c2d90e3f702843297}
+
+
+Type used with MessageQ\_\-\mbox{[}open/set/get\mbox{]}ReplyQueue and MessageQ\_\-put. 
+
+\index{MessageQ.h@{MessageQ.h}!MessageQ\_\-QueueIndex@{MessageQ\_\-QueueIndex}}
+\index{MessageQ\_\-QueueIndex@{MessageQ\_\-QueueIndex}!MessageQ.h@{MessageQ.h}}
+\paragraph[{MessageQ\_\-QueueIndex}]{\setlength{\rightskip}{0pt plus 5cm}typedef UInt16 {\bf MessageQ\_\-QueueIndex}}\hfill\label{_message_q_8h_a22a5f41fd82f03f7c14f45dab647bada}
+
+
+Local queue index. 
+
+\index{MessageQ.h@{MessageQ.h}!MessageQ\_\-Handle@{MessageQ\_\-Handle}}
+\index{MessageQ\_\-Handle@{MessageQ\_\-Handle}!MessageQ.h@{MessageQ.h}}
+\paragraph[{MessageQ\_\-Handle}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct MessageQ\_\-Object$\ast$ {\bf MessageQ\_\-Handle}}\hfill\label{_message_q_8h_a1d584ce08733ca864d81e1e64a41cf7a}
+
+
+MessageQ\_\-Handle type. 
+
+\index{MessageQ.h@{MessageQ.h}!MessageQ\_\-Msg@{MessageQ\_\-Msg}}
+\index{MessageQ\_\-Msg@{MessageQ\_\-Msg}!MessageQ.h@{MessageQ.h}}
+\paragraph[{MessageQ\_\-Msg}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf MessageQ\_\-MsgHeader}$\ast$ {\bf MessageQ\_\-Msg}}\hfill\label{_message_q_8h_ab675d3cdd0443a1ad05658d375458204}
+
+
+Typedef for ease of use. 
+
+
+
+\subsubsection{Enumeration Type Documentation}
+\index{MessageQ.h@{MessageQ.h}!MessageQ\_\-Priority@{MessageQ\_\-Priority}}
+\index{MessageQ\_\-Priority@{MessageQ\_\-Priority}!MessageQ.h@{MessageQ.h}}
+\paragraph[{MessageQ\_\-Priority}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf MessageQ\_\-Priority}}\hfill\label{_message_q_8h_a01e825f1f15fa12643eabea99ca76248}
+
+
+Message priority. 
+
+\begin{Desc}
+\item[Enumerator: ]\par
+\begin{description}
+\index{MessageQ\_\-NORMALPRI@{MessageQ\_\-NORMALPRI}!MessageQ.h@{MessageQ.h}}\index{MessageQ.h@{MessageQ.h}!MessageQ\_\-NORMALPRI@{MessageQ\_\-NORMALPRI}}\item[{\em 
+MessageQ\_\-NORMALPRI\label{_message_q_8h_a01e825f1f15fa12643eabea99ca76248a12365e9d70b3fc967dc147e2f8a0d4fb}
+}]Normal Priority \index{MessageQ\_\-HIGHPRI@{MessageQ\_\-HIGHPRI}!MessageQ.h@{MessageQ.h}}\index{MessageQ.h@{MessageQ.h}!MessageQ\_\-HIGHPRI@{MessageQ\_\-HIGHPRI}}\item[{\em 
+MessageQ\_\-HIGHPRI\label{_message_q_8h_a01e825f1f15fa12643eabea99ca76248ae06ba6f7cd0cafb89a56b1224693755d}
+}]High Priority \index{MessageQ\_\-RESERVEDPRI@{MessageQ\_\-RESERVEDPRI}!MessageQ.h@{MessageQ.h}}\index{MessageQ.h@{MessageQ.h}!MessageQ\_\-RESERVEDPRI@{MessageQ\_\-RESERVEDPRI}}\item[{\em 
+MessageQ\_\-RESERVEDPRI\label{_message_q_8h_a01e825f1f15fa12643eabea99ca76248a3baaafcfd52556f649576a8c08748d03}
+}]Reserved Priorit \index{MessageQ\_\-URGENTPRI@{MessageQ\_\-URGENTPRI}!MessageQ.h@{MessageQ.h}}\index{MessageQ.h@{MessageQ.h}!MessageQ\_\-URGENTPRI@{MessageQ\_\-URGENTPRI}}\item[{\em 
+MessageQ\_\-URGENTPRI\label{_message_q_8h_a01e825f1f15fa12643eabea99ca76248a18496bc5d4650cd4eb8db0c399d95399}
+}]Urgent Priority \end{description}
+\end{Desc}
+
+
+
+\subsubsection{Function Documentation}
+\index{MessageQ.h@{MessageQ.h}!MessageQ\_\-Params\_\-init@{MessageQ\_\-Params\_\-init}}
+\index{MessageQ\_\-Params\_\-init@{MessageQ\_\-Params\_\-init}!MessageQ.h@{MessageQ.h}}
+\paragraph[{MessageQ\_\-Params\_\-init}]{\setlength{\rightskip}{0pt plus 5cm}Void MessageQ\_\-Params\_\-init (
+\begin{DoxyParamCaption}
+\item[{{\bf MessageQ\_\-Params} $\ast$}]{ params}
+\end{DoxyParamCaption}
+)}\hfill\label{_message_q_8h_a896b64c7afc22be66f1a6c3aa157537f}
+
+
+Initialize \hyperlink{struct_message_q___params}{MessageQ\_\-Params}. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em params} & Parameters required to create a MessageQ \\
+\hline
+\end{DoxyParams}
+\index{MessageQ.h@{MessageQ.h}!MessageQ\_\-create@{MessageQ\_\-create}}
+\index{MessageQ\_\-create@{MessageQ\_\-create}!MessageQ.h@{MessageQ.h}}
+\paragraph[{MessageQ\_\-create}]{\setlength{\rightskip}{0pt plus 5cm}{\bf MessageQ\_\-Handle} MessageQ\_\-create (
+\begin{DoxyParamCaption}
+\item[{String}]{ name, }
+\item[{const {\bf MessageQ\_\-Params} $\ast$}]{ params}
+\end{DoxyParamCaption}
+)}\hfill\label{_message_q_8h_a1f2be1c6bf60aa6e220cf5805052f727}
+
+
+Create a MessageQ instance. 
+
+The name supplied here does not have to be in persistent memory. The maximum length of the string supplied here, including the '$\backslash$0' terminator is '32' by default.
+
+There are no verifications to ensure that the name supplied in MessageQ\_\-create is unique across all processors. Caution must be exercised to ensure that each processor uses a unique name.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em name} & Name of the queue \\
+\hline
+\mbox{\tt in}  & {\em params} & Initialized MessageQ parameters\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+MessageQ Handle 
+\end{DoxyReturn}
+\index{MessageQ.h@{MessageQ.h}!MessageQ\_\-delete@{MessageQ\_\-delete}}
+\index{MessageQ\_\-delete@{MessageQ\_\-delete}!MessageQ.h@{MessageQ.h}}
+\paragraph[{MessageQ\_\-delete}]{\setlength{\rightskip}{0pt plus 5cm}Int MessageQ\_\-delete (
+\begin{DoxyParamCaption}
+\item[{{\bf MessageQ\_\-Handle} $\ast$}]{ handlePtr}
+\end{DoxyParamCaption}
+)}\hfill\label{_message_q_8h_a10986c1a6b64d3ca07c38d1521ea16cd}
+
+
+Delete a created MessageQ instance. 
+
+This function deletes a created message queue instance. If the message queue is non-\/empty, any messages remaining in the queue will not be freed and will be lost.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in,out}  & {\em handlePtr} & Pointer to handle to delete.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+MessageQ status:
+\begin{DoxyItemize}
+\item \hyperlink{_message_q_8h_a19b5749722c26050d2e56c2104f982fe}{MessageQ\_\-E\_\-FAIL}: delete failed
+\item \hyperlink{_message_q_8h_a1643901e74764002f880ccc408691de6}{MessageQ\_\-S\_\-SUCCESS}: delete successful 
+\end{DoxyItemize}
+\end{DoxyReturn}
+\index{MessageQ.h@{MessageQ.h}!MessageQ\_\-open@{MessageQ\_\-open}}
+\index{MessageQ\_\-open@{MessageQ\_\-open}!MessageQ.h@{MessageQ.h}}
+\paragraph[{MessageQ\_\-open}]{\setlength{\rightskip}{0pt plus 5cm}Int MessageQ\_\-open (
+\begin{DoxyParamCaption}
+\item[{String}]{ name, }
+\item[{{\bf MessageQ\_\-QueueId} $\ast$}]{ queueId}
+\end{DoxyParamCaption}
+)}\hfill\label{_message_q_8h_af9e6bd0c1dbb236eb4a618211bf15325}
+
+
+Open a message queue. 
+
+MessageQ\_\-open is used to retrieve the queue id for a queue that has been created either locally or remotely. Note that the queueId is simply a 32 bit value that uniquely identifies a queue. Therefore, it is also possible to put a message on a queue whose queueId has been retrieved using any other method.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em name} & Name of queue to open \\
+\hline
+\mbox{\tt out}  & {\em queueId} & QueueId that can be used in \hyperlink{_message_q_8h_aa628f9bf897924f61d6adfba3f82fa8d}{MessageQ\_\-put}\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+MessageQ status:
+\begin{DoxyItemize}
+\item \hyperlink{_message_q_8h_ab629c8afd0ce8a14f60ee791fdb7c3e4}{MessageQ\_\-E\_\-NOTFOUND}: open failed (name not found on any processor)
+\item \hyperlink{_message_q_8h_a1643901e74764002f880ccc408691de6}{MessageQ\_\-S\_\-SUCCESS}: open successful 
+\end{DoxyItemize}
+\end{DoxyReturn}
+\index{MessageQ.h@{MessageQ.h}!MessageQ\_\-close@{MessageQ\_\-close}}
+\index{MessageQ\_\-close@{MessageQ\_\-close}!MessageQ.h@{MessageQ.h}}
+\paragraph[{MessageQ\_\-close}]{\setlength{\rightskip}{0pt plus 5cm}Int MessageQ\_\-close (
+\begin{DoxyParamCaption}
+\item[{{\bf MessageQ\_\-QueueId} $\ast$}]{ queueId}
+\end{DoxyParamCaption}
+)}\hfill\label{_message_q_8h_ab2cdb25f8e9fec3fe3f17a43c0b85bed}
+
+
+Close the opened handle. 
+
+Only close a queueId that was returned from \hyperlink{_message_q_8h_af9e6bd0c1dbb236eb4a618211bf15325}{MessageQ\_\-open}.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em queueId} & Pointer to queueId to close\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+MessageQ status:
+\begin{DoxyItemize}
+\item \hyperlink{_message_q_8h_a19b5749722c26050d2e56c2104f982fe}{MessageQ\_\-E\_\-FAIL}: close failed
+\item \hyperlink{_message_q_8h_a1643901e74764002f880ccc408691de6}{MessageQ\_\-S\_\-SUCCESS}: close successful 
+\end{DoxyItemize}
+\end{DoxyReturn}
+\index{MessageQ.h@{MessageQ.h}!MessageQ\_\-alloc@{MessageQ\_\-alloc}}
+\index{MessageQ\_\-alloc@{MessageQ\_\-alloc}!MessageQ.h@{MessageQ.h}}
+\paragraph[{MessageQ\_\-alloc}]{\setlength{\rightskip}{0pt plus 5cm}{\bf MessageQ\_\-Msg} MessageQ\_\-alloc (
+\begin{DoxyParamCaption}
+\item[{UInt16}]{ heapId, }
+\item[{UInt32}]{ size}
+\end{DoxyParamCaption}
+)}\hfill\label{_message_q_8h_ad8de6381a05a4d8a672d06a3b5676a24}
+
+
+Allocates a message from the heap. 
+
+This function allocates a message from the heap associated with the heapId. The first field of the message must be a \#\hyperlink{struct_message_q___msg_header}{MessageQ\_\-MsgHeader} structure. For example: 
+\begin{DoxyCode}
+      typedef struct MyMsg {
+         MessageQ_MsgHeader header;
+         ...
+      } MyMsg;
+\end{DoxyCode}
+
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em heapId} & heapId \\
+\hline
+\mbox{\tt in}  & {\em size} & size of requested message (including the \#\hyperlink{struct_message_q___msg_header}{MessageQ\_\-MsgHeader}).\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Allocated message or NULL if no memory. 
+\end{DoxyReturn}
+\index{MessageQ.h@{MessageQ.h}!MessageQ\_\-free@{MessageQ\_\-free}}
+\index{MessageQ\_\-free@{MessageQ\_\-free}!MessageQ.h@{MessageQ.h}}
+\paragraph[{MessageQ\_\-free}]{\setlength{\rightskip}{0pt plus 5cm}Int MessageQ\_\-free (
+\begin{DoxyParamCaption}
+\item[{{\bf MessageQ\_\-Msg}}]{ msg}
+\end{DoxyParamCaption}
+)}\hfill\label{_message_q_8h_ac7ac95bf02e7366b353e728b15d76852}
+
+
+Frees a message back to the heap. 
+
+Frees the message back to the heap that was used to allocate it.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em msg} & Message to free.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+MessageQ status:
+\begin{DoxyItemize}
+\item \hyperlink{_message_q_8h_a19b5749722c26050d2e56c2104f982fe}{MessageQ\_\-E\_\-FAIL}: failed to free message
+\item \hyperlink{_message_q_8h_a1643901e74764002f880ccc408691de6}{MessageQ\_\-S\_\-SUCCESS}: successfully freed the message 
+\end{DoxyItemize}
+\end{DoxyReturn}
+\index{MessageQ.h@{MessageQ.h}!MessageQ\_\-registerHeap@{MessageQ\_\-registerHeap}}
+\index{MessageQ\_\-registerHeap@{MessageQ\_\-registerHeap}!MessageQ.h@{MessageQ.h}}
+\paragraph[{MessageQ\_\-registerHeap}]{\setlength{\rightskip}{0pt plus 5cm}Int MessageQ\_\-registerHeap (
+\begin{DoxyParamCaption}
+\item[{Ptr}]{ heap, }
+\item[{UInt16}]{ heapId}
+\end{DoxyParamCaption}
+)}\hfill\label{_message_q_8h_ab74ba85e9c7ebbb1a888df871fd2a6c6}
+
+
+Register a heap with MessageQ. 
+
+This function registers a heap with MessageQ. The user selects a unique heapId associated with this heap. When a message is allocated via the \hyperlink{_message_q_8h_ad8de6381a05a4d8a672d06a3b5676a24}{MessageQ\_\-alloc} function, the heapId is specified. Internally, MessageQ uses the heapId to access the heap.
+
+Care must be taken when assigning heapIds. Internally MessageQ stores the heapId into the message. When the message is freed (via \hyperlink{_message_q_8h_ac7ac95bf02e7366b353e728b15d76852}{MessageQ\_\-free}), the heapId is used to determine which heap to use. On systems with shared memory the heapIds must match on corresponding processors. For example, assume there is a heap called myHeap which acts on shared memory and processors 0 and 1 both use this heap. When you register the heap with MessageQ, the same heapId must be used on both processor 0 and 1.
+
+If a heap is already registered for the specified heapId, no action is taken and MessageQ\_\-E\_\-ALREADYEXISTS is returned.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em heap} & Heap to register \\
+\hline
+\mbox{\tt in}  & {\em heapId} & heapId associated with the heap\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+MessageQ status:
+\begin{DoxyItemize}
+\item \hyperlink{_message_q_8h_a1643901e74764002f880ccc408691de6}{MessageQ\_\-S\_\-SUCCESS}: heap successfully registered
+\item \hyperlink{_message_q_8h_ad8d156d79a68fada5951aef246dcda0d}{MessageQ\_\-E\_\-ALREADYEXISTS}: heap already exists with heapId 
+\end{DoxyItemize}
+\end{DoxyReturn}
+\index{MessageQ.h@{MessageQ.h}!MessageQ\_\-unregisterHeap@{MessageQ\_\-unregisterHeap}}
+\index{MessageQ\_\-unregisterHeap@{MessageQ\_\-unregisterHeap}!MessageQ.h@{MessageQ.h}}
+\paragraph[{MessageQ\_\-unregisterHeap}]{\setlength{\rightskip}{0pt plus 5cm}Int MessageQ\_\-unregisterHeap (
+\begin{DoxyParamCaption}
+\item[{UInt16}]{ heapId}
+\end{DoxyParamCaption}
+)}\hfill\label{_message_q_8h_a4258fb35928047e54b625009c86ec4ba}
+
+
+Unregister a heap with MessageQ. 
+
+This function unregisters the heap associated with the heapId. Care must be taken to ensure that there are no outstanding messages allocated from this heap. If there are outstanding messages, an attempt to free the message will result in non-\/deterministic results.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em heapId} & Heap to unregister\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+MessageQ status:
+\begin{DoxyItemize}
+\item \hyperlink{_message_q_8h_a1643901e74764002f880ccc408691de6}{MessageQ\_\-S\_\-SUCCESS}: heap successfully unregistered 
+\end{DoxyItemize}
+\end{DoxyReturn}
+\index{MessageQ.h@{MessageQ.h}!MessageQ\_\-setMsgTrace@{MessageQ\_\-setMsgTrace}}
+\index{MessageQ\_\-setMsgTrace@{MessageQ\_\-setMsgTrace}!MessageQ.h@{MessageQ.h}}
+\paragraph[{MessageQ\_\-setMsgTrace}]{\setlength{\rightskip}{0pt plus 5cm}Void MessageQ\_\-setMsgTrace (
+\begin{DoxyParamCaption}
+\item[{{\bf MessageQ\_\-Msg}}]{ msg, }
+\item[{Bool}]{ traceFlag}
+\end{DoxyParamCaption}
+)}\hfill\label{_message_q_8h_a74dc311c0b89f6fcbb309a5a98ab349f}
+
+
+Sets the message tracing flag on a given message. 
+
+This function enables message tracing for a message. Tracing is offered in the form of Log messages that are output during operations on the message (i.e. MessageQ\_\-free, MessageQ\_\-put, etc).
+
+
+\begin{DoxyParams}{Parameters}
+{\em msg} & Message \\
+\hline
+{\em traceFlag} & Message trace flag (TRUE = tracing enabled) \\
+\hline
+\end{DoxyParams}
+\index{MessageQ.h@{MessageQ.h}!MessageQ\_\-staticMsgInit@{MessageQ\_\-staticMsgInit}}
+\index{MessageQ\_\-staticMsgInit@{MessageQ\_\-staticMsgInit}!MessageQ.h@{MessageQ.h}}
+\paragraph[{MessageQ\_\-staticMsgInit}]{\setlength{\rightskip}{0pt plus 5cm}Void MessageQ\_\-staticMsgInit (
+\begin{DoxyParamCaption}
+\item[{{\bf MessageQ\_\-Msg}}]{ msg, }
+\item[{UInt32}]{ size}
+\end{DoxyParamCaption}
+)}\hfill\label{_message_q_8h_a5b627fa66c267f53cccb0a960fe23a64}
+
+
+Initializes a message not obtained from MessageQ\_\-alloc. 
+
+There are several fields in the \#\hyperlink{struct_message_q___msg_header}{MessageQ\_\-MsgHeader} that are initialized by the \hyperlink{_message_q_8h_ad8de6381a05a4d8a672d06a3b5676a24}{MessageQ\_\-alloc} function. The staticMsgInit can be used to initialize these fields for messages that are not allocated from MessageQ.
+
+There is one strict constraint with using messages not allocated from MessageQ. The message cannot be freed via \hyperlink{_message_q_8h_ac7ac95bf02e7366b353e728b15d76852}{MessageQ\_\-free} function. This includes
+\begin{DoxyItemize}
+\item The application calling MessageQ\_\-free on the same processor
+\item The application calling MessageQ\_\-free on a different processor
+\item The application cannot send the message to another processor where the transport might call MessageQ\_\-free on the message. For example, copy based transport call MessageQ\_\-free after sending the message. If a staticMsgInit'd msg is passed to MessageQ\_\-free an assert will occur
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}[1]{Parameters}
+ & {\em msg} & Message to initialize \\
+\hline
+\mbox{\tt in}  & {\em size} & Size of the message in MAUs \\
+\hline
+\end{DoxyParams}
+\index{MessageQ.h@{MessageQ.h}!MessageQ\_\-get@{MessageQ\_\-get}}
+\index{MessageQ\_\-get@{MessageQ\_\-get}!MessageQ.h@{MessageQ.h}}
+\paragraph[{MessageQ\_\-get}]{\setlength{\rightskip}{0pt plus 5cm}Int MessageQ\_\-get (
+\begin{DoxyParamCaption}
+\item[{{\bf MessageQ\_\-Handle}}]{ handle, }
+\item[{{\bf MessageQ\_\-Msg} $\ast$}]{ msg, }
+\item[{UInt}]{ timeout}
+\end{DoxyParamCaption}
+)}\hfill\label{_message_q_8h_aaeb270f6b50d96f1e1dd134591ffc380}
+
+
+Gets a message from the message queue. 
+
+This function returns a status. It also returns a message in msg. If no message is available, it blocks on the synchronizer object until the synchronizer is signaled or a timeout occurs. The synchronizer is signaled, when Message\_\-put is called on the MessageQ handle. If a timeout occurs, the msg is set to NULL and the status is \hyperlink{_message_q_8h_a7aa8fb2d3e83b747e767f1c117a657c7}{MessageQ\_\-E\_\-TIMEOUT}. If a timeout of zero is specified, the function returns immediately and if no message is available, the msg is set to NULL and the status is \hyperlink{_message_q_8h_a7aa8fb2d3e83b747e767f1c117a657c7}{MessageQ\_\-E\_\-TIMEOUT}. The \hyperlink{_message_q_8h_a320bbc58b6a523f70d9866a54d176b44}{MessageQ\_\-E\_\-UNBLOCKED} status is return, if MessageQ\_\-unblock is called on the MessageQ handle. If a message is successfully retrieved, the msg is set to the message and a \hyperlink{_message_q_8h_a1643901e74764002f880ccc408691de6}{MessageQ\_\-S\_\-SUCCESS} status is returned.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em handle} & MessageQ handle \\
+\hline
+\mbox{\tt out}  & {\em msg} & Pointer to the message \\
+\hline
+\mbox{\tt in}  & {\em timeout} & Maximum duration to wait for a message in microseconds.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+MessageQ status:
+\begin{DoxyItemize}
+\item \hyperlink{_message_q_8h_a1643901e74764002f880ccc408691de6}{MessageQ\_\-S\_\-SUCCESS}: Message successfully returned
+\item \hyperlink{_message_q_8h_a7aa8fb2d3e83b747e767f1c117a657c7}{MessageQ\_\-E\_\-TIMEOUT}: MessageQ\_\-get timed out
+\item \hyperlink{_message_q_8h_a320bbc58b6a523f70d9866a54d176b44}{MessageQ\_\-E\_\-UNBLOCKED}: MessageQ\_\-get was unblocked
+\item \hyperlink{_message_q_8h_a19b5749722c26050d2e56c2104f982fe}{MessageQ\_\-E\_\-FAIL}: A general failure has occurred
+\end{DoxyItemize}
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{_message_q_8h_aa628f9bf897924f61d6adfba3f82fa8d}{MessageQ\_\-put} \hyperlink{_message_q_8h_ae9491bc9f790e267836f27ad2e31d7de}{MessageQ\_\-unblock} 
+\end{DoxySeeAlso}
+\index{MessageQ.h@{MessageQ.h}!MessageQ\_\-put@{MessageQ\_\-put}}
+\index{MessageQ\_\-put@{MessageQ\_\-put}!MessageQ.h@{MessageQ.h}}
+\paragraph[{MessageQ\_\-put}]{\setlength{\rightskip}{0pt plus 5cm}Int MessageQ\_\-put (
+\begin{DoxyParamCaption}
+\item[{{\bf MessageQ\_\-QueueId}}]{ queueId, }
+\item[{{\bf MessageQ\_\-Msg}}]{ msg}
+\end{DoxyParamCaption}
+)}\hfill\label{_message_q_8h_aa628f9bf897924f61d6adfba3f82fa8d}
+
+
+Place a message onto a message queue. 
+
+This call places the message onto the specified message queue. The message queue could be local or remote. The MessageQ module manages the delivery.
+
+In the case where the queue is remote, MessageQ does not guarantee that the message is actually delivered before the \hyperlink{_message_q_8h_aa628f9bf897924f61d6adfba3f82fa8d}{MessageQ\_\-put()} call returns
+
+The queue id must have been returned from one of the following functions:
+\begin{DoxyItemize}
+\item MessageQ\_\-open
+\item MessageQ\_\-getReplyQueue
+\item MessageQ\_\-getDstQueue
+\end{DoxyItemize}
+
+After the message is placed onto the final destination, the queue's MessageQ\_\-Params::synchronizer signal function is called.
+
+The application loses ownership of the message once put() is called.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em queueId} & Destination MessageQ \\
+\hline
+\mbox{\tt in}  & {\em msg} & Message to be sent.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Status of the call.
+\begin{DoxyItemize}
+\item \hyperlink{_message_q_8h_a1643901e74764002f880ccc408691de6}{MessageQ\_\-S\_\-SUCCESS} denotes success.
+\item \hyperlink{_message_q_8h_a19b5749722c26050d2e56c2104f982fe}{MessageQ\_\-E\_\-FAIL} denotes failure. The put was not successful. The caller still owns the message. 
+\end{DoxyItemize}
+\end{DoxyReturn}
+\index{MessageQ.h@{MessageQ.h}!MessageQ\_\-count@{MessageQ\_\-count}}
+\index{MessageQ\_\-count@{MessageQ\_\-count}!MessageQ.h@{MessageQ.h}}
+\paragraph[{MessageQ\_\-count}]{\setlength{\rightskip}{0pt plus 5cm}Int MessageQ\_\-count (
+\begin{DoxyParamCaption}
+\item[{{\bf MessageQ\_\-Handle}}]{ handle}
+\end{DoxyParamCaption}
+)}\hfill\label{_message_q_8h_a5e2f02d046b2bb16dce6b41f9b4c5ad3}
+
+
+Returns the number of messages in a message queue. 
+
+This function returns the number of messages in a message queue.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em handle} & MessageQ handle\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Number of messages in the message queue. 
+\end{DoxyReturn}
+\index{MessageQ.h@{MessageQ.h}!MessageQ\_\-getQueueId@{MessageQ\_\-getQueueId}}
+\index{MessageQ\_\-getQueueId@{MessageQ\_\-getQueueId}!MessageQ.h@{MessageQ.h}}
+\paragraph[{MessageQ\_\-getQueueId}]{\setlength{\rightskip}{0pt plus 5cm}UInt32 MessageQ\_\-getQueueId (
+\begin{DoxyParamCaption}
+\item[{{\bf MessageQ\_\-Handle}}]{ handle}
+\end{DoxyParamCaption}
+)}\hfill\label{_message_q_8h_af9d9030e493a5a6f961d84900e313623}
+
+
+Returns the QueueId associated with the handle. 
+
+Since the \hyperlink{_message_q_8h_aa628f9bf897924f61d6adfba3f82fa8d}{MessageQ\_\-put} function takes a QueueId, the creator of a message queue cannot send a message to itself without retrieving the QueueId. This function extracts the QueueId from the object.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em handle} & MessageQ handle\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+QueueId associated to the object 
+\end{DoxyReturn}
+\index{MessageQ.h@{MessageQ.h}!MessageQ\_\-setReplyQueue@{MessageQ\_\-setReplyQueue}}
+\index{MessageQ\_\-setReplyQueue@{MessageQ\_\-setReplyQueue}!MessageQ.h@{MessageQ.h}}
+\paragraph[{MessageQ\_\-setReplyQueue}]{\setlength{\rightskip}{0pt plus 5cm}Void MessageQ\_\-setReplyQueue (
+\begin{DoxyParamCaption}
+\item[{{\bf MessageQ\_\-Handle}}]{ handle, }
+\item[{{\bf MessageQ\_\-Msg}}]{ msg}
+\end{DoxyParamCaption}
+)}\hfill\label{_message_q_8h_a2532f1ebf44ae91a8fd8f63a49e44802}
+
+
+Embeds a source message queue into a message. 
+
+This function along with the \hyperlink{_message_q_8h_a8af7731e0ea02352febe0f055438c5e5}{MessageQ\_\-getReplyQueue} function can be used instead of the \hyperlink{_message_q_8h_af9e6bd0c1dbb236eb4a618211bf15325}{MessageQ\_\-open} function. The sender of a message can embed a messageQ into the message with this function. The receiver of the message can extract the message queue id with the \hyperlink{_message_q_8h_a8af7731e0ea02352febe0f055438c5e5}{MessageQ\_\-getReplyQueue} function.
+
+This method is particularly useful in a client/server relationship where the server does not want to know who the clients are. The clients can embed their message queue into the message to the server and the server extracts it and uses it to reply.
+
+
+\begin{DoxyParams}{Parameters}
+{\em handle} & MessageQ handle \\
+\hline
+{\em msg} & Message to embed queue into \\
+\hline
+\end{DoxyParams}
+\index{MessageQ.h@{MessageQ.h}!MessageQ\_\-unblock@{MessageQ\_\-unblock}}
+\index{MessageQ\_\-unblock@{MessageQ\_\-unblock}!MessageQ.h@{MessageQ.h}}
+\paragraph[{MessageQ\_\-unblock}]{\setlength{\rightskip}{0pt plus 5cm}Void MessageQ\_\-unblock (
+\begin{DoxyParamCaption}
+\item[{{\bf MessageQ\_\-Handle}}]{ handle}
+\end{DoxyParamCaption}
+)}\hfill\label{_message_q_8h_ae9491bc9f790e267836f27ad2e31d7de}
+
+
+Unblocks a MessageQ. 
+
+Unblocks a reader thread that is blocked on a MessageQ\_\-get. The MessageQ\_\-get call will return with status \hyperlink{_message_q_8h_a320bbc58b6a523f70d9866a54d176b44}{MessageQ\_\-E\_\-UNBLOCKED} indicating that it returned due to a MessageQ\_\-unblock rather than a timeout or a received message. This call should only be used during a shutdown sequence in order to ensure that there is no blocked reader on a queue before deleting the queue. A queue may not be used after it has been unblocked.
+
+MessageQ\_\-unblock works by raising a flag in the queue indicating that it is unblocked and then signaling the synchronizer that is configured with the target queue. If MessageQ\_\-unblock is called upon a queue that has no blocked listeners, then any subsequent MessageQ\_\-get will not block and will immediately return MessageQ\_\-E\_\-UNBLOCKED regardless of whether there is a message on the queue.
+
+Restrictions:
+\begin{DoxyItemize}
+\item A queue may not be used after it has been unblocked.
+\item MessageQ\_\-unblock may only be called on a local queue.
+\item May only be used with a queue configured with a blocking synchronizer.
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em handle} & MessageQ handle\\
+\hline
+\end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{_message_q_8h_aaeb270f6b50d96f1e1dd134591ffc380}{MessageQ\_\-get} 
+\end{DoxySeeAlso}

@@ -1,0 +1,90 @@
+\subsection{MessageQ\_\-MsgHeader Struct Reference}
+\label{struct_message_q___msg_header}\index{MessageQ\_\-MsgHeader@{MessageQ\_\-MsgHeader}}
+
+
+Required first field in every message.  
+
+
+
+
+{\ttfamily \#include $<$MessageQ.h$>$}
+
+\subsubsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+Bits32 \hyperlink{struct_message_q___msg_header_aa8269e435d09e486b167c0b6f9cc90b0}{reserved0}
+\item 
+Bits32 \hyperlink{struct_message_q___msg_header_a1e12c3020f3f175128bf2ae4c5d1df7c}{reserved1}
+\item 
+Bits32 \hyperlink{struct_message_q___msg_header_adee0e6ed997b218584e2009854fa5214}{msgSize}
+\item 
+Bits16 \hyperlink{struct_message_q___msg_header_a377485e7c13fde415d7d8811fe8f4f37}{flags}
+\item 
+Bits16 \hyperlink{struct_message_q___msg_header_abb97c08bbc06479c4a5e5fde91412e57}{msgId}
+\item 
+Bits16 \hyperlink{struct_message_q___msg_header_af37bb45f1801bf39207a7293bf5a05d3}{dstId}
+\item 
+Bits16 \hyperlink{struct_message_q___msg_header_a6a4fcb509b74acd7d45f23a55c71d552}{dstProc}
+\item 
+Bits16 \hyperlink{struct_message_q___msg_header_ac933455354a8b5735404cbc81147dd06}{replyId}
+\item 
+Bits16 \hyperlink{struct_message_q___msg_header_a9c6cbc63347f25ea6cc47338d570cb48}{replyProc}
+\item 
+Bits16 \hyperlink{struct_message_q___msg_header_a29c80efb7f32089965ce1a0e69b7262c}{srcProc}
+\item 
+Bits16 \hyperlink{struct_message_q___msg_header_a4281bf0f37f64a9c5e580f0abc3536eb}{heapId}
+\item 
+Bits16 \hyperlink{struct_message_q___msg_header_afcef65b2eebc0e508363870743706909}{seqNum}
+\item 
+Bits16 \hyperlink{struct_message_q___msg_header_a66d4a1e8d4a20da8bad4feca1c710e53}{reserved}
+\end{DoxyCompactItemize}
+
+
+\subsubsection{Detailed Description}
+Required first field in every message. 
+
+\subsubsection{Field Documentation}
+\index{MessageQ\_\-MsgHeader@{MessageQ\_\-MsgHeader}!reserved0@{reserved0}}
+\index{reserved0@{reserved0}!MessageQ_MsgHeader@{MessageQ\_\-MsgHeader}}
+\paragraph[{reserved0}]{\setlength{\rightskip}{0pt plus 5cm}Bits32 {\bf MessageQ\_\-MsgHeader::reserved0}}\hfill\label{struct_message_q___msg_header_aa8269e435d09e486b167c0b6f9cc90b0}
+reserved for List.elem-\/$>$next \index{MessageQ\_\-MsgHeader@{MessageQ\_\-MsgHeader}!reserved1@{reserved1}}
+\index{reserved1@{reserved1}!MessageQ_MsgHeader@{MessageQ\_\-MsgHeader}}
+\paragraph[{reserved1}]{\setlength{\rightskip}{0pt plus 5cm}Bits32 {\bf MessageQ\_\-MsgHeader::reserved1}}\hfill\label{struct_message_q___msg_header_a1e12c3020f3f175128bf2ae4c5d1df7c}
+reserved for List.elem-\/$>$prev \index{MessageQ\_\-MsgHeader@{MessageQ\_\-MsgHeader}!msgSize@{msgSize}}
+\index{msgSize@{msgSize}!MessageQ_MsgHeader@{MessageQ\_\-MsgHeader}}
+\paragraph[{msgSize}]{\setlength{\rightskip}{0pt plus 5cm}Bits32 {\bf MessageQ\_\-MsgHeader::msgSize}}\hfill\label{struct_message_q___msg_header_adee0e6ed997b218584e2009854fa5214}
+message size \index{MessageQ\_\-MsgHeader@{MessageQ\_\-MsgHeader}!flags@{flags}}
+\index{flags@{flags}!MessageQ_MsgHeader@{MessageQ\_\-MsgHeader}}
+\paragraph[{flags}]{\setlength{\rightskip}{0pt plus 5cm}Bits16 {\bf MessageQ\_\-MsgHeader::flags}}\hfill\label{struct_message_q___msg_header_a377485e7c13fde415d7d8811fe8f4f37}
+bitmask of different flags \index{MessageQ\_\-MsgHeader@{MessageQ\_\-MsgHeader}!msgId@{msgId}}
+\index{msgId@{msgId}!MessageQ_MsgHeader@{MessageQ\_\-MsgHeader}}
+\paragraph[{msgId}]{\setlength{\rightskip}{0pt plus 5cm}Bits16 {\bf MessageQ\_\-MsgHeader::msgId}}\hfill\label{struct_message_q___msg_header_abb97c08bbc06479c4a5e5fde91412e57}
+message id \index{MessageQ\_\-MsgHeader@{MessageQ\_\-MsgHeader}!dstId@{dstId}}
+\index{dstId@{dstId}!MessageQ_MsgHeader@{MessageQ\_\-MsgHeader}}
+\paragraph[{dstId}]{\setlength{\rightskip}{0pt plus 5cm}Bits16 {\bf MessageQ\_\-MsgHeader::dstId}}\hfill\label{struct_message_q___msg_header_af37bb45f1801bf39207a7293bf5a05d3}
+destination queue id \index{MessageQ\_\-MsgHeader@{MessageQ\_\-MsgHeader}!dstProc@{dstProc}}
+\index{dstProc@{dstProc}!MessageQ_MsgHeader@{MessageQ\_\-MsgHeader}}
+\paragraph[{dstProc}]{\setlength{\rightskip}{0pt plus 5cm}Bits16 {\bf MessageQ\_\-MsgHeader::dstProc}}\hfill\label{struct_message_q___msg_header_a6a4fcb509b74acd7d45f23a55c71d552}
+destination processor id \index{MessageQ\_\-MsgHeader@{MessageQ\_\-MsgHeader}!replyId@{replyId}}
+\index{replyId@{replyId}!MessageQ_MsgHeader@{MessageQ\_\-MsgHeader}}
+\paragraph[{replyId}]{\setlength{\rightskip}{0pt plus 5cm}Bits16 {\bf MessageQ\_\-MsgHeader::replyId}}\hfill\label{struct_message_q___msg_header_ac933455354a8b5735404cbc81147dd06}
+reply id \index{MessageQ\_\-MsgHeader@{MessageQ\_\-MsgHeader}!replyProc@{replyProc}}
+\index{replyProc@{replyProc}!MessageQ_MsgHeader@{MessageQ\_\-MsgHeader}}
+\paragraph[{replyProc}]{\setlength{\rightskip}{0pt plus 5cm}Bits16 {\bf MessageQ\_\-MsgHeader::replyProc}}\hfill\label{struct_message_q___msg_header_a9c6cbc63347f25ea6cc47338d570cb48}
+reply processor \index{MessageQ\_\-MsgHeader@{MessageQ\_\-MsgHeader}!srcProc@{srcProc}}
+\index{srcProc@{srcProc}!MessageQ_MsgHeader@{MessageQ\_\-MsgHeader}}
+\paragraph[{srcProc}]{\setlength{\rightskip}{0pt plus 5cm}Bits16 {\bf MessageQ\_\-MsgHeader::srcProc}}\hfill\label{struct_message_q___msg_header_a29c80efb7f32089965ce1a0e69b7262c}
+source processor \index{MessageQ\_\-MsgHeader@{MessageQ\_\-MsgHeader}!heapId@{heapId}}
+\index{heapId@{heapId}!MessageQ_MsgHeader@{MessageQ\_\-MsgHeader}}
+\paragraph[{heapId}]{\setlength{\rightskip}{0pt plus 5cm}Bits16 {\bf MessageQ\_\-MsgHeader::heapId}}\hfill\label{struct_message_q___msg_header_a4281bf0f37f64a9c5e580f0abc3536eb}
+heap id \index{MessageQ\_\-MsgHeader@{MessageQ\_\-MsgHeader}!seqNum@{seqNum}}
+\index{seqNum@{seqNum}!MessageQ_MsgHeader@{MessageQ\_\-MsgHeader}}
+\paragraph[{seqNum}]{\setlength{\rightskip}{0pt plus 5cm}Bits16 {\bf MessageQ\_\-MsgHeader::seqNum}}\hfill\label{struct_message_q___msg_header_afcef65b2eebc0e508363870743706909}
+sequence number \index{MessageQ\_\-MsgHeader@{MessageQ\_\-MsgHeader}!reserved@{reserved}}
+\index{reserved@{reserved}!MessageQ_MsgHeader@{MessageQ\_\-MsgHeader}}
+\paragraph[{reserved}]{\setlength{\rightskip}{0pt plus 5cm}Bits16 {\bf MessageQ\_\-MsgHeader::reserved}}\hfill\label{struct_message_q___msg_header_a66d4a1e8d4a20da8bad4feca1c710e53}
+reserved 
+
+The documentation for this struct was generated from the following file:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{_message_q_8h}{MessageQ.h}\end{DoxyCompactItemize}

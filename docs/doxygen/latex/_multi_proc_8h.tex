@@ -1,0 +1,337 @@
+\subsection{MultiProc.h File Reference}
+\label{_multi_proc_8h}\index{MultiProc.h@{MultiProc.h}}
+
+
+\subsubsection{Detailed Description}
+Processor ID Manager. ===========================================================================
+
+Many IPC modules require the ability to uniquely specify and identify processors in a multi-\/processor environment. The MultiProc module centeralizes processor id management into one module. Since this configuration is almost always universally required, most IPC applications require supplying configuration of this module.
+
+Each processor in the MultiProc module may be uniquely identified by either a name string or an integer ranging from 0 to NUMPROCESSORS -\/ 1.
+
+At runtime, the \hyperlink{_multi_proc_8h_ad690d4b42978e95cb57d9244bb8e6959}{MultiProc\_\-getId} call returns the MultiProc id for any processor given its name.
+
+The MultiProc header should be included in an application as follows: 
+\begin{DoxyCode}
+  #include <ti/ipc/MultiProc.h>
+\end{DoxyCode}
+ This graph shows which files directly or indirectly include this file:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=103pt]{_multi_proc_8h__dep__incl}
+\end{center}
+\end{figure}
+\subsubsection*{Defines}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{_multi_proc_8h_a419e76c904cc23e3ab274bd49d4ba2f0}{MultiProc\_\-S\_\-BUSY}~2
+\begin{DoxyCompactList}\small\item\em The resource is still in use. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_multi_proc_8h_a67c6af51e4eee99a2e57b498ba943366}{MultiProc\_\-S\_\-ALREADYSETUP}~1
+\begin{DoxyCompactList}\small\item\em The module has been already setup. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_multi_proc_8h_a88ef69134ed8907ec46443a8c5445acd}{MultiProc\_\-S\_\-SUCCESS}~0
+\begin{DoxyCompactList}\small\item\em Operation is successful. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_multi_proc_8h_ac3e4ff7eac6f0fe38b97b1ca086ea1c6}{MultiProc\_\-E\_\-FAIL}~-\/1
+\begin{DoxyCompactList}\small\item\em Generic failure. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_multi_proc_8h_a898d3875868db40c49e5c28100c2accb}{MultiProc\_\-E\_\-INVALIDARG}~-\/2
+\begin{DoxyCompactList}\small\item\em Argument passed to function is invalid. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_multi_proc_8h_aaa847e4fc5b581994dff79bcfc859bce}{MultiProc\_\-E\_\-MEMORY}~-\/3
+\begin{DoxyCompactList}\small\item\em Operation resulted in memory failure. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_multi_proc_8h_a18f5c0436a877611489726c797d86556}{MultiProc\_\-E\_\-ALREADYEXISTS}~-\/4
+\begin{DoxyCompactList}\small\item\em The specified entity already exists. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_multi_proc_8h_a94763088a2d466568560a039ea675290}{MultiProc\_\-E\_\-NOTFOUND}~-\/5
+\begin{DoxyCompactList}\small\item\em Unable to find the specified entity. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_multi_proc_8h_a2f6b71bcbab4cfe1c69f1c5a9403a3d5}{MultiProc\_\-E\_\-TIMEOUT}~-\/6
+\begin{DoxyCompactList}\small\item\em Operation timed out. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_multi_proc_8h_a4d77c2159e3d47966e8306c486e0c2da}{MultiProc\_\-E\_\-INVALIDSTATE}~-\/7
+\begin{DoxyCompactList}\small\item\em Module is not initialized. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_multi_proc_8h_aae22e0e82ebcff6fcdfb22b0ae26ff7b}{MultiProc\_\-E\_\-OSFAILURE}~-\/8
+\begin{DoxyCompactList}\small\item\em A failure occurred in an OS-\/specific call. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_multi_proc_8h_aa72d734728c7c0fc99353e9fdc89d9a1}{MultiProc\_\-E\_\-RESOURCE}~-\/9
+\begin{DoxyCompactList}\small\item\em Specified resource is not available. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_multi_proc_8h_aa7adeed5b18aeefd77fb57e333974d5d}{MultiProc\_\-E\_\-RESTART}~-\/10
+\begin{DoxyCompactList}\small\item\em Operation was interrupted. Please restart the operation. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_multi_proc_8h_a94a1d14527833bc8294407634d5495d9}{MultiProc\_\-INVALIDID}~(0xFFFF)
+\begin{DoxyCompactList}\small\item\em Invalid processor id. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+UInt16 \hyperlink{_multi_proc_8h_a147f37c02626ab600bea516211eac50e}{MultiProc\_\-getBaseIdOfCluster} (Void)
+\begin{DoxyCompactList}\small\item\em Gets the base MultiProc id of the cluster. \item\end{DoxyCompactList}\item 
+UInt16 \hyperlink{_multi_proc_8h_ad690d4b42978e95cb57d9244bb8e6959}{MultiProc\_\-getId} (String name)
+\begin{DoxyCompactList}\small\item\em Gets the MultiProc id. \item\end{DoxyCompactList}\item 
+String \hyperlink{_multi_proc_8h_aa16e1bb4fd1eb6f968d6ba47c65f88e0}{MultiProc\_\-getName} (UInt16 id)
+\begin{DoxyCompactList}\small\item\em Gets the name of a processor. \item\end{DoxyCompactList}\item 
+UInt16 \hyperlink{_multi_proc_8h_a75e5d953ef6828ef03c2eb8d70dda82d}{MultiProc\_\-getNumProcessors} (Void)
+\begin{DoxyCompactList}\small\item\em Gets the number of processors. \item\end{DoxyCompactList}\item 
+UInt16 \hyperlink{_multi_proc_8h_a74dfbb6a7dbf74b2a9be6c041a13d8bd}{MultiProc\_\-getNumProcsInCluster} (Void)
+\begin{DoxyCompactList}\small\item\em Gets the number of processors in the cluster. \item\end{DoxyCompactList}\item 
+UInt16 \hyperlink{_multi_proc_8h_a2cb11a79ed2c6cbd6ea6b88b63903124}{MultiProc\_\-self} (Void)
+\begin{DoxyCompactList}\small\item\em Gets executing processor's MultiProc id. \item\end{DoxyCompactList}\item 
+Int \hyperlink{_multi_proc_8h_ae8ca0f1d758d428d9f06f56badee7f0c}{MultiProc\_\-setBaseIdOfCluster} (UInt16 baseId)
+\begin{DoxyCompactList}\small\item\em Sets executing processor's base id of the cluster. \item\end{DoxyCompactList}\item 
+Int \hyperlink{_multi_proc_8h_a4a00561c7a3f5f91b7ab7e1b4c3fb1ef}{MultiProc\_\-setLocalId} (UInt16 id)
+\begin{DoxyCompactList}\small\item\em Sets executing processor's MultiProc id. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsubsection{Define Documentation}
+\index{MultiProc.h@{MultiProc.h}!MultiProc\_\-S\_\-BUSY@{MultiProc\_\-S\_\-BUSY}}
+\index{MultiProc\_\-S\_\-BUSY@{MultiProc\_\-S\_\-BUSY}!MultiProc.h@{MultiProc.h}}
+\paragraph[{MultiProc\_\-S\_\-BUSY}]{\setlength{\rightskip}{0pt plus 5cm}\#define MultiProc\_\-S\_\-BUSY~2}\hfill\label{_multi_proc_8h_a419e76c904cc23e3ab274bd49d4ba2f0}
+
+
+The resource is still in use. 
+
+\index{MultiProc.h@{MultiProc.h}!MultiProc\_\-S\_\-ALREADYSETUP@{MultiProc\_\-S\_\-ALREADYSETUP}}
+\index{MultiProc\_\-S\_\-ALREADYSETUP@{MultiProc\_\-S\_\-ALREADYSETUP}!MultiProc.h@{MultiProc.h}}
+\paragraph[{MultiProc\_\-S\_\-ALREADYSETUP}]{\setlength{\rightskip}{0pt plus 5cm}\#define MultiProc\_\-S\_\-ALREADYSETUP~1}\hfill\label{_multi_proc_8h_a67c6af51e4eee99a2e57b498ba943366}
+
+
+The module has been already setup. 
+
+\index{MultiProc.h@{MultiProc.h}!MultiProc\_\-S\_\-SUCCESS@{MultiProc\_\-S\_\-SUCCESS}}
+\index{MultiProc\_\-S\_\-SUCCESS@{MultiProc\_\-S\_\-SUCCESS}!MultiProc.h@{MultiProc.h}}
+\paragraph[{MultiProc\_\-S\_\-SUCCESS}]{\setlength{\rightskip}{0pt plus 5cm}\#define MultiProc\_\-S\_\-SUCCESS~0}\hfill\label{_multi_proc_8h_a88ef69134ed8907ec46443a8c5445acd}
+
+
+Operation is successful. 
+
+\index{MultiProc.h@{MultiProc.h}!MultiProc\_\-E\_\-FAIL@{MultiProc\_\-E\_\-FAIL}}
+\index{MultiProc\_\-E\_\-FAIL@{MultiProc\_\-E\_\-FAIL}!MultiProc.h@{MultiProc.h}}
+\paragraph[{MultiProc\_\-E\_\-FAIL}]{\setlength{\rightskip}{0pt plus 5cm}\#define MultiProc\_\-E\_\-FAIL~-\/1}\hfill\label{_multi_proc_8h_ac3e4ff7eac6f0fe38b97b1ca086ea1c6}
+
+
+Generic failure. 
+
+\index{MultiProc.h@{MultiProc.h}!MultiProc\_\-E\_\-INVALIDARG@{MultiProc\_\-E\_\-INVALIDARG}}
+\index{MultiProc\_\-E\_\-INVALIDARG@{MultiProc\_\-E\_\-INVALIDARG}!MultiProc.h@{MultiProc.h}}
+\paragraph[{MultiProc\_\-E\_\-INVALIDARG}]{\setlength{\rightskip}{0pt plus 5cm}\#define MultiProc\_\-E\_\-INVALIDARG~-\/2}\hfill\label{_multi_proc_8h_a898d3875868db40c49e5c28100c2accb}
+
+
+Argument passed to function is invalid. 
+
+\index{MultiProc.h@{MultiProc.h}!MultiProc\_\-E\_\-MEMORY@{MultiProc\_\-E\_\-MEMORY}}
+\index{MultiProc\_\-E\_\-MEMORY@{MultiProc\_\-E\_\-MEMORY}!MultiProc.h@{MultiProc.h}}
+\paragraph[{MultiProc\_\-E\_\-MEMORY}]{\setlength{\rightskip}{0pt plus 5cm}\#define MultiProc\_\-E\_\-MEMORY~-\/3}\hfill\label{_multi_proc_8h_aaa847e4fc5b581994dff79bcfc859bce}
+
+
+Operation resulted in memory failure. 
+
+\index{MultiProc.h@{MultiProc.h}!MultiProc\_\-E\_\-ALREADYEXISTS@{MultiProc\_\-E\_\-ALREADYEXISTS}}
+\index{MultiProc\_\-E\_\-ALREADYEXISTS@{MultiProc\_\-E\_\-ALREADYEXISTS}!MultiProc.h@{MultiProc.h}}
+\paragraph[{MultiProc\_\-E\_\-ALREADYEXISTS}]{\setlength{\rightskip}{0pt plus 5cm}\#define MultiProc\_\-E\_\-ALREADYEXISTS~-\/4}\hfill\label{_multi_proc_8h_a18f5c0436a877611489726c797d86556}
+
+
+The specified entity already exists. 
+
+\index{MultiProc.h@{MultiProc.h}!MultiProc\_\-E\_\-NOTFOUND@{MultiProc\_\-E\_\-NOTFOUND}}
+\index{MultiProc\_\-E\_\-NOTFOUND@{MultiProc\_\-E\_\-NOTFOUND}!MultiProc.h@{MultiProc.h}}
+\paragraph[{MultiProc\_\-E\_\-NOTFOUND}]{\setlength{\rightskip}{0pt plus 5cm}\#define MultiProc\_\-E\_\-NOTFOUND~-\/5}\hfill\label{_multi_proc_8h_a94763088a2d466568560a039ea675290}
+
+
+Unable to find the specified entity. 
+
+\index{MultiProc.h@{MultiProc.h}!MultiProc\_\-E\_\-TIMEOUT@{MultiProc\_\-E\_\-TIMEOUT}}
+\index{MultiProc\_\-E\_\-TIMEOUT@{MultiProc\_\-E\_\-TIMEOUT}!MultiProc.h@{MultiProc.h}}
+\paragraph[{MultiProc\_\-E\_\-TIMEOUT}]{\setlength{\rightskip}{0pt plus 5cm}\#define MultiProc\_\-E\_\-TIMEOUT~-\/6}\hfill\label{_multi_proc_8h_a2f6b71bcbab4cfe1c69f1c5a9403a3d5}
+
+
+Operation timed out. 
+
+\index{MultiProc.h@{MultiProc.h}!MultiProc\_\-E\_\-INVALIDSTATE@{MultiProc\_\-E\_\-INVALIDSTATE}}
+\index{MultiProc\_\-E\_\-INVALIDSTATE@{MultiProc\_\-E\_\-INVALIDSTATE}!MultiProc.h@{MultiProc.h}}
+\paragraph[{MultiProc\_\-E\_\-INVALIDSTATE}]{\setlength{\rightskip}{0pt plus 5cm}\#define MultiProc\_\-E\_\-INVALIDSTATE~-\/7}\hfill\label{_multi_proc_8h_a4d77c2159e3d47966e8306c486e0c2da}
+
+
+Module is not initialized. 
+
+\index{MultiProc.h@{MultiProc.h}!MultiProc\_\-E\_\-OSFAILURE@{MultiProc\_\-E\_\-OSFAILURE}}
+\index{MultiProc\_\-E\_\-OSFAILURE@{MultiProc\_\-E\_\-OSFAILURE}!MultiProc.h@{MultiProc.h}}
+\paragraph[{MultiProc\_\-E\_\-OSFAILURE}]{\setlength{\rightskip}{0pt plus 5cm}\#define MultiProc\_\-E\_\-OSFAILURE~-\/8}\hfill\label{_multi_proc_8h_aae22e0e82ebcff6fcdfb22b0ae26ff7b}
+
+
+A failure occurred in an OS-\/specific call. 
+
+\index{MultiProc.h@{MultiProc.h}!MultiProc\_\-E\_\-RESOURCE@{MultiProc\_\-E\_\-RESOURCE}}
+\index{MultiProc\_\-E\_\-RESOURCE@{MultiProc\_\-E\_\-RESOURCE}!MultiProc.h@{MultiProc.h}}
+\paragraph[{MultiProc\_\-E\_\-RESOURCE}]{\setlength{\rightskip}{0pt plus 5cm}\#define MultiProc\_\-E\_\-RESOURCE~-\/9}\hfill\label{_multi_proc_8h_aa72d734728c7c0fc99353e9fdc89d9a1}
+
+
+Specified resource is not available. 
+
+\index{MultiProc.h@{MultiProc.h}!MultiProc\_\-E\_\-RESTART@{MultiProc\_\-E\_\-RESTART}}
+\index{MultiProc\_\-E\_\-RESTART@{MultiProc\_\-E\_\-RESTART}!MultiProc.h@{MultiProc.h}}
+\paragraph[{MultiProc\_\-E\_\-RESTART}]{\setlength{\rightskip}{0pt plus 5cm}\#define MultiProc\_\-E\_\-RESTART~-\/10}\hfill\label{_multi_proc_8h_aa7adeed5b18aeefd77fb57e333974d5d}
+
+
+Operation was interrupted. Please restart the operation. 
+
+\index{MultiProc.h@{MultiProc.h}!MultiProc\_\-INVALIDID@{MultiProc\_\-INVALIDID}}
+\index{MultiProc\_\-INVALIDID@{MultiProc\_\-INVALIDID}!MultiProc.h@{MultiProc.h}}
+\paragraph[{MultiProc\_\-INVALIDID}]{\setlength{\rightskip}{0pt plus 5cm}\#define MultiProc\_\-INVALIDID~(0xFFFF)}\hfill\label{_multi_proc_8h_a94a1d14527833bc8294407634d5495d9}
+
+
+Invalid processor id. 
+
+
+
+\subsubsection{Function Documentation}
+\index{MultiProc.h@{MultiProc.h}!MultiProc\_\-getBaseIdOfCluster@{MultiProc\_\-getBaseIdOfCluster}}
+\index{MultiProc\_\-getBaseIdOfCluster@{MultiProc\_\-getBaseIdOfCluster}!MultiProc.h@{MultiProc.h}}
+\paragraph[{MultiProc\_\-getBaseIdOfCluster}]{\setlength{\rightskip}{0pt plus 5cm}UInt16 MultiProc\_\-getBaseIdOfCluster (
+\begin{DoxyParamCaption}
+\item[{Void}]{}
+\end{DoxyParamCaption}
+)}\hfill\label{_multi_proc_8h_a147f37c02626ab600bea516211eac50e}
+
+
+Gets the base MultiProc id of the cluster. 
+
+Retrieves the base MultiProc id for the cluster of processors.
+
+\begin{DoxyReturn}{Returns}
+MultiProc id for base of cluster
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+MultiProc\_\-getClusterId 
+\end{DoxySeeAlso}
+\index{MultiProc.h@{MultiProc.h}!MultiProc\_\-getId@{MultiProc\_\-getId}}
+\index{MultiProc\_\-getId@{MultiProc\_\-getId}!MultiProc.h@{MultiProc.h}}
+\paragraph[{MultiProc\_\-getId}]{\setlength{\rightskip}{0pt plus 5cm}UInt16 MultiProc\_\-getId (
+\begin{DoxyParamCaption}
+\item[{String}]{ name}
+\end{DoxyParamCaption}
+)}\hfill\label{_multi_proc_8h_ad690d4b42978e95cb57d9244bb8e6959}
+
+
+Gets the MultiProc id. 
+
+Retrieves the MultiProc id for the processor with corresponding MultiProc name. \hyperlink{_multi_proc_8h_a94a1d14527833bc8294407634d5495d9}{MultiProc\_\-INVALIDID} is returned if the name was not found.
+
+
+\begin{DoxyParams}{Parameters}
+{\em name} & Name of the processor.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+MultiProc id
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{_multi_proc_8h_aa16e1bb4fd1eb6f968d6ba47c65f88e0}{MultiProc\_\-getName} 
+\end{DoxySeeAlso}
+\index{MultiProc.h@{MultiProc.h}!MultiProc\_\-getName@{MultiProc\_\-getName}}
+\index{MultiProc\_\-getName@{MultiProc\_\-getName}!MultiProc.h@{MultiProc.h}}
+\paragraph[{MultiProc\_\-getName}]{\setlength{\rightskip}{0pt plus 5cm}String MultiProc\_\-getName (
+\begin{DoxyParamCaption}
+\item[{UInt16}]{ id}
+\end{DoxyParamCaption}
+)}\hfill\label{_multi_proc_8h_aa16e1bb4fd1eb6f968d6ba47c65f88e0}
+
+
+Gets the name of a processor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em id} & MultiProc id.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Name of the processor
+\end{DoxyReturn}
+The returned string should never be modified.
+
+\begin{DoxySeeAlso}{See also}
+\hyperlink{_multi_proc_8h_ad690d4b42978e95cb57d9244bb8e6959}{MultiProc\_\-getId} 
+\end{DoxySeeAlso}
+\index{MultiProc.h@{MultiProc.h}!MultiProc\_\-getNumProcessors@{MultiProc\_\-getNumProcessors}}
+\index{MultiProc\_\-getNumProcessors@{MultiProc\_\-getNumProcessors}!MultiProc.h@{MultiProc.h}}
+\paragraph[{MultiProc\_\-getNumProcessors}]{\setlength{\rightskip}{0pt plus 5cm}UInt16 MultiProc\_\-getNumProcessors (
+\begin{DoxyParamCaption}
+\item[{Void}]{}
+\end{DoxyParamCaption}
+)}\hfill\label{_multi_proc_8h_a75e5d953ef6828ef03c2eb8d70dda82d}
+
+
+Gets the number of processors. 
+
+\begin{DoxyReturn}{Returns}
+Number of processors configured with MultiProc 
+\end{DoxyReturn}
+\index{MultiProc.h@{MultiProc.h}!MultiProc\_\-getNumProcsInCluster@{MultiProc\_\-getNumProcsInCluster}}
+\index{MultiProc\_\-getNumProcsInCluster@{MultiProc\_\-getNumProcsInCluster}!MultiProc.h@{MultiProc.h}}
+\paragraph[{MultiProc\_\-getNumProcsInCluster}]{\setlength{\rightskip}{0pt plus 5cm}UInt16 MultiProc\_\-getNumProcsInCluster (
+\begin{DoxyParamCaption}
+\item[{Void}]{}
+\end{DoxyParamCaption}
+)}\hfill\label{_multi_proc_8h_a74dfbb6a7dbf74b2a9be6c041a13d8bd}
+
+
+Gets the number of processors in the cluster. 
+
+\begin{DoxyReturn}{Returns}
+Number of processors in cluster 
+\end{DoxyReturn}
+\index{MultiProc.h@{MultiProc.h}!MultiProc\_\-self@{MultiProc\_\-self}}
+\index{MultiProc\_\-self@{MultiProc\_\-self}!MultiProc.h@{MultiProc.h}}
+\paragraph[{MultiProc\_\-self}]{\setlength{\rightskip}{0pt plus 5cm}UInt16 MultiProc\_\-self (
+\begin{DoxyParamCaption}
+\item[{Void}]{}
+\end{DoxyParamCaption}
+)}\hfill\label{_multi_proc_8h_a2cb11a79ed2c6cbd6ea6b88b63903124}
+
+
+Gets executing processor's MultiProc id. 
+
+\begin{DoxyReturn}{Returns}
+Executing processor's id
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{_multi_proc_8h_ad690d4b42978e95cb57d9244bb8e6959}{MultiProc\_\-getId} 
+\end{DoxySeeAlso}
+\index{MultiProc.h@{MultiProc.h}!MultiProc\_\-setBaseIdOfCluster@{MultiProc\_\-setBaseIdOfCluster}}
+\index{MultiProc\_\-setBaseIdOfCluster@{MultiProc\_\-setBaseIdOfCluster}!MultiProc.h@{MultiProc.h}}
+\paragraph[{MultiProc\_\-setBaseIdOfCluster}]{\setlength{\rightskip}{0pt plus 5cm}Int MultiProc\_\-setBaseIdOfCluster (
+\begin{DoxyParamCaption}
+\item[{UInt16}]{ baseId}
+\end{DoxyParamCaption}
+)}\hfill\label{_multi_proc_8h_ae8ca0f1d758d428d9f06f56badee7f0c}
+
+
+Sets executing processor's base id of the cluster. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em baseId} & The MultiProc base id of the cluster\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+MultiProc status:
+\begin{DoxyItemize}
+\item \hyperlink{_multi_proc_8h_a88ef69134ed8907ec46443a8c5445acd}{MultiProc\_\-S\_\-SUCCESS}: sucessfully set base id of cluster
+\item \hyperlink{_multi_proc_8h_ac3e4ff7eac6f0fe38b97b1ca086ea1c6}{MultiProc\_\-E\_\-FAIL}: failed to set base id of cluster 
+\end{DoxyItemize}
+\end{DoxyReturn}
+\index{MultiProc.h@{MultiProc.h}!MultiProc\_\-setLocalId@{MultiProc\_\-setLocalId}}
+\index{MultiProc\_\-setLocalId@{MultiProc\_\-setLocalId}!MultiProc.h@{MultiProc.h}}
+\paragraph[{MultiProc\_\-setLocalId}]{\setlength{\rightskip}{0pt plus 5cm}Int MultiProc\_\-setLocalId (
+\begin{DoxyParamCaption}
+\item[{UInt16}]{ id}
+\end{DoxyParamCaption}
+)}\hfill\label{_multi_proc_8h_a4a00561c7a3f5f91b7ab7e1b4c3fb1ef}
+
+
+Sets executing processor's MultiProc id. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em id} & MultiProc id\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+MultiProc status:
+\begin{DoxyItemize}
+\item \hyperlink{_multi_proc_8h_a88ef69134ed8907ec46443a8c5445acd}{MultiProc\_\-S\_\-SUCCESS}: MultiProc id successfully set
+\item \hyperlink{_multi_proc_8h_ac3e4ff7eac6f0fe38b97b1ca086ea1c6}{MultiProc\_\-E\_\-FAIL}: MultiProc id cannot be set at this time 
+\end{DoxyItemize}
+\end{DoxyReturn}

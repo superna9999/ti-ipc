@@ -1,0 +1,667 @@
+\subsection{ListMP.h File Reference}
+\label{_list_m_p_8h}\index{ListMP.h@{ListMP.h}}
+
+
+\subsubsection{Detailed Description}
+Multiple processor shared memory list. ===========================================================================
+
+ListMP is a doubly linked-\/list based module designed to be used in a multi-\/processor environment. It provides a way for multiple processors to create, access, and manipulate the same link list in shared memory.
+
+The ListMP module uses a NameServer instance to store information about an instance during create. Each ListMP instance is created by specifying a name and region id. The name supplied must be unique for all ListMP instances in the system.
+
+\hyperlink{_list_m_p_8h_a71fdd7f30d377065fb70dd095a186d3e}{ListMP\_\-create()} is used to create an instance of a ListMP. Shared memory is modified during create. Once created, an instance may be opened by calling \hyperlink{_list_m_p_8h_aeae2eea832b0f2f8cf45ea297bb1c7d0}{ListMP\_\-open()}. Open does not modify any shared memory. Open() should be called only when global interrupts are enabled.
+
+To use a ListMP instance, a \hyperlink{struct_list_m_p___elem}{ListMP\_\-Elem} must be embedded as the very first element of a structure. ListMP does not provide cache coherency for the buffer put onto the link list. ListMP only provides cache coherency for the \hyperlink{struct_list_m_p___elem}{ListMP\_\-Elem} fields. The buffer should be written back before being placed on a ListMP, if cache coherency is required.
+
+The ListMP header should be included in an application as follows: 
+\begin{DoxyCode}
+  #include <ti/ipc/ListMP.h>
+\end{DoxyCode}
+
+
+============================================================================ {\ttfamily \#include $<$ti/ipc/SharedRegion.h$>$}\par
+{\ttfamily \#include $<$ti/ipc/GateMP.h$>$}\par
+Include dependency graph for ListMP.h:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=237pt]{_list_m_p_8h__incl}
+\end{center}
+\end{figure}
+\subsubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct_list_m_p___elem}{ListMP\_\-Elem}
+\begin{DoxyCompactList}\small\item\em Structure defining a ListMP element. \item\end{DoxyCompactList}\item 
+struct \hyperlink{struct_list_m_p___params}{ListMP\_\-Params}
+\begin{DoxyCompactList}\small\item\em Structure defining parameter structure for \hyperlink{_list_m_p_8h_a71fdd7f30d377065fb70dd095a186d3e}{ListMP\_\-create()}. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsubsection*{Defines}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{_list_m_p_8h_aae3ea24c5161e44b42c0a2c6f73fd3d2}{ListMP\_\-S\_\-BUSY}~2
+\begin{DoxyCompactList}\small\item\em The resource is still in use. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_list_m_p_8h_ae2dbc4743a0ddc0c4aaded37551cf25e}{ListMP\_\-S\_\-ALREADYSETUP}~1
+\begin{DoxyCompactList}\small\item\em The module has been already setup. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_list_m_p_8h_a67e97f10cd480f457375e9a20bb41e27}{ListMP\_\-S\_\-SUCCESS}~0
+\begin{DoxyCompactList}\small\item\em Operation is successful. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_list_m_p_8h_a4aa4e08eddd7d36b42395070f21125df}{ListMP\_\-E\_\-FAIL}~-\/1
+\begin{DoxyCompactList}\small\item\em Generic failure. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_list_m_p_8h_a0cfe16cd038629372772230866ef681f}{ListMP\_\-E\_\-INVALIDARG}~-\/2
+\begin{DoxyCompactList}\small\item\em Argument passed to function is invalid. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_list_m_p_8h_ae855742ffb668b39109633d3a3fe552c}{ListMP\_\-E\_\-MEMORY}~-\/3
+\begin{DoxyCompactList}\small\item\em Operation resulted in memory failure. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_list_m_p_8h_aa943a6dd86b5cd4092faa9a2c3650678}{ListMP\_\-E\_\-ALREADYEXISTS}~-\/4
+\begin{DoxyCompactList}\small\item\em The specified entity already exists. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_list_m_p_8h_ad1094272ac41cf2b022d6c514beaceac}{ListMP\_\-E\_\-NOTFOUND}~-\/5
+\begin{DoxyCompactList}\small\item\em Unable to find the specified entity. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_list_m_p_8h_a163b8195b54eab051c94c37b6f76a3c0}{ListMP\_\-E\_\-TIMEOUT}~-\/6
+\begin{DoxyCompactList}\small\item\em Operation timed out. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_list_m_p_8h_a1f5136445766b775f24f09fbc1e77531}{ListMP\_\-E\_\-INVALIDSTATE}~-\/7
+\begin{DoxyCompactList}\small\item\em Module is not initialized. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_list_m_p_8h_a71a0081f7de24109c2b91f209b3d9d3d}{ListMP\_\-E\_\-OSFAILURE}~-\/8
+\begin{DoxyCompactList}\small\item\em A failure occurred in an OS-\/specific call. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_list_m_p_8h_a17bd29505d65eb1130a9526bb842507c}{ListMP\_\-E\_\-RESOURCE}~-\/9
+\begin{DoxyCompactList}\small\item\em Specified resource is not available. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_list_m_p_8h_a6fd9b6b57f38d4be617d2fdae5f4d4e8}{ListMP\_\-E\_\-RESTART}~-\/10
+\begin{DoxyCompactList}\small\item\em Operation was interrupted. Please restart the operation. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct ListMP\_\-Object $\ast$ \hyperlink{_list_m_p_8h_abf5a0381ce9dab133382015abaf7fe6b}{ListMP\_\-Handle}
+\begin{DoxyCompactList}\small\item\em ListMP\_\-Handle type. \item\end{DoxyCompactList}\item 
+typedef struct \hyperlink{struct_list_m_p___elem}{ListMP\_\-Elem} \hyperlink{_list_m_p_8h_a848cf7dfe687e86045808fca1c561ea0}{ListMP\_\-Elem}
+\begin{DoxyCompactList}\small\item\em Structure defining a ListMP element. \item\end{DoxyCompactList}\item 
+typedef struct \hyperlink{struct_list_m_p___params}{ListMP\_\-Params} \hyperlink{_list_m_p_8h_ad2f3144c55c1f05df600bc6f37290b8f}{ListMP\_\-Params}
+\begin{DoxyCompactList}\small\item\em Structure defining parameter structure for \hyperlink{_list_m_p_8h_a71fdd7f30d377065fb70dd095a186d3e}{ListMP\_\-create()}. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+Void \hyperlink{_list_m_p_8h_a051127fdcd75440808d0fed31c6e8b4b}{ListMP\_\-Params\_\-init} (\hyperlink{struct_list_m_p___params}{ListMP\_\-Params} $\ast$params)
+\begin{DoxyCompactList}\small\item\em Initializes ListMP parameters. \item\end{DoxyCompactList}\item 
+\hyperlink{_list_m_p_8h_abf5a0381ce9dab133382015abaf7fe6b}{ListMP\_\-Handle} \hyperlink{_list_m_p_8h_a71fdd7f30d377065fb70dd095a186d3e}{ListMP\_\-create} (const \hyperlink{struct_list_m_p___params}{ListMP\_\-Params} $\ast$params)
+\begin{DoxyCompactList}\small\item\em Creates and initializes ListMP module. \item\end{DoxyCompactList}\item 
+Int \hyperlink{_list_m_p_8h_a9f9045344d095a9829ba601d74d39c93}{ListMP\_\-close} (\hyperlink{_list_m_p_8h_abf5a0381ce9dab133382015abaf7fe6b}{ListMP\_\-Handle} $\ast$handlePtr)
+\begin{DoxyCompactList}\small\item\em Close an opened ListMP instance. \item\end{DoxyCompactList}\item 
+Int \hyperlink{_list_m_p_8h_a9a3875bf334cbc6d692e9053e7e4152b}{ListMP\_\-delete} (\hyperlink{_list_m_p_8h_abf5a0381ce9dab133382015abaf7fe6b}{ListMP\_\-Handle} $\ast$handlePtr)
+\begin{DoxyCompactList}\small\item\em Deletes a ListMP instance. \item\end{DoxyCompactList}\item 
+Int \hyperlink{_list_m_p_8h_aeae2eea832b0f2f8cf45ea297bb1c7d0}{ListMP\_\-open} (String name, \hyperlink{_list_m_p_8h_abf5a0381ce9dab133382015abaf7fe6b}{ListMP\_\-Handle} $\ast$handlePtr)
+\begin{DoxyCompactList}\small\item\em Open a created ListMP instance. \item\end{DoxyCompactList}\item 
+Bool \hyperlink{_list_m_p_8h_a87f3489e92331dd7e3a2ca7315d6ae88}{ListMP\_\-empty} (\hyperlink{_list_m_p_8h_abf5a0381ce9dab133382015abaf7fe6b}{ListMP\_\-Handle} handle)
+\begin{DoxyCompactList}\small\item\em Determines if a ListMP instance is empty. \item\end{DoxyCompactList}\item 
+\hyperlink{_gate_m_p_8h_ad5bb259f928a14e98d973334bc60ebb3}{GateMP\_\-Handle} \hyperlink{_list_m_p_8h_abcbcfa3aa97f94f1559c94e3de56a445}{ListMP\_\-getGate} (\hyperlink{_list_m_p_8h_abf5a0381ce9dab133382015abaf7fe6b}{ListMP\_\-Handle} handle)
+\begin{DoxyCompactList}\small\item\em Retrieves the GateMP handle associated with the ListMP instance. \item\end{DoxyCompactList}\item 
+Ptr \hyperlink{_list_m_p_8h_a3f94c683617f51b4e9de75d87c729524}{ListMP\_\-getHead} (\hyperlink{_list_m_p_8h_abf5a0381ce9dab133382015abaf7fe6b}{ListMP\_\-Handle} handle)
+\begin{DoxyCompactList}\small\item\em Get an element from front of a ListMP instance. \item\end{DoxyCompactList}\item 
+Ptr \hyperlink{_list_m_p_8h_a75ac818a89cae66a10fb200f691c3949}{ListMP\_\-getTail} (\hyperlink{_list_m_p_8h_abf5a0381ce9dab133382015abaf7fe6b}{ListMP\_\-Handle} handle)
+\begin{DoxyCompactList}\small\item\em Get an element from back of a ListMP instance. \item\end{DoxyCompactList}\item 
+Int \hyperlink{_list_m_p_8h_a202b294a05f5be8b909c38e592978e8b}{ListMP\_\-insert} (\hyperlink{_list_m_p_8h_abf5a0381ce9dab133382015abaf7fe6b}{ListMP\_\-Handle} handle, \hyperlink{struct_list_m_p___elem}{ListMP\_\-Elem} $\ast$newElem, \hyperlink{struct_list_m_p___elem}{ListMP\_\-Elem} $\ast$curElem)
+\begin{DoxyCompactList}\small\item\em Insert an element into a ListMP instance. \item\end{DoxyCompactList}\item 
+Ptr \hyperlink{_list_m_p_8h_a1c9b826d5b17a55a8ddbe231db1b8f36}{ListMP\_\-next} (\hyperlink{_list_m_p_8h_abf5a0381ce9dab133382015abaf7fe6b}{ListMP\_\-Handle} handle, \hyperlink{struct_list_m_p___elem}{ListMP\_\-Elem} $\ast$elem)
+\begin{DoxyCompactList}\small\item\em Return the next element in a ListMP instance (non-\/atomic) \item\end{DoxyCompactList}\item 
+Ptr \hyperlink{_list_m_p_8h_aab4e8c1ad68b0d4908ea6221b889cf14}{ListMP\_\-prev} (\hyperlink{_list_m_p_8h_abf5a0381ce9dab133382015abaf7fe6b}{ListMP\_\-Handle} handle, \hyperlink{struct_list_m_p___elem}{ListMP\_\-Elem} $\ast$elem)
+\begin{DoxyCompactList}\small\item\em Return the previous element in ListMP instance (non-\/atomic) \item\end{DoxyCompactList}\item 
+Int \hyperlink{_list_m_p_8h_aed19b5eadd7b9007c948c1343934e251}{ListMP\_\-putHead} (\hyperlink{_list_m_p_8h_abf5a0381ce9dab133382015abaf7fe6b}{ListMP\_\-Handle} handle, \hyperlink{struct_list_m_p___elem}{ListMP\_\-Elem} $\ast$elem)
+\begin{DoxyCompactList}\small\item\em Put an element at head of a ListMP instance. \item\end{DoxyCompactList}\item 
+Int \hyperlink{_list_m_p_8h_ab97d069db0de6f8116acb262989b8441}{ListMP\_\-putTail} (\hyperlink{_list_m_p_8h_abf5a0381ce9dab133382015abaf7fe6b}{ListMP\_\-Handle} handle, \hyperlink{struct_list_m_p___elem}{ListMP\_\-Elem} $\ast$elem)
+\begin{DoxyCompactList}\small\item\em Put an element at back of a ListMP instance. \item\end{DoxyCompactList}\item 
+Int \hyperlink{_list_m_p_8h_ab66a123f8234c4eb218fa81407c06c3c}{ListMP\_\-remove} (\hyperlink{_list_m_p_8h_abf5a0381ce9dab133382015abaf7fe6b}{ListMP\_\-Handle} handle, \hyperlink{struct_list_m_p___elem}{ListMP\_\-Elem} $\ast$elem)
+\begin{DoxyCompactList}\small\item\em Remove an element from a ListMP instance. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsubsection{Define Documentation}
+\index{ListMP.h@{ListMP.h}!ListMP\_\-S\_\-BUSY@{ListMP\_\-S\_\-BUSY}}
+\index{ListMP\_\-S\_\-BUSY@{ListMP\_\-S\_\-BUSY}!ListMP.h@{ListMP.h}}
+\paragraph[{ListMP\_\-S\_\-BUSY}]{\setlength{\rightskip}{0pt plus 5cm}\#define ListMP\_\-S\_\-BUSY~2}\hfill\label{_list_m_p_8h_aae3ea24c5161e44b42c0a2c6f73fd3d2}
+
+
+The resource is still in use. 
+
+\index{ListMP.h@{ListMP.h}!ListMP\_\-S\_\-ALREADYSETUP@{ListMP\_\-S\_\-ALREADYSETUP}}
+\index{ListMP\_\-S\_\-ALREADYSETUP@{ListMP\_\-S\_\-ALREADYSETUP}!ListMP.h@{ListMP.h}}
+\paragraph[{ListMP\_\-S\_\-ALREADYSETUP}]{\setlength{\rightskip}{0pt plus 5cm}\#define ListMP\_\-S\_\-ALREADYSETUP~1}\hfill\label{_list_m_p_8h_ae2dbc4743a0ddc0c4aaded37551cf25e}
+
+
+The module has been already setup. 
+
+\index{ListMP.h@{ListMP.h}!ListMP\_\-S\_\-SUCCESS@{ListMP\_\-S\_\-SUCCESS}}
+\index{ListMP\_\-S\_\-SUCCESS@{ListMP\_\-S\_\-SUCCESS}!ListMP.h@{ListMP.h}}
+\paragraph[{ListMP\_\-S\_\-SUCCESS}]{\setlength{\rightskip}{0pt plus 5cm}\#define ListMP\_\-S\_\-SUCCESS~0}\hfill\label{_list_m_p_8h_a67e97f10cd480f457375e9a20bb41e27}
+
+
+Operation is successful. 
+
+\index{ListMP.h@{ListMP.h}!ListMP\_\-E\_\-FAIL@{ListMP\_\-E\_\-FAIL}}
+\index{ListMP\_\-E\_\-FAIL@{ListMP\_\-E\_\-FAIL}!ListMP.h@{ListMP.h}}
+\paragraph[{ListMP\_\-E\_\-FAIL}]{\setlength{\rightskip}{0pt plus 5cm}\#define ListMP\_\-E\_\-FAIL~-\/1}\hfill\label{_list_m_p_8h_a4aa4e08eddd7d36b42395070f21125df}
+
+
+Generic failure. 
+
+\index{ListMP.h@{ListMP.h}!ListMP\_\-E\_\-INVALIDARG@{ListMP\_\-E\_\-INVALIDARG}}
+\index{ListMP\_\-E\_\-INVALIDARG@{ListMP\_\-E\_\-INVALIDARG}!ListMP.h@{ListMP.h}}
+\paragraph[{ListMP\_\-E\_\-INVALIDARG}]{\setlength{\rightskip}{0pt plus 5cm}\#define ListMP\_\-E\_\-INVALIDARG~-\/2}\hfill\label{_list_m_p_8h_a0cfe16cd038629372772230866ef681f}
+
+
+Argument passed to function is invalid. 
+
+\index{ListMP.h@{ListMP.h}!ListMP\_\-E\_\-MEMORY@{ListMP\_\-E\_\-MEMORY}}
+\index{ListMP\_\-E\_\-MEMORY@{ListMP\_\-E\_\-MEMORY}!ListMP.h@{ListMP.h}}
+\paragraph[{ListMP\_\-E\_\-MEMORY}]{\setlength{\rightskip}{0pt plus 5cm}\#define ListMP\_\-E\_\-MEMORY~-\/3}\hfill\label{_list_m_p_8h_ae855742ffb668b39109633d3a3fe552c}
+
+
+Operation resulted in memory failure. 
+
+\index{ListMP.h@{ListMP.h}!ListMP\_\-E\_\-ALREADYEXISTS@{ListMP\_\-E\_\-ALREADYEXISTS}}
+\index{ListMP\_\-E\_\-ALREADYEXISTS@{ListMP\_\-E\_\-ALREADYEXISTS}!ListMP.h@{ListMP.h}}
+\paragraph[{ListMP\_\-E\_\-ALREADYEXISTS}]{\setlength{\rightskip}{0pt plus 5cm}\#define ListMP\_\-E\_\-ALREADYEXISTS~-\/4}\hfill\label{_list_m_p_8h_aa943a6dd86b5cd4092faa9a2c3650678}
+
+
+The specified entity already exists. 
+
+\index{ListMP.h@{ListMP.h}!ListMP\_\-E\_\-NOTFOUND@{ListMP\_\-E\_\-NOTFOUND}}
+\index{ListMP\_\-E\_\-NOTFOUND@{ListMP\_\-E\_\-NOTFOUND}!ListMP.h@{ListMP.h}}
+\paragraph[{ListMP\_\-E\_\-NOTFOUND}]{\setlength{\rightskip}{0pt plus 5cm}\#define ListMP\_\-E\_\-NOTFOUND~-\/5}\hfill\label{_list_m_p_8h_ad1094272ac41cf2b022d6c514beaceac}
+
+
+Unable to find the specified entity. 
+
+\index{ListMP.h@{ListMP.h}!ListMP\_\-E\_\-TIMEOUT@{ListMP\_\-E\_\-TIMEOUT}}
+\index{ListMP\_\-E\_\-TIMEOUT@{ListMP\_\-E\_\-TIMEOUT}!ListMP.h@{ListMP.h}}
+\paragraph[{ListMP\_\-E\_\-TIMEOUT}]{\setlength{\rightskip}{0pt plus 5cm}\#define ListMP\_\-E\_\-TIMEOUT~-\/6}\hfill\label{_list_m_p_8h_a163b8195b54eab051c94c37b6f76a3c0}
+
+
+Operation timed out. 
+
+\index{ListMP.h@{ListMP.h}!ListMP\_\-E\_\-INVALIDSTATE@{ListMP\_\-E\_\-INVALIDSTATE}}
+\index{ListMP\_\-E\_\-INVALIDSTATE@{ListMP\_\-E\_\-INVALIDSTATE}!ListMP.h@{ListMP.h}}
+\paragraph[{ListMP\_\-E\_\-INVALIDSTATE}]{\setlength{\rightskip}{0pt plus 5cm}\#define ListMP\_\-E\_\-INVALIDSTATE~-\/7}\hfill\label{_list_m_p_8h_a1f5136445766b775f24f09fbc1e77531}
+
+
+Module is not initialized. 
+
+\index{ListMP.h@{ListMP.h}!ListMP\_\-E\_\-OSFAILURE@{ListMP\_\-E\_\-OSFAILURE}}
+\index{ListMP\_\-E\_\-OSFAILURE@{ListMP\_\-E\_\-OSFAILURE}!ListMP.h@{ListMP.h}}
+\paragraph[{ListMP\_\-E\_\-OSFAILURE}]{\setlength{\rightskip}{0pt plus 5cm}\#define ListMP\_\-E\_\-OSFAILURE~-\/8}\hfill\label{_list_m_p_8h_a71a0081f7de24109c2b91f209b3d9d3d}
+
+
+A failure occurred in an OS-\/specific call. 
+
+\index{ListMP.h@{ListMP.h}!ListMP\_\-E\_\-RESOURCE@{ListMP\_\-E\_\-RESOURCE}}
+\index{ListMP\_\-E\_\-RESOURCE@{ListMP\_\-E\_\-RESOURCE}!ListMP.h@{ListMP.h}}
+\paragraph[{ListMP\_\-E\_\-RESOURCE}]{\setlength{\rightskip}{0pt plus 5cm}\#define ListMP\_\-E\_\-RESOURCE~-\/9}\hfill\label{_list_m_p_8h_a17bd29505d65eb1130a9526bb842507c}
+
+
+Specified resource is not available. 
+
+\index{ListMP.h@{ListMP.h}!ListMP\_\-E\_\-RESTART@{ListMP\_\-E\_\-RESTART}}
+\index{ListMP\_\-E\_\-RESTART@{ListMP\_\-E\_\-RESTART}!ListMP.h@{ListMP.h}}
+\paragraph[{ListMP\_\-E\_\-RESTART}]{\setlength{\rightskip}{0pt plus 5cm}\#define ListMP\_\-E\_\-RESTART~-\/10}\hfill\label{_list_m_p_8h_a6fd9b6b57f38d4be617d2fdae5f4d4e8}
+
+
+Operation was interrupted. Please restart the operation. 
+
+
+
+\subsubsection{Typedef Documentation}
+\index{ListMP.h@{ListMP.h}!ListMP\_\-Handle@{ListMP\_\-Handle}}
+\index{ListMP\_\-Handle@{ListMP\_\-Handle}!ListMP.h@{ListMP.h}}
+\paragraph[{ListMP\_\-Handle}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct ListMP\_\-Object$\ast$ {\bf ListMP\_\-Handle}}\hfill\label{_list_m_p_8h_abf5a0381ce9dab133382015abaf7fe6b}
+
+
+ListMP\_\-Handle type. 
+
+\index{ListMP.h@{ListMP.h}!ListMP\_\-Elem@{ListMP\_\-Elem}}
+\index{ListMP\_\-Elem@{ListMP\_\-Elem}!ListMP.h@{ListMP.h}}
+\paragraph[{ListMP\_\-Elem}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf ListMP\_\-Elem}  {\bf ListMP\_\-Elem}}\hfill\label{_list_m_p_8h_a848cf7dfe687e86045808fca1c561ea0}
+
+
+Structure defining a ListMP element. 
+
+\index{ListMP.h@{ListMP.h}!ListMP\_\-Params@{ListMP\_\-Params}}
+\index{ListMP\_\-Params@{ListMP\_\-Params}!ListMP.h@{ListMP.h}}
+\paragraph[{ListMP\_\-Params}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf ListMP\_\-Params}  {\bf ListMP\_\-Params}}\hfill\label{_list_m_p_8h_ad2f3144c55c1f05df600bc6f37290b8f}
+
+
+Structure defining parameter structure for \hyperlink{_list_m_p_8h_a71fdd7f30d377065fb70dd095a186d3e}{ListMP\_\-create()}. 
+
+
+
+\subsubsection{Function Documentation}
+\index{ListMP.h@{ListMP.h}!ListMP\_\-Params\_\-init@{ListMP\_\-Params\_\-init}}
+\index{ListMP\_\-Params\_\-init@{ListMP\_\-Params\_\-init}!ListMP.h@{ListMP.h}}
+\paragraph[{ListMP\_\-Params\_\-init}]{\setlength{\rightskip}{0pt plus 5cm}Void ListMP\_\-Params\_\-init (
+\begin{DoxyParamCaption}
+\item[{{\bf ListMP\_\-Params} $\ast$}]{ params}
+\end{DoxyParamCaption}
+)}\hfill\label{_list_m_p_8h_a051127fdcd75440808d0fed31c6e8b4b}
+
+
+Initializes ListMP parameters. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em params} & Instance param structure. \\
+\hline
+\end{DoxyParams}
+\index{ListMP.h@{ListMP.h}!ListMP\_\-create@{ListMP\_\-create}}
+\index{ListMP\_\-create@{ListMP\_\-create}!ListMP.h@{ListMP.h}}
+\paragraph[{ListMP\_\-create}]{\setlength{\rightskip}{0pt plus 5cm}{\bf ListMP\_\-Handle} ListMP\_\-create (
+\begin{DoxyParamCaption}
+\item[{const {\bf ListMP\_\-Params} $\ast$}]{ params}
+\end{DoxyParamCaption}
+)}\hfill\label{_list_m_p_8h_a71fdd7f30d377065fb70dd095a186d3e}
+
+
+Creates and initializes ListMP module. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em params} & Instance param structure.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a ListMP instance handle
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{_list_m_p_8h_a9a3875bf334cbc6d692e9053e7e4152b}{ListMP\_\-delete} 
+\end{DoxySeeAlso}
+\index{ListMP.h@{ListMP.h}!ListMP\_\-close@{ListMP\_\-close}}
+\index{ListMP\_\-close@{ListMP\_\-close}!ListMP.h@{ListMP.h}}
+\paragraph[{ListMP\_\-close}]{\setlength{\rightskip}{0pt plus 5cm}Int ListMP\_\-close (
+\begin{DoxyParamCaption}
+\item[{{\bf ListMP\_\-Handle} $\ast$}]{ handlePtr}
+\end{DoxyParamCaption}
+)}\hfill\label{_list_m_p_8h_a9f9045344d095a9829ba601d74d39c93}
+
+
+Close an opened ListMP instance. 
+
+Closing an instance will free local memory consumed by the opened instance. Instances that are opened should be closed before the instance is deleted. If using NameServer, the instance name will be removed from the NameServer instance.
+
+
+\begin{DoxyParams}{Parameters}
+{\em handlePtr} & Pointer to a ListMP instance\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Status
+\begin{DoxyItemize}
+\item \hyperlink{_list_m_p_8h_a67e97f10cd480f457375e9a20bb41e27}{ListMP\_\-S\_\-SUCCESS}: ListMP successfully closed
+\item \hyperlink{_list_m_p_8h_a4aa4e08eddd7d36b42395070f21125df}{ListMP\_\-E\_\-FAIL}: A general failure has occurred
+\end{DoxyItemize}
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{_list_m_p_8h_aeae2eea832b0f2f8cf45ea297bb1c7d0}{ListMP\_\-open} 
+\end{DoxySeeAlso}
+\index{ListMP.h@{ListMP.h}!ListMP\_\-delete@{ListMP\_\-delete}}
+\index{ListMP\_\-delete@{ListMP\_\-delete}!ListMP.h@{ListMP.h}}
+\paragraph[{ListMP\_\-delete}]{\setlength{\rightskip}{0pt plus 5cm}Int ListMP\_\-delete (
+\begin{DoxyParamCaption}
+\item[{{\bf ListMP\_\-Handle} $\ast$}]{ handlePtr}
+\end{DoxyParamCaption}
+)}\hfill\label{_list_m_p_8h_a9a3875bf334cbc6d692e9053e7e4152b}
+
+
+Deletes a ListMP instance. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em handlePtr} & Pointer to ListMP instance\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Status
+\begin{DoxyItemize}
+\item \hyperlink{_list_m_p_8h_a67e97f10cd480f457375e9a20bb41e27}{ListMP\_\-S\_\-SUCCESS}: ListMP successfully deleted
+\begin{DoxyItemize}
+\item \hyperlink{_list_m_p_8h_a4aa4e08eddd7d36b42395070f21125df}{ListMP\_\-E\_\-FAIL}: ListMP delete failed
+\end{DoxyItemize}
+\end{DoxyItemize}
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{_list_m_p_8h_a71fdd7f30d377065fb70dd095a186d3e}{ListMP\_\-create} 
+\end{DoxySeeAlso}
+\index{ListMP.h@{ListMP.h}!ListMP\_\-open@{ListMP\_\-open}}
+\index{ListMP\_\-open@{ListMP\_\-open}!ListMP.h@{ListMP.h}}
+\paragraph[{ListMP\_\-open}]{\setlength{\rightskip}{0pt plus 5cm}Int ListMP\_\-open (
+\begin{DoxyParamCaption}
+\item[{String}]{ name, }
+\item[{{\bf ListMP\_\-Handle} $\ast$}]{ handlePtr}
+\end{DoxyParamCaption}
+)}\hfill\label{_list_m_p_8h_aeae2eea832b0f2f8cf45ea297bb1c7d0}
+
+
+Open a created ListMP instance. 
+
+An open can be performed on a previously created instance. Open is used to gain access to the same ListMP instance. Generally an instance is created on one processor and opened on other processors but it can be opened on the same processor too. Open returns a ListMP instance handle like create, but it does not initialize any shared memory.
+
+The open call searches the local ListMP NameServer table first for a matching name. If no local match is found, it will search all remote ListMP NameServer tables for a matching name.
+
+A status value of \hyperlink{_list_m_p_8h_a67e97f10cd480f457375e9a20bb41e27}{ListMP\_\-S\_\-SUCCESS} is returned if a matching ListMP instance is found. A \hyperlink{_list_m_p_8h_a4aa4e08eddd7d36b42395070f21125df}{ListMP\_\-E\_\-FAIL} is returned if no matching instance is found. Generally this means the ListMP instance has not yet been created. A more specific status error is returned if an error was raised.
+
+Call close() when the opened instance is no longer needed.
+
+
+\begin{DoxyParams}{Parameters}
+{\em name} & Name of created ListMP instance \\
+\hline
+{\em handlePtr} & pointer to the handle if a handle was found.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Status
+\begin{DoxyItemize}
+\item \hyperlink{_list_m_p_8h_a67e97f10cd480f457375e9a20bb41e27}{ListMP\_\-S\_\-SUCCESS}: ListMP successfully opened
+\item \hyperlink{_list_m_p_8h_ad1094272ac41cf2b022d6c514beaceac}{ListMP\_\-E\_\-NOTFOUND}: ListMP is not yet ready to be opened.
+\item \hyperlink{_list_m_p_8h_a4aa4e08eddd7d36b42395070f21125df}{ListMP\_\-E\_\-FAIL}: A general failure has occurred
+\end{DoxyItemize}
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{_list_m_p_8h_a71fdd7f30d377065fb70dd095a186d3e}{ListMP\_\-create} 
+\end{DoxySeeAlso}
+\index{ListMP.h@{ListMP.h}!ListMP\_\-empty@{ListMP\_\-empty}}
+\index{ListMP\_\-empty@{ListMP\_\-empty}!ListMP.h@{ListMP.h}}
+\paragraph[{ListMP\_\-empty}]{\setlength{\rightskip}{0pt plus 5cm}Bool ListMP\_\-empty (
+\begin{DoxyParamCaption}
+\item[{{\bf ListMP\_\-Handle}}]{ handle}
+\end{DoxyParamCaption}
+)}\hfill\label{_list_m_p_8h_a87f3489e92331dd7e3a2ca7315d6ae88}
+
+
+Determines if a ListMP instance is empty. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em handle} & a ListMP handle.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+TRUE if 'next' element points to head, otherwise FALSE 
+\end{DoxyReturn}
+\index{ListMP.h@{ListMP.h}!ListMP\_\-getGate@{ListMP\_\-getGate}}
+\index{ListMP\_\-getGate@{ListMP\_\-getGate}!ListMP.h@{ListMP.h}}
+\paragraph[{ListMP\_\-getGate}]{\setlength{\rightskip}{0pt plus 5cm}{\bf GateMP\_\-Handle} ListMP\_\-getGate (
+\begin{DoxyParamCaption}
+\item[{{\bf ListMP\_\-Handle}}]{ handle}
+\end{DoxyParamCaption}
+)}\hfill\label{_list_m_p_8h_abcbcfa3aa97f94f1559c94e3de56a445}
+
+
+Retrieves the GateMP handle associated with the ListMP instance. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em handle} & a ListMP handle.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+GateMP handle for ListMP instance. 
+\end{DoxyReturn}
+\index{ListMP.h@{ListMP.h}!ListMP\_\-getHead@{ListMP\_\-getHead}}
+\index{ListMP\_\-getHead@{ListMP\_\-getHead}!ListMP.h@{ListMP.h}}
+\paragraph[{ListMP\_\-getHead}]{\setlength{\rightskip}{0pt plus 5cm}Ptr ListMP\_\-getHead (
+\begin{DoxyParamCaption}
+\item[{{\bf ListMP\_\-Handle}}]{ handle}
+\end{DoxyParamCaption}
+)}\hfill\label{_list_m_p_8h_a3f94c683617f51b4e9de75d87c729524}
+
+
+Get an element from front of a ListMP instance. 
+
+Atomically removes the element from the front of a ListMP instance and returns a pointer to it. Uses ListMP\_\-Params::gate for critical region management.
+
+
+\begin{DoxyParams}{Parameters}
+{\em handle} & a ListMP handle.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+pointer to former first element. 
+\end{DoxyReturn}
+\index{ListMP.h@{ListMP.h}!ListMP\_\-getTail@{ListMP\_\-getTail}}
+\index{ListMP\_\-getTail@{ListMP\_\-getTail}!ListMP.h@{ListMP.h}}
+\paragraph[{ListMP\_\-getTail}]{\setlength{\rightskip}{0pt plus 5cm}Ptr ListMP\_\-getTail (
+\begin{DoxyParamCaption}
+\item[{{\bf ListMP\_\-Handle}}]{ handle}
+\end{DoxyParamCaption}
+)}\hfill\label{_list_m_p_8h_a75ac818a89cae66a10fb200f691c3949}
+
+
+Get an element from back of a ListMP instance. 
+
+Atomically removes the element from the back of a ListMP instance and returns a pointer to it. Uses ListMP\_\-Params::gate for critical region management.
+
+
+\begin{DoxyParams}{Parameters}
+{\em handle} & a ListMP handle.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+pointer to former last element 
+\end{DoxyReturn}
+\index{ListMP.h@{ListMP.h}!ListMP\_\-insert@{ListMP\_\-insert}}
+\index{ListMP\_\-insert@{ListMP\_\-insert}!ListMP.h@{ListMP.h}}
+\paragraph[{ListMP\_\-insert}]{\setlength{\rightskip}{0pt plus 5cm}Int ListMP\_\-insert (
+\begin{DoxyParamCaption}
+\item[{{\bf ListMP\_\-Handle}}]{ handle, }
+\item[{{\bf ListMP\_\-Elem} $\ast$}]{ newElem, }
+\item[{{\bf ListMP\_\-Elem} $\ast$}]{ curElem}
+\end{DoxyParamCaption}
+)}\hfill\label{_list_m_p_8h_a202b294a05f5be8b909c38e592978e8b}
+
+
+Insert an element into a ListMP instance. 
+
+Atomically inserts `newElem` in the instance in front of `curElem`. To place an element at the back of a ListMP instance, use \hyperlink{_list_m_p_8h_ab97d069db0de6f8116acb262989b8441}{ListMP\_\-putTail}. To place an element at the front of a ListMP instance, use \hyperlink{_list_m_p_8h_aed19b5eadd7b9007c948c1343934e251}{ListMP\_\-putHead}.
+
+The following code shows an example.
+
+
+\begin{DoxyCode}
+  ListMP_Elem elem, curElem;
+
+  ListMP_insert(listHandle, &elem, &curElem);  // insert before curElem
+\end{DoxyCode}
+
+
+
+\begin{DoxyParams}{Parameters}
+{\em handle} & a ListMP handle. \\
+\hline
+{\em newElem} & new element to insert into the ListMP. \\
+\hline
+{\em curElem} & current element in the ListMP.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Status
+\begin{DoxyItemize}
+\item \hyperlink{_list_m_p_8h_a67e97f10cd480f457375e9a20bb41e27}{ListMP\_\-S\_\-SUCCESS}: if operation was successful
+\item \hyperlink{_list_m_p_8h_a4aa4e08eddd7d36b42395070f21125df}{ListMP\_\-E\_\-FAIL}: if operation failed 
+\end{DoxyItemize}
+\end{DoxyReturn}
+\index{ListMP.h@{ListMP.h}!ListMP\_\-next@{ListMP\_\-next}}
+\index{ListMP\_\-next@{ListMP\_\-next}!ListMP.h@{ListMP.h}}
+\paragraph[{ListMP\_\-next}]{\setlength{\rightskip}{0pt plus 5cm}Ptr ListMP\_\-next (
+\begin{DoxyParamCaption}
+\item[{{\bf ListMP\_\-Handle}}]{ handle, }
+\item[{{\bf ListMP\_\-Elem} $\ast$}]{ elem}
+\end{DoxyParamCaption}
+)}\hfill\label{_list_m_p_8h_a1c9b826d5b17a55a8ddbe231db1b8f36}
+
+
+Return the next element in a ListMP instance (non-\/atomic) 
+
+Is useful in searching a ListMP instance. It does not remove any items from the ListMP instance. The caller should protect the ListMP instance from being changed while using this call since it is non-\/atomic.
+
+To look at the first `elem` on the ListMP, use NULL as the `elem` argument.
+
+The following code shows an example. The scanning of a ListMP instance should be protected against other threads that modify the ListMP.
+
+
+\begin{DoxyCode}
+  ListMP_Elem   *elem = NULL;
+  GateMP_Handle gate;
+  IArg          key;
+
+  // get the gate for the ListMP instance
+  gate = ListMP_getGate(listHandle);
+
+  // Begin protection against modification of the ListMP.
+  key = GateMP_enter(gate);
+
+  while ((elem = ListMP_next(ListMPHandle, elem)) != NULL) {
+      //act on elem as needed. For example call ListMP_remove().
+  }
+
+  // End protection against modification of the ListMP.
+  GateMP_leave(gate, key);
+\end{DoxyCode}
+
+
+
+\begin{DoxyParams}{Parameters}
+{\em handle} & a ListMP handle. \\
+\hline
+{\em elem} & element in ListMP or NULL to start at the head\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+next element in ListMP instance or NULL to denote end. 
+\end{DoxyReturn}
+\index{ListMP.h@{ListMP.h}!ListMP\_\-prev@{ListMP\_\-prev}}
+\index{ListMP\_\-prev@{ListMP\_\-prev}!ListMP.h@{ListMP.h}}
+\paragraph[{ListMP\_\-prev}]{\setlength{\rightskip}{0pt plus 5cm}Ptr ListMP\_\-prev (
+\begin{DoxyParamCaption}
+\item[{{\bf ListMP\_\-Handle}}]{ handle, }
+\item[{{\bf ListMP\_\-Elem} $\ast$}]{ elem}
+\end{DoxyParamCaption}
+)}\hfill\label{_list_m_p_8h_aab4e8c1ad68b0d4908ea6221b889cf14}
+
+
+Return the previous element in ListMP instance (non-\/atomic) 
+
+Useful in searching a ListMP instance in reverse order. It does not remove any items from the ListMP instance. The caller should protect the ListMP instance from being changed while using this call since it is non-\/atomic.
+
+To look at the last `elem` on the ListMP instance, use NULL as the `elem` argument.
+
+The following code shows an example. The scanning of a ListMP instance should be protected against other threads that modify the instance.
+
+
+\begin{DoxyCode}
+  ListMP_Elem  *elem = NULL;
+  GateMP_Handle gate;
+  IArg          key;
+
+  // get the gate for the ListMP instance
+  gate = ListMP_getGate(listHandle);
+
+  // Begin protection against modification of the ListMP.
+  key = GateMP_enter(gate);
+
+  while ((elem = ListMP_prev(listHandle, elem)) != NULL) {
+      //act on elem as needed. For example call ListMP_remove().
+  }
+
+  // End protection against modification of the ListMP.
+  GateMP_leave(gate, key);
+\end{DoxyCode}
+
+
+
+\begin{DoxyParams}{Parameters}
+{\em handle} & a ListMP handle. \\
+\hline
+{\em elem} & element in ListMP or NULL to start at the end\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+previous element in ListMP or NULL if empty. 
+\end{DoxyReturn}
+\index{ListMP.h@{ListMP.h}!ListMP\_\-putHead@{ListMP\_\-putHead}}
+\index{ListMP\_\-putHead@{ListMP\_\-putHead}!ListMP.h@{ListMP.h}}
+\paragraph[{ListMP\_\-putHead}]{\setlength{\rightskip}{0pt plus 5cm}Int ListMP\_\-putHead (
+\begin{DoxyParamCaption}
+\item[{{\bf ListMP\_\-Handle}}]{ handle, }
+\item[{{\bf ListMP\_\-Elem} $\ast$}]{ elem}
+\end{DoxyParamCaption}
+)}\hfill\label{_list_m_p_8h_aed19b5eadd7b9007c948c1343934e251}
+
+
+Put an element at head of a ListMP instance. 
+
+Atomically places the element at the front of a ListMP instance. Uses ListMP\_\-Params::gate for critical region management.
+
+
+\begin{DoxyParams}{Parameters}
+{\em handle} & a ListMP handle \\
+\hline
+{\em elem} & pointer to new ListMP element\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Status
+\begin{DoxyItemize}
+\item \hyperlink{_list_m_p_8h_a67e97f10cd480f457375e9a20bb41e27}{ListMP\_\-S\_\-SUCCESS}: if operation was successful
+\item \hyperlink{_list_m_p_8h_a4aa4e08eddd7d36b42395070f21125df}{ListMP\_\-E\_\-FAIL}: if operation failed 
+\end{DoxyItemize}
+\end{DoxyReturn}
+\index{ListMP.h@{ListMP.h}!ListMP\_\-putTail@{ListMP\_\-putTail}}
+\index{ListMP\_\-putTail@{ListMP\_\-putTail}!ListMP.h@{ListMP.h}}
+\paragraph[{ListMP\_\-putTail}]{\setlength{\rightskip}{0pt plus 5cm}Int ListMP\_\-putTail (
+\begin{DoxyParamCaption}
+\item[{{\bf ListMP\_\-Handle}}]{ handle, }
+\item[{{\bf ListMP\_\-Elem} $\ast$}]{ elem}
+\end{DoxyParamCaption}
+)}\hfill\label{_list_m_p_8h_ab97d069db0de6f8116acb262989b8441}
+
+
+Put an element at back of a ListMP instance. 
+
+Atomically places the element at the back of a ListMP instance. Uses ListMP\_\-Params::gate for critical region management.
+
+
+\begin{DoxyParams}{Parameters}
+{\em handle} & a ListMP handle \\
+\hline
+{\em elem} & pointer to new ListMP element\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Status
+\begin{DoxyItemize}
+\item \hyperlink{_list_m_p_8h_a67e97f10cd480f457375e9a20bb41e27}{ListMP\_\-S\_\-SUCCESS}: if operation was successful
+\item \hyperlink{_list_m_p_8h_a4aa4e08eddd7d36b42395070f21125df}{ListMP\_\-E\_\-FAIL}: if operation failed 
+\end{DoxyItemize}
+\end{DoxyReturn}
+\index{ListMP.h@{ListMP.h}!ListMP\_\-remove@{ListMP\_\-remove}}
+\index{ListMP\_\-remove@{ListMP\_\-remove}!ListMP.h@{ListMP.h}}
+\paragraph[{ListMP\_\-remove}]{\setlength{\rightskip}{0pt plus 5cm}Int ListMP\_\-remove (
+\begin{DoxyParamCaption}
+\item[{{\bf ListMP\_\-Handle}}]{ handle, }
+\item[{{\bf ListMP\_\-Elem} $\ast$}]{ elem}
+\end{DoxyParamCaption}
+)}\hfill\label{_list_m_p_8h_ab66a123f8234c4eb218fa81407c06c3c}
+
+
+Remove an element from a ListMP instance. 
+
+Atomically removes an element from a ListMP.
+
+The `elem` parameter is a pointer to an existing element to be removed from a ListMP instance.
+
+
+\begin{DoxyParams}{Parameters}
+{\em handle} & a ListMP handle \\
+\hline
+{\em elem} & element in ListMP\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Status
+\begin{DoxyItemize}
+\item \hyperlink{_list_m_p_8h_a67e97f10cd480f457375e9a20bb41e27}{ListMP\_\-S\_\-SUCCESS}: if operation was successful
+\item \hyperlink{_list_m_p_8h_a4aa4e08eddd7d36b42395070f21125df}{ListMP\_\-E\_\-FAIL}: if operation failed 
+\end{DoxyItemize}
+\end{DoxyReturn}

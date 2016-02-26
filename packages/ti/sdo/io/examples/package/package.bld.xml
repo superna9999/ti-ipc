@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  This file conforms to the DTD xdc/bld/build.dtd -->
+<package name="ti.sdo.io.examples" version="1, 0, 0, 0" producerId="undefined">
+    <units>
+    </units>
+    <sources>
+        <srcFile name="package/cfg/release/stream_p64P.c"/>
+        <srcFile name="package/cfg/release/stream_p674.c"/>
+        <srcFile name="package/cfg/release/stream_p28L.c"/>
+        <srcFile name="package/cfg/release/stream_pe64T.c"/>
+        <srcFile name="package/cfg/release/stream_pe66.c"/>
+        <srcFile name="package/cfg/release/stream_pe9.c"/>
+        <srcFile name="package/cfg/release/stream_pem3.c"/>
+        <srcFile name="stream.c"/>
+    </sources>
+    <configscripts>
+        <srcFile name="stream.cfg"/>
+    </configscripts>
+    <makefiles>
+        <srcFile name="package.mak" src="package.bld"/>
+        <srcFile name="package/package.xdc.dep" src="package.xdc"/>
+        <srcFile name="package/cfg/release/stream_p64P.mak" src="package.bld"/>
+        <srcFile name="package/cfg/release/stream_p64P.o64P.dep" src="package/cfg/release/stream_p64P.c"/>
+        <srcFile name="package/cfg/release/stream_p64P.dep" src="package/cfg/release/stream_p64P.cfg"/>
+        <srcFile name="package/cfg/release/stream_p674.mak" src="package.bld"/>
+        <srcFile name="package/cfg/release/stream_p674.o674.dep" src="package/cfg/release/stream_p674.c"/>
+        <srcFile name="package/cfg/release/stream_p674.dep" src="package/cfg/release/stream_p674.cfg"/>
+        <srcFile name="package/cfg/release/stream_p28L.mak" src="package.bld"/>
+        <srcFile name="package/cfg/release/stream_p28L.o28L.dep" src="package/cfg/release/stream_p28L.c"/>
+        <srcFile name="package/cfg/release/stream_p28L.dep" src="package/cfg/release/stream_p28L.cfg"/>
+        <srcFile name="package/cfg/release/stream_pe64T.mak" src="package.bld"/>
+        <srcFile name="package/cfg/release/stream_pe64T.oe64T.dep" src="package/cfg/release/stream_pe64T.c"/>
+        <srcFile name="package/cfg/release/stream_pe64T.dep" src="package/cfg/release/stream_pe64T.cfg"/>
+        <srcFile name="package/cfg/release/stream_pe66.mak" src="package.bld"/>
+        <srcFile name="package/cfg/release/stream_pe66.oe66.dep" src="package/cfg/release/stream_pe66.c"/>
+        <srcFile name="package/cfg/release/stream_pe66.dep" src="package/cfg/release/stream_pe66.cfg"/>
+        <srcFile name="package/cfg/release/stream_pe9.mak" src="package.bld"/>
+        <srcFile name="package/cfg/release/stream_pe9.oe9.dep" src="package/cfg/release/stream_pe9.c"/>
+        <srcFile name="package/cfg/release/stream_pe9.dep" src="package/cfg/release/stream_pe9.cfg"/>
+        <srcFile name="package/cfg/release/stream_pem3.mak" src="package.bld"/>
+        <srcFile name="package/cfg/release/stream_pem3.oem3.dep" src="package/cfg/release/stream_pem3.c"/>
+        <srcFile name="package/cfg/release/stream_pem3.dep" src="package/cfg/release/stream_pem3.cfg"/>
+        <srcFile name="package/cfg/release/stream.x64P.mak" src="package.bld"/>
+        <srcFile name="package/cfg/release/stream/stream.o64P.dep" src="stream.c"/>
+        <srcFile name="package/cfg/release/stream.x674.mak" src="package.bld"/>
+        <srcFile name="package/cfg/release/stream/stream.o674.dep" src="stream.c"/>
+        <srcFile name="package/cfg/release/stream.x28L.mak" src="package.bld"/>
+        <srcFile name="package/cfg/release/stream/stream.o28L.dep" src="stream.c"/>
+        <srcFile name="package/cfg/release/stream.xe64T.mak" src="package.bld"/>
+        <srcFile name="package/cfg/release/stream/stream.oe64T.dep" src="stream.c"/>
+        <srcFile name="package/cfg/release/stream.xe66.mak" src="package.bld"/>
+        <srcFile name="package/cfg/release/stream/stream.oe66.dep" src="stream.c"/>
+        <srcFile name="package/cfg/release/stream.xe9.mak" src="package.bld"/>
+        <srcFile name="package/cfg/release/stream/stream.oe9.dep" src="stream.c"/>
+        <srcFile name="package/cfg/release/stream.xem3.mak" src="package.bld"/>
+        <srcFile name="package/cfg/release/stream/stream.oem3.dep" src="stream.c"/>
+        <srcFile name="package/rel/ti_sdo_io_examples.tar.gz.dep" src="package/rel/ti_sdo_io_examples.xdc.inc"/>
+    </makefiles>
+    <targets>
+        <target name="ti.targets.C64P"
+            version="ti.targets.C64P{1,0,7.0,0"
+            platform="ti.sdo.ipc.examples.platforms.evm6472.core0"
+            isa="64P"
+            suffix="64P"
+            rootDir="/db/toolsrc/library/tools/vendors/ti/c6x/7.0.0/Linux"
+            os="undefined"
+            rts="ti.targets.rts6000">
+            <model endian="little"
+                codeModel="undefined"
+                dataModel="undefined"/>
+        </target>
+        <target name="ti.targets.C674"
+            version="ti.targets.C674{1,0,7.0,0"
+            platform="ti.sdo.ipc.examples.platforms.evmTI816X.dsp"
+            isa="674"
+            suffix="674"
+            rootDir="/db/toolsrc/library/tools/vendors/ti/c6x/7.0.0/Linux"
+            os="undefined"
+            rts="ti.targets.rts6000">
+            <model endian="little"
+                codeModel="undefined"
+                dataModel="undefined"/>
+        </target>
+        <target name="ti.targets.C28_large"
+            version="ti.targets.C28_large{1,0,5.2,3"
+            platform="ti.platforms.ezdsp28235"
+            isa="28"
+            suffix="28L"
+            rootDir="/db/toolsrc/library/tools/vendors/ti/c28/5.2.3/Linux"
+            os="undefined"
+            rts="ti.targets.rts2800">
+            <model endian="little"
+                codeModel="undefined"
+                dataModel="large"/>
+        </target>
+        <target name="ti.targets.elf.C64T"
+            version="ti.targets.elf.C64T{1,0,7.2,0"
+            platform="ti.sdo.ipc.examples.platforms.omap4430.dsp"
+            isa="64T"
+            suffix="e64T"
+            rootDir="/db/toolsrc/library/tools/vendors/ti/c6x/7.2.0/Linux"
+            os="undefined"
+            rts="ti.targets.rts6000">
+            <model endian="little"
+                codeModel="undefined"
+                dataModel="undefined"/>
+        </target>
+        <target name="ti.targets.elf.C66"
+            version="ti.targets.elf.C66{1,0,7.2,0"
+            platform="ti.sdo.ipc.examples.platforms.evm6678.core0"
+            isa="66"
+            suffix="e66"
+            rootDir="/db/toolsrc/library/tools/vendors/ti/c6x/7.2.0/Linux"
+            os="undefined"
+            rts="ti.targets.rts6000">
+            <model endian="little"
+                codeModel="undefined"
+                dataModel="undefined"/>
+        </target>
+        <target name="ti.targets.arm.elf.Arm9"
+            version="ti.targets.arm.elf.Arm9{1,0,4.9,0"
+            platform="ti.sdo.ipc.examples.platforms.evmDM6446.arm"
+            isa="v5T"
+            suffix="e9"
+            rootDir="/db/toolsrc/library/tools/vendors/ti/arm/4.9.0/Linux"
+            os="undefined"
+            rts="ti.targets.arm.rtsarm">
+            <model endian="little"
+                codeModel="undefined"
+                dataModel="undefined"/>
+        </target>
+        <target name="ti.targets.arm.elf.M3"
+            version="ti.targets.arm.elf.M3{1,0,4.9,0"
+            platform="ti.sdo.ipc.examples.platforms.evmC6A8149.vpss"
+            isa="v7M"
+            suffix="em3"
+            rootDir="/db/toolsrc/library/tools/vendors/ti/arm/4.9.0/Linux"
+            os="undefined"
+            rts="ti.targets.arm.rtsarm">
+            <model endian="little"
+                codeModel="thumb2"
+                dataModel="undefined"/>
+        </target>
+    </targets>
+    <libraries>
+    </libraries>
+    <configurations>
+    <configuration name="release/stream"
+        pname="release/stream.p64P"
+        target="ti.targets.C64P"
+        platform="ti.sdo.ipc.examples.platforms.evm6472.core0"
+        profile="release"
+        isPartial="false"
+        xCfgScript="package/cfg/release/stream_p64P.cfg"
+        xCfgPrefix="package/cfg/release/stream_p64P"
+        cfgScript="stream.cfg"
+        />
+    <configuration name="release/stream"
+        pname="release/stream.p674"
+        target="ti.targets.C674"
+        platform="ti.sdo.ipc.examples.platforms.evmTI816X.dsp"
+        profile="release"
+        isPartial="false"
+        xCfgScript="package/cfg/release/stream_p674.cfg"
+        xCfgPrefix="package/cfg/release/stream_p674"
+        cfgScript="stream.cfg"
+        />
+    <configuration name="release/stream"
+        pname="release/stream.p28L"
+        target="ti.targets.C28_large"
+        platform="ti.platforms.ezdsp28235"
+        profile="release"
+        isPartial="false"
+        xCfgScript="package/cfg/release/stream_p28L.cfg"
+        xCfgPrefix="package/cfg/release/stream_p28L"
+        cfgScript="stream.cfg"
+        />
+    <configuration name="release/stream"
+        pname="release/stream.pe64T"
+        target="ti.targets.elf.C64T"
+        platform="ti.sdo.ipc.examples.platforms.omap4430.dsp"
+        profile="release"
+        isPartial="false"
+        xCfgScript="package/cfg/release/stream_pe64T.cfg"
+        xCfgPrefix="package/cfg/release/stream_pe64T"
+        cfgScript="stream.cfg"
+        />
+    <configuration name="release/stream"
+        pname="release/stream.pe66"
+        target="ti.targets.elf.C66"
+        platform="ti.sdo.ipc.examples.platforms.evm6678.core0"
+        profile="release"
+        isPartial="false"
+        xCfgScript="package/cfg/release/stream_pe66.cfg"
+        xCfgPrefix="package/cfg/release/stream_pe66"
+        cfgScript="stream.cfg"
+        />
+    <configuration name="release/stream"
+        pname="release/stream.pe9"
+        target="ti.targets.arm.elf.Arm9"
+        platform="ti.sdo.ipc.examples.platforms.evmDM6446.arm"
+        profile="release"
+        isPartial="false"
+        xCfgScript="package/cfg/release/stream_pe9.cfg"
+        xCfgPrefix="package/cfg/release/stream_pe9"
+        cfgScript="stream.cfg"
+        />
+    <configuration name="release/stream"
+        pname="release/stream.pem3"
+        target="ti.targets.arm.elf.M3"
+        platform="ti.sdo.ipc.examples.platforms.evmC6A8149.vpss"
+        profile="release"
+        isPartial="false"
+        xCfgScript="package/cfg/release/stream_pem3.cfg"
+        xCfgPrefix="package/cfg/release/stream_pem3"
+        cfgScript="stream.cfg"
+        />
+    </configurations>
+    <executables>
+    <executable name="release/stream"
+        pname="release/stream.x64P"
+        target="ti.targets.C64P"
+        platform="ti.sdo.ipc.examples.platforms.evm6472.core0"
+        profile="release"
+        xCfgScript="package/cfg/release/stream_p64P.cfg"
+        xCfgPrefix="package/cfg/release/stream_p64P"
+        cfgScript="stream.cfg"
+        />
+    <executable name="release/stream"
+        pname="release/stream.x674"
+        target="ti.targets.C674"
+        platform="ti.sdo.ipc.examples.platforms.evmTI816X.dsp"
+        profile="release"
+        xCfgScript="package/cfg/release/stream_p674.cfg"
+        xCfgPrefix="package/cfg/release/stream_p674"
+        cfgScript="stream.cfg"
+        />
+    <executable name="release/stream"
+        pname="release/stream.x28L"
+        target="ti.targets.C28_large"
+        platform="ti.platforms.ezdsp28235"
+        profile="release"
+        xCfgScript="package/cfg/release/stream_p28L.cfg"
+        xCfgPrefix="package/cfg/release/stream_p28L"
+        cfgScript="stream.cfg"
+        />
+    <executable name="release/stream"
+        pname="release/stream.xe64T"
+        target="ti.targets.elf.C64T"
+        platform="ti.sdo.ipc.examples.platforms.omap4430.dsp"
+        profile="release"
+        xCfgScript="package/cfg/release/stream_pe64T.cfg"
+        xCfgPrefix="package/cfg/release/stream_pe64T"
+        cfgScript="stream.cfg"
+        />
+    <executable name="release/stream"
+        pname="release/stream.xe66"
+        target="ti.targets.elf.C66"
+        platform="ti.sdo.ipc.examples.platforms.evm6678.core0"
+        profile="release"
+        xCfgScript="package/cfg/release/stream_pe66.cfg"
+        xCfgPrefix="package/cfg/release/stream_pe66"
+        cfgScript="stream.cfg"
+        />
+    <executable name="release/stream"
+        pname="release/stream.xe9"
+        target="ti.targets.arm.elf.Arm9"
+        platform="ti.sdo.ipc.examples.platforms.evmDM6446.arm"
+        profile="release"
+        xCfgScript="package/cfg/release/stream_pe9.cfg"
+        xCfgPrefix="package/cfg/release/stream_pe9"
+        cfgScript="stream.cfg"
+        />
+    <executable name="release/stream"
+        pname="release/stream.xem3"
+        target="ti.targets.arm.elf.M3"
+        platform="ti.sdo.ipc.examples.platforms.evmC6A8149.vpss"
+        profile="release"
+        xCfgScript="package/cfg/release/stream_pem3.cfg"
+        xCfgPrefix="package/cfg/release/stream_pem3"
+        cfgScript="stream.cfg"
+        />
+    </executables>
+    <tests>
+    <test exeName="release/stream.x64P"
+        args=""
+        groupName="regress"
+        refOutput="golden/stream.k"
+        refExitCode="0"
+        execArgs="-t%2060"
+        />
+    <test exeName="release/stream.x64P"
+        args=""
+        groupName="release/stream.x64P"
+        refOutput="undefined"
+        refExitCode="0"
+        execArgs="-t%2060"
+        />
+    <test exeName="release/stream.x674"
+        args=""
+        groupName="regress"
+        refOutput="golden/stream.k"
+        refExitCode="0"
+        execArgs="-t%2060"
+        />
+    <test exeName="release/stream.x674"
+        args=""
+        groupName="release/stream.x674"
+        refOutput="undefined"
+        refExitCode="0"
+        execArgs="-t%2060"
+        />
+    <test exeName="release/stream.x28L"
+        args=""
+        groupName="regress"
+        refOutput="golden/stream.k"
+        refExitCode="0"
+        execArgs="-t%2060"
+        />
+    <test exeName="release/stream.x28L"
+        args=""
+        groupName="release/stream.x28L"
+        refOutput="undefined"
+        refExitCode="0"
+        execArgs="-t%2060"
+        />
+    <test exeName="release/stream.xe64T"
+        args=""
+        groupName="regress"
+        refOutput="golden/stream.k"
+        refExitCode="0"
+        execArgs="-t%2060"
+        />
+    <test exeName="release/stream.xe64T"
+        args=""
+        groupName="release/stream.xe64T"
+        refOutput="undefined"
+        refExitCode="0"
+        execArgs="-t%2060"
+        />
+    <test exeName="release/stream.xe66"
+        args=""
+        groupName="regress"
+        refOutput="golden/stream.k"
+        refExitCode="0"
+        execArgs="-t%2060"
+        />
+    <test exeName="release/stream.xe66"
+        args=""
+        groupName="release/stream.xe66"
+        refOutput="undefined"
+        refExitCode="0"
+        execArgs="-t%2060"
+        />
+    <test exeName="release/stream.xe9"
+        args=""
+        groupName="regress"
+        refOutput="golden/stream.k"
+        refExitCode="0"
+        execArgs="-t%2060"
+        />
+    <test exeName="release/stream.xe9"
+        args=""
+        groupName="release/stream.xe9"
+        refOutput="undefined"
+        refExitCode="0"
+        execArgs="-t%2060"
+        />
+    <test exeName="release/stream.xem3"
+        args=""
+        groupName="regress"
+        refOutput="golden/stream.k"
+        refExitCode="0"
+        execArgs="-t%2060"
+        />
+    <test exeName="release/stream.xem3"
+        args=""
+        groupName="release/stream.xem3"
+        refOutput="undefined"
+        refExitCode="0"
+        execArgs="-t%2060"
+        />
+    </tests>
+    <releases relDir="package/rel/">
+    <release name="ti_sdo_io_examples"
+        pname="../../../../../exports/ti_sdo_io_examples.tar.gz"
+        label="default"
+        relScript="tisb/release/filters/copyright.rel">
+        <file name="package/package.bld.xml"/>
+        <file name="package/package.ext.xml"/>
+        <file name="package/package.rel.dot"/>
+        <file name="package/build.cfg"/>
+        <file name="package/package.xdc.inc"/>
+        <file name="package.bld"/>
+        <file name="stream.k"/>
+        <file name="package/cfg/release/stream_p64P.xdc.inc"/>
+        <file name="package/cfg/release/stream_p64P.cfg"/>
+        <file name="package/cfg/release/stream_p64P.c"/>
+        <file name="package/cfg/release/stream_p674.xdc.inc"/>
+        <file name="package/cfg/release/stream_p674.cfg"/>
+        <file name="package/cfg/release/stream_p674.c"/>
+        <file name="package/cfg/release/stream_p28L.xdc.inc"/>
+        <file name="package/cfg/release/stream_p28L.cfg"/>
+        <file name="package/cfg/release/stream_p28L.c"/>
+        <file name="package/cfg/release/stream_pe64T.xdc.inc"/>
+        <file name="package/cfg/release/stream_pe64T.cfg"/>
+        <file name="package/cfg/release/stream_pe64T.c"/>
+        <file name="package/cfg/release/stream_pe66.xdc.inc"/>
+        <file name="package/cfg/release/stream_pe66.cfg"/>
+        <file name="package/cfg/release/stream_pe66.c"/>
+        <file name="package/cfg/release/stream_pe9.xdc.inc"/>
+        <file name="package/cfg/release/stream_pe9.cfg"/>
+        <file name="package/cfg/release/stream_pe9.c"/>
+        <file name="package/cfg/release/stream_pem3.xdc.inc"/>
+        <file name="package/cfg/release/stream_pem3.cfg"/>
+        <file name="package/cfg/release/stream_pem3.c"/>
+        <file name="stream.c"/>
+    </release>
+    </releases>
+    <repositories>
+    </repositories>
+</package>

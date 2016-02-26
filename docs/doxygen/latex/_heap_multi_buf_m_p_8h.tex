@@ -1,0 +1,457 @@
+\subsection{HeapMultiBufMP.h File Reference}
+\label{_heap_multi_buf_m_p_8h}\index{HeapMultiBufMP.h@{HeapMultiBufMP.h}}
+
+
+\subsubsection{Detailed Description}
+Multiple fixed size buffer heap implementation. ============================================================================
+
+The HeapMultiBufMP manager provides functions to allocate and free storage from a shared memory heap of type HeapMultiBufMP which inherits from IHeap. HeapMultiBufMP manages multiple fixed-\/size memory buffers. Each buffer contains a fixed number of allocatable memory 'blocks' of the same size. HeapMultiBufMP is intended as a fast and deterministic memory manager which can service requests for blocks of arbitrary size.
+
+An example HeapMultiBufMP instance might have sixteen 32-\/byte blocks in one buffer, and four 128-\/byte blocks in another buffer. A request for memory will be serviced by the smallest possible block, so a request for 100 bytes would receive a 128-\/byte block in our example.
+
+Allocating from HeapMultiBufMP will try to return a block from the first buffer which has:
+
+1. A block size that is $>$= to the requested size
+
+AND
+
+2. An alignment that is $>$= to the requested alignment
+
+Buffer configuration for a new instance is primarily supplied via the HeapMultiBufMP\_\-Params::bucketEntries instance configuration parameter. Once buckets are adjusted for size and alignment, buffers with equal sizes and alignments are combined.
+
+Block Sizes and Alignment
+\begin{DoxyItemize}
+\item A buffer with a requested alignment of 0 will receive the target-\/ specific minimum alignment
+\item If cache is enabled for the particular shared region in which the shared buffer is to be placed, then the minimum alignment for each buffer is equal to the cache line size of the shared region.
+\item The actual block sizes will be a multiple of the alignment. For example, if a buffer is configured to have 56-\/byte blocks with an alignment of 32, HeapMultiBufMP will actually create 64-\/byte blocks. When providing the buffer for a dynamice create, make sure it is large enough to take this into account.
+\item Multiple buffers with the same block size ARE allowed. This may occur, for example, if sizeof is used to specify the block sizes.
+\item If any buffers have both the same block size and alignment, they will be merged. If this is a problem, consider managing these buffers directly with HeapBufMP objects.
+\end{DoxyItemize}
+
+In addition to the buffer configuration, a HeapMultiBufMP\_\-Params::name and a HeapMultiBufMP\_\-Params::regionId (from which shared memory is allocated) must be supplied when creating an instance.
+
+Once an instance is created, an \hyperlink{_heap_multi_buf_m_p_8h_a0fe88a611f390024e0772876546084cc}{HeapMultiBufMP\_\-open} can be performed using the name that was supplied in the \hyperlink{_heap_multi_buf_m_p_8h_a76b4a6dc8007ad99b598aa5a64b0d955}{HeapMultiBufMP\_\-create}. The open is used to gain access to the same HeapMultiBufMP instance. Generally an instance is created on one processor and opened on the other processor(s). The open returns (by reference) a HeapMultiBufMP instance handle like the create, however the open does not modify the shared memory.
+
+\hyperlink{_heap_multi_buf_m_p_8h_a0fe88a611f390024e0772876546084cc}{HeapMultiBufMP\_\-open} will return HeapMultiBufMP\_\-E\_\-FAIL if called before the instance is created.
+
+The HeapMultiBufMP header should be included in an application as follows: 
+\begin{DoxyCode}
+  #include <ti/ipc/HeapMultiBufMP.h>
+\end{DoxyCode}
+
+
+\begin{DoxyVersion}{Version}
+0.00.01
+\end{DoxyVersion}
+============================================================================ {\ttfamily \#include $<$ti/ipc/GateMP.h$>$}\par
+Include dependency graph for HeapMultiBufMP.h:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=133pt]{_heap_multi_buf_m_p_8h__incl}
+\end{center}
+\end{figure}
+\subsubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct_heap_multi_buf_m_p___bucket}{HeapMultiBufMP\_\-Bucket}
+\begin{DoxyCompactList}\small\item\em Structure for bucket configuration. \item\end{DoxyCompactList}\item 
+struct \hyperlink{struct_heap_multi_buf_m_p___params}{HeapMultiBufMP\_\-Params}
+\begin{DoxyCompactList}\small\item\em Structure defining parameters for the HeapMultiBufMP module. \item\end{DoxyCompactList}\item 
+struct \hyperlink{struct_heap_multi_buf_m_p___extended_stats}{HeapMultiBufMP\_\-ExtendedStats}
+\begin{DoxyCompactList}\small\item\em Stats structure for the \hyperlink{_heap_multi_buf_m_p_8h_a386420101752537b59e12520aafd9b0d}{HeapMultiBufMP\_\-getExtendedStats} API. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsubsection*{Defines}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{_heap_multi_buf_m_p_8h_a90c33c9402a75cbe4e26b02d8b399916}{HeapMultiBufMP\_\-S\_\-BUSY}~2
+\begin{DoxyCompactList}\small\item\em The resource is still in use. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_heap_multi_buf_m_p_8h_a8eb59b4affca50c201dc6e08ae1bb614}{HeapMultiBufMP\_\-S\_\-ALREADYSETUP}~1
+\begin{DoxyCompactList}\small\item\em The module has been already setup. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_heap_multi_buf_m_p_8h_ab1e8f168212f49a10090c1e0e88eb891}{HeapMultiBufMP\_\-S\_\-SUCCESS}~0
+\item 
+\#define \hyperlink{_heap_multi_buf_m_p_8h_aa539c8b8eaab1a246208b00d3cb95d89}{HeapMultiBufMP\_\-E\_\-FAIL}~-\/1
+\item 
+\#define \hyperlink{_heap_multi_buf_m_p_8h_a1f636d17043946e189a176d6e87b6892}{HeapMultiBufMP\_\-E\_\-INVALIDARG}~-\/2
+\begin{DoxyCompactList}\small\item\em Argument passed to function is invalid. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_heap_multi_buf_m_p_8h_a651ef3b2e6c5fccca7d6e81937007d4e}{HeapMultiBufMP\_\-E\_\-MEMORY}~-\/3
+\begin{DoxyCompactList}\small\item\em Operation resulted in memory failure. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_heap_multi_buf_m_p_8h_aa4a386a0533dcea1f4da27467fc57d1e}{HeapMultiBufMP\_\-E\_\-ALREADYEXISTS}~-\/4
+\begin{DoxyCompactList}\small\item\em The specified entity already exists. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_heap_multi_buf_m_p_8h_a9e65df2b0c5a166d3d38530d191f14d1}{HeapMultiBufMP\_\-E\_\-NOTFOUND}~-\/5
+\begin{DoxyCompactList}\small\item\em Unable to find the specified entity. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_heap_multi_buf_m_p_8h_a6ad1a9ffb91f75d79919732c5de78e63}{HeapMultiBufMP\_\-E\_\-TIMEOUT}~-\/6
+\begin{DoxyCompactList}\small\item\em Operation timed out. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_heap_multi_buf_m_p_8h_af631aca7140763ec034bd45fdc5f4d73}{HeapMultiBufMP\_\-E\_\-INVALIDSTATE}~-\/7
+\begin{DoxyCompactList}\small\item\em Module is not initialized. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_heap_multi_buf_m_p_8h_a72ae1d6fe31a65ae7064197fa66229fc}{HeapMultiBufMP\_\-E\_\-OSFAILURE}~-\/8
+\begin{DoxyCompactList}\small\item\em A failure occurred in an OS-\/specific call. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_heap_multi_buf_m_p_8h_a48d5b8e442db63bee46fd6984a321639}{HeapMultiBufMP\_\-E\_\-RESOURCE}~-\/9
+\begin{DoxyCompactList}\small\item\em Specified resource is not available. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_heap_multi_buf_m_p_8h_a1bdbda42d7389cd53338729ca3804851}{HeapMultiBufMP\_\-E\_\-RESTART}~-\/10
+\begin{DoxyCompactList}\small\item\em Operation was interrupted. Please restart the operation. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_heap_multi_buf_m_p_8h_adf1fa817a6a12132b7293ec1fc1c8bf4}{HeapMultiBufMP\_\-MAXBUCKETS}~((UInt)8)
+\begin{DoxyCompactList}\small\item\em Maximum number of buffer buckets supported. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct HeapMultiBufMP\_\-Object $\ast$ \hyperlink{_heap_multi_buf_m_p_8h_a84a0dbef1eb25a19072649a3c30ed4e6}{HeapMultiBufMP\_\-Handle}
+\begin{DoxyCompactList}\small\item\em HeapMultiBufMP\_\-Handle type. \item\end{DoxyCompactList}\item 
+typedef struct \hyperlink{struct_heap_multi_buf_m_p___bucket}{HeapMultiBufMP\_\-Bucket} \hyperlink{_heap_multi_buf_m_p_8h_ae5ebd64bf1712fe348d9fa6ba7d93017}{HeapMultiBufMP\_\-Bucket}
+\begin{DoxyCompactList}\small\item\em Structure for bucket configuration. \item\end{DoxyCompactList}\item 
+typedef struct \hyperlink{struct_heap_multi_buf_m_p___params}{HeapMultiBufMP\_\-Params} \hyperlink{_heap_multi_buf_m_p_8h_a99f17c33d2dc597764d5e3cab6f96762}{HeapMultiBufMP\_\-Params}
+\begin{DoxyCompactList}\small\item\em Structure defining parameters for the HeapMultiBufMP module. \item\end{DoxyCompactList}\item 
+typedef struct \hyperlink{struct_heap_multi_buf_m_p___extended_stats}{HeapMultiBufMP\_\-ExtendedStats} \hyperlink{_heap_multi_buf_m_p_8h_a1182cc241dd94d235a2b6d1b74afc2e1}{HeapMultiBufMP\_\-ExtendedStats}
+\begin{DoxyCompactList}\small\item\em Stats structure for the \hyperlink{_heap_multi_buf_m_p_8h_a386420101752537b59e12520aafd9b0d}{HeapMultiBufMP\_\-getExtendedStats} API. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+Int \hyperlink{_heap_multi_buf_m_p_8h_a267f6b50f05a5c859ac38d207020381e}{HeapMultiBufMP\_\-close} (\hyperlink{_heap_multi_buf_m_p_8h_a84a0dbef1eb25a19072649a3c30ed4e6}{HeapMultiBufMP\_\-Handle} $\ast$handlePtr)
+\begin{DoxyCompactList}\small\item\em Close a HeapMultiBufMP instance. \item\end{DoxyCompactList}\item 
+\hyperlink{_heap_multi_buf_m_p_8h_a84a0dbef1eb25a19072649a3c30ed4e6}{HeapMultiBufMP\_\-Handle} \hyperlink{_heap_multi_buf_m_p_8h_a76b4a6dc8007ad99b598aa5a64b0d955}{HeapMultiBufMP\_\-create} (const \hyperlink{struct_heap_multi_buf_m_p___params}{HeapMultiBufMP\_\-Params} $\ast$params)
+\begin{DoxyCompactList}\small\item\em Create a HeapMultiBufMP instance. \item\end{DoxyCompactList}\item 
+Int \hyperlink{_heap_multi_buf_m_p_8h_aaa779c5601feba3b7519345823d0df7e}{HeapMultiBufMP\_\-delete} (\hyperlink{_heap_multi_buf_m_p_8h_a84a0dbef1eb25a19072649a3c30ed4e6}{HeapMultiBufMP\_\-Handle} $\ast$handlePtr)
+\begin{DoxyCompactList}\small\item\em Delete a created HeapMultiBufMP instance. \item\end{DoxyCompactList}\item 
+Int \hyperlink{_heap_multi_buf_m_p_8h_a0fe88a611f390024e0772876546084cc}{HeapMultiBufMP\_\-open} (String name, \hyperlink{_heap_multi_buf_m_p_8h_a84a0dbef1eb25a19072649a3c30ed4e6}{HeapMultiBufMP\_\-Handle} $\ast$handlePtr)
+\begin{DoxyCompactList}\small\item\em Open a created HeapMultiBufMP instance. \item\end{DoxyCompactList}\item 
+Void \hyperlink{_heap_multi_buf_m_p_8h_a0a3a33f3e29e6f78623ec7cb89d2c3a4}{HeapMultiBufMP\_\-Params\_\-init} (\hyperlink{struct_heap_multi_buf_m_p___params}{HeapMultiBufMP\_\-Params} $\ast$params)
+\begin{DoxyCompactList}\small\item\em Initialize a HeapMultiBufMP parameters struct. \item\end{DoxyCompactList}\item 
+Void $\ast$ \hyperlink{_heap_multi_buf_m_p_8h_a7a9a09acb3e7d1c942f1535f00bbad1e}{HeapMultiBufMP\_\-alloc} (\hyperlink{_heap_multi_buf_m_p_8h_a84a0dbef1eb25a19072649a3c30ed4e6}{HeapMultiBufMP\_\-Handle} handle, SizeT size, SizeT align)
+\begin{DoxyCompactList}\small\item\em Allocate a block of memory of specified size and alignment. \item\end{DoxyCompactList}\item 
+Void \hyperlink{_heap_multi_buf_m_p_8h_a1df398e57eed0e1fa1aa1035107adcbf}{HeapMultiBufMP\_\-free} (\hyperlink{_heap_multi_buf_m_p_8h_a84a0dbef1eb25a19072649a3c30ed4e6}{HeapMultiBufMP\_\-Handle} handle, Ptr block, SizeT size)
+\begin{DoxyCompactList}\small\item\em Frees a block of memory. \item\end{DoxyCompactList}\item 
+Void \hyperlink{_heap_multi_buf_m_p_8h_a386420101752537b59e12520aafd9b0d}{HeapMultiBufMP\_\-getExtendedStats} (\hyperlink{_heap_multi_buf_m_p_8h_a84a0dbef1eb25a19072649a3c30ed4e6}{HeapMultiBufMP\_\-Handle} handle, \hyperlink{struct_heap_multi_buf_m_p___extended_stats}{HeapMultiBufMP\_\-ExtendedStats} $\ast$stats)
+\begin{DoxyCompactList}\small\item\em Get extended memory statistics. \item\end{DoxyCompactList}\item 
+Void \hyperlink{_heap_multi_buf_m_p_8h_ad1cbb150d20f6c9e12f8c5e13ab70c61}{HeapMultiBufMP\_\-getStats} (\hyperlink{_heap_multi_buf_m_p_8h_a84a0dbef1eb25a19072649a3c30ed4e6}{HeapMultiBufMP\_\-Handle} handle, Ptr stats)
+\begin{DoxyCompactList}\small\item\em Get memory statistics. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsubsection{Define Documentation}
+\index{HeapMultiBufMP.h@{HeapMultiBufMP.h}!HeapMultiBufMP\_\-S\_\-BUSY@{HeapMultiBufMP\_\-S\_\-BUSY}}
+\index{HeapMultiBufMP\_\-S\_\-BUSY@{HeapMultiBufMP\_\-S\_\-BUSY}!HeapMultiBufMP.h@{HeapMultiBufMP.h}}
+\paragraph[{HeapMultiBufMP\_\-S\_\-BUSY}]{\setlength{\rightskip}{0pt plus 5cm}\#define HeapMultiBufMP\_\-S\_\-BUSY~2}\hfill\label{_heap_multi_buf_m_p_8h_a90c33c9402a75cbe4e26b02d8b399916}
+
+
+The resource is still in use. 
+
+\index{HeapMultiBufMP.h@{HeapMultiBufMP.h}!HeapMultiBufMP\_\-S\_\-ALREADYSETUP@{HeapMultiBufMP\_\-S\_\-ALREADYSETUP}}
+\index{HeapMultiBufMP\_\-S\_\-ALREADYSETUP@{HeapMultiBufMP\_\-S\_\-ALREADYSETUP}!HeapMultiBufMP.h@{HeapMultiBufMP.h}}
+\paragraph[{HeapMultiBufMP\_\-S\_\-ALREADYSETUP}]{\setlength{\rightskip}{0pt plus 5cm}\#define HeapMultiBufMP\_\-S\_\-ALREADYSETUP~1}\hfill\label{_heap_multi_buf_m_p_8h_a8eb59b4affca50c201dc6e08ae1bb614}
+
+
+The module has been already setup. 
+
+\index{HeapMultiBufMP.h@{HeapMultiBufMP.h}!HeapMultiBufMP\_\-S\_\-SUCCESS@{HeapMultiBufMP\_\-S\_\-SUCCESS}}
+\index{HeapMultiBufMP\_\-S\_\-SUCCESS@{HeapMultiBufMP\_\-S\_\-SUCCESS}!HeapMultiBufMP.h@{HeapMultiBufMP.h}}
+\paragraph[{HeapMultiBufMP\_\-S\_\-SUCCESS}]{\setlength{\rightskip}{0pt plus 5cm}\#define HeapMultiBufMP\_\-S\_\-SUCCESS~0}\hfill\label{_heap_multi_buf_m_p_8h_ab1e8f168212f49a10090c1e0e88eb891}
+\index{HeapMultiBufMP.h@{HeapMultiBufMP.h}!HeapMultiBufMP\_\-E\_\-FAIL@{HeapMultiBufMP\_\-E\_\-FAIL}}
+\index{HeapMultiBufMP\_\-E\_\-FAIL@{HeapMultiBufMP\_\-E\_\-FAIL}!HeapMultiBufMP.h@{HeapMultiBufMP.h}}
+\paragraph[{HeapMultiBufMP\_\-E\_\-FAIL}]{\setlength{\rightskip}{0pt plus 5cm}\#define HeapMultiBufMP\_\-E\_\-FAIL~-\/1}\hfill\label{_heap_multi_buf_m_p_8h_aa539c8b8eaab1a246208b00d3cb95d89}
+\index{HeapMultiBufMP.h@{HeapMultiBufMP.h}!HeapMultiBufMP\_\-E\_\-INVALIDARG@{HeapMultiBufMP\_\-E\_\-INVALIDARG}}
+\index{HeapMultiBufMP\_\-E\_\-INVALIDARG@{HeapMultiBufMP\_\-E\_\-INVALIDARG}!HeapMultiBufMP.h@{HeapMultiBufMP.h}}
+\paragraph[{HeapMultiBufMP\_\-E\_\-INVALIDARG}]{\setlength{\rightskip}{0pt plus 5cm}\#define HeapMultiBufMP\_\-E\_\-INVALIDARG~-\/2}\hfill\label{_heap_multi_buf_m_p_8h_a1f636d17043946e189a176d6e87b6892}
+
+
+Argument passed to function is invalid. 
+
+\index{HeapMultiBufMP.h@{HeapMultiBufMP.h}!HeapMultiBufMP\_\-E\_\-MEMORY@{HeapMultiBufMP\_\-E\_\-MEMORY}}
+\index{HeapMultiBufMP\_\-E\_\-MEMORY@{HeapMultiBufMP\_\-E\_\-MEMORY}!HeapMultiBufMP.h@{HeapMultiBufMP.h}}
+\paragraph[{HeapMultiBufMP\_\-E\_\-MEMORY}]{\setlength{\rightskip}{0pt plus 5cm}\#define HeapMultiBufMP\_\-E\_\-MEMORY~-\/3}\hfill\label{_heap_multi_buf_m_p_8h_a651ef3b2e6c5fccca7d6e81937007d4e}
+
+
+Operation resulted in memory failure. 
+
+\index{HeapMultiBufMP.h@{HeapMultiBufMP.h}!HeapMultiBufMP\_\-E\_\-ALREADYEXISTS@{HeapMultiBufMP\_\-E\_\-ALREADYEXISTS}}
+\index{HeapMultiBufMP\_\-E\_\-ALREADYEXISTS@{HeapMultiBufMP\_\-E\_\-ALREADYEXISTS}!HeapMultiBufMP.h@{HeapMultiBufMP.h}}
+\paragraph[{HeapMultiBufMP\_\-E\_\-ALREADYEXISTS}]{\setlength{\rightskip}{0pt plus 5cm}\#define HeapMultiBufMP\_\-E\_\-ALREADYEXISTS~-\/4}\hfill\label{_heap_multi_buf_m_p_8h_aa4a386a0533dcea1f4da27467fc57d1e}
+
+
+The specified entity already exists. 
+
+\index{HeapMultiBufMP.h@{HeapMultiBufMP.h}!HeapMultiBufMP\_\-E\_\-NOTFOUND@{HeapMultiBufMP\_\-E\_\-NOTFOUND}}
+\index{HeapMultiBufMP\_\-E\_\-NOTFOUND@{HeapMultiBufMP\_\-E\_\-NOTFOUND}!HeapMultiBufMP.h@{HeapMultiBufMP.h}}
+\paragraph[{HeapMultiBufMP\_\-E\_\-NOTFOUND}]{\setlength{\rightskip}{0pt plus 5cm}\#define HeapMultiBufMP\_\-E\_\-NOTFOUND~-\/5}\hfill\label{_heap_multi_buf_m_p_8h_a9e65df2b0c5a166d3d38530d191f14d1}
+
+
+Unable to find the specified entity. 
+
+\index{HeapMultiBufMP.h@{HeapMultiBufMP.h}!HeapMultiBufMP\_\-E\_\-TIMEOUT@{HeapMultiBufMP\_\-E\_\-TIMEOUT}}
+\index{HeapMultiBufMP\_\-E\_\-TIMEOUT@{HeapMultiBufMP\_\-E\_\-TIMEOUT}!HeapMultiBufMP.h@{HeapMultiBufMP.h}}
+\paragraph[{HeapMultiBufMP\_\-E\_\-TIMEOUT}]{\setlength{\rightskip}{0pt plus 5cm}\#define HeapMultiBufMP\_\-E\_\-TIMEOUT~-\/6}\hfill\label{_heap_multi_buf_m_p_8h_a6ad1a9ffb91f75d79919732c5de78e63}
+
+
+Operation timed out. 
+
+\index{HeapMultiBufMP.h@{HeapMultiBufMP.h}!HeapMultiBufMP\_\-E\_\-INVALIDSTATE@{HeapMultiBufMP\_\-E\_\-INVALIDSTATE}}
+\index{HeapMultiBufMP\_\-E\_\-INVALIDSTATE@{HeapMultiBufMP\_\-E\_\-INVALIDSTATE}!HeapMultiBufMP.h@{HeapMultiBufMP.h}}
+\paragraph[{HeapMultiBufMP\_\-E\_\-INVALIDSTATE}]{\setlength{\rightskip}{0pt plus 5cm}\#define HeapMultiBufMP\_\-E\_\-INVALIDSTATE~-\/7}\hfill\label{_heap_multi_buf_m_p_8h_af631aca7140763ec034bd45fdc5f4d73}
+
+
+Module is not initialized. 
+
+\index{HeapMultiBufMP.h@{HeapMultiBufMP.h}!HeapMultiBufMP\_\-E\_\-OSFAILURE@{HeapMultiBufMP\_\-E\_\-OSFAILURE}}
+\index{HeapMultiBufMP\_\-E\_\-OSFAILURE@{HeapMultiBufMP\_\-E\_\-OSFAILURE}!HeapMultiBufMP.h@{HeapMultiBufMP.h}}
+\paragraph[{HeapMultiBufMP\_\-E\_\-OSFAILURE}]{\setlength{\rightskip}{0pt plus 5cm}\#define HeapMultiBufMP\_\-E\_\-OSFAILURE~-\/8}\hfill\label{_heap_multi_buf_m_p_8h_a72ae1d6fe31a65ae7064197fa66229fc}
+
+
+A failure occurred in an OS-\/specific call. 
+
+\index{HeapMultiBufMP.h@{HeapMultiBufMP.h}!HeapMultiBufMP\_\-E\_\-RESOURCE@{HeapMultiBufMP\_\-E\_\-RESOURCE}}
+\index{HeapMultiBufMP\_\-E\_\-RESOURCE@{HeapMultiBufMP\_\-E\_\-RESOURCE}!HeapMultiBufMP.h@{HeapMultiBufMP.h}}
+\paragraph[{HeapMultiBufMP\_\-E\_\-RESOURCE}]{\setlength{\rightskip}{0pt plus 5cm}\#define HeapMultiBufMP\_\-E\_\-RESOURCE~-\/9}\hfill\label{_heap_multi_buf_m_p_8h_a48d5b8e442db63bee46fd6984a321639}
+
+
+Specified resource is not available. 
+
+\index{HeapMultiBufMP.h@{HeapMultiBufMP.h}!HeapMultiBufMP\_\-E\_\-RESTART@{HeapMultiBufMP\_\-E\_\-RESTART}}
+\index{HeapMultiBufMP\_\-E\_\-RESTART@{HeapMultiBufMP\_\-E\_\-RESTART}!HeapMultiBufMP.h@{HeapMultiBufMP.h}}
+\paragraph[{HeapMultiBufMP\_\-E\_\-RESTART}]{\setlength{\rightskip}{0pt plus 5cm}\#define HeapMultiBufMP\_\-E\_\-RESTART~-\/10}\hfill\label{_heap_multi_buf_m_p_8h_a1bdbda42d7389cd53338729ca3804851}
+
+
+Operation was interrupted. Please restart the operation. 
+
+\index{HeapMultiBufMP.h@{HeapMultiBufMP.h}!HeapMultiBufMP\_\-MAXBUCKETS@{HeapMultiBufMP\_\-MAXBUCKETS}}
+\index{HeapMultiBufMP\_\-MAXBUCKETS@{HeapMultiBufMP\_\-MAXBUCKETS}!HeapMultiBufMP.h@{HeapMultiBufMP.h}}
+\paragraph[{HeapMultiBufMP\_\-MAXBUCKETS}]{\setlength{\rightskip}{0pt plus 5cm}\#define HeapMultiBufMP\_\-MAXBUCKETS~((UInt)8)}\hfill\label{_heap_multi_buf_m_p_8h_adf1fa817a6a12132b7293ec1fc1c8bf4}
+
+
+Maximum number of buffer buckets supported. 
+
+
+
+\subsubsection{Typedef Documentation}
+\index{HeapMultiBufMP.h@{HeapMultiBufMP.h}!HeapMultiBufMP\_\-Handle@{HeapMultiBufMP\_\-Handle}}
+\index{HeapMultiBufMP\_\-Handle@{HeapMultiBufMP\_\-Handle}!HeapMultiBufMP.h@{HeapMultiBufMP.h}}
+\paragraph[{HeapMultiBufMP\_\-Handle}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct HeapMultiBufMP\_\-Object$\ast$ {\bf HeapMultiBufMP\_\-Handle}}\hfill\label{_heap_multi_buf_m_p_8h_a84a0dbef1eb25a19072649a3c30ed4e6}
+
+
+HeapMultiBufMP\_\-Handle type. 
+
+\index{HeapMultiBufMP.h@{HeapMultiBufMP.h}!HeapMultiBufMP\_\-Bucket@{HeapMultiBufMP\_\-Bucket}}
+\index{HeapMultiBufMP\_\-Bucket@{HeapMultiBufMP\_\-Bucket}!HeapMultiBufMP.h@{HeapMultiBufMP.h}}
+\paragraph[{HeapMultiBufMP\_\-Bucket}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf HeapMultiBufMP\_\-Bucket}  {\bf HeapMultiBufMP\_\-Bucket}}\hfill\label{_heap_multi_buf_m_p_8h_ae5ebd64bf1712fe348d9fa6ba7d93017}
+
+
+Structure for bucket configuration. 
+
+An array of buckets is a required parameter to create any HeapMultiBufMP instance. The fields of each bucket correspond to the attributes of each buffer in the HeapMultiBufMP. The actual block sizes and alignments may be adjusted per the process described at HeapMultiBufMP\_\-Params::bucketEntries. \index{HeapMultiBufMP.h@{HeapMultiBufMP.h}!HeapMultiBufMP\_\-Params@{HeapMultiBufMP\_\-Params}}
+\index{HeapMultiBufMP\_\-Params@{HeapMultiBufMP\_\-Params}!HeapMultiBufMP.h@{HeapMultiBufMP.h}}
+\paragraph[{HeapMultiBufMP\_\-Params}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf HeapMultiBufMP\_\-Params}  {\bf HeapMultiBufMP\_\-Params}}\hfill\label{_heap_multi_buf_m_p_8h_a99f17c33d2dc597764d5e3cab6f96762}
+
+
+Structure defining parameters for the HeapMultiBufMP module. 
+
+\index{HeapMultiBufMP.h@{HeapMultiBufMP.h}!HeapMultiBufMP\_\-ExtendedStats@{HeapMultiBufMP\_\-ExtendedStats}}
+\index{HeapMultiBufMP\_\-ExtendedStats@{HeapMultiBufMP\_\-ExtendedStats}!HeapMultiBufMP.h@{HeapMultiBufMP.h}}
+\paragraph[{HeapMultiBufMP\_\-ExtendedStats}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf HeapMultiBufMP\_\-ExtendedStats}  {\bf HeapMultiBufMP\_\-ExtendedStats}}\hfill\label{_heap_multi_buf_m_p_8h_a1182cc241dd94d235a2b6d1b74afc2e1}
+
+
+Stats structure for the \hyperlink{_heap_multi_buf_m_p_8h_a386420101752537b59e12520aafd9b0d}{HeapMultiBufMP\_\-getExtendedStats} API. 
+
+
+
+\subsubsection{Function Documentation}
+\index{HeapMultiBufMP.h@{HeapMultiBufMP.h}!HeapMultiBufMP\_\-close@{HeapMultiBufMP\_\-close}}
+\index{HeapMultiBufMP\_\-close@{HeapMultiBufMP\_\-close}!HeapMultiBufMP.h@{HeapMultiBufMP.h}}
+\paragraph[{HeapMultiBufMP\_\-close}]{\setlength{\rightskip}{0pt plus 5cm}Int HeapMultiBufMP\_\-close (
+\begin{DoxyParamCaption}
+\item[{{\bf HeapMultiBufMP\_\-Handle} $\ast$}]{ handlePtr}
+\end{DoxyParamCaption}
+)}\hfill\label{_heap_multi_buf_m_p_8h_a267f6b50f05a5c859ac38d207020381e}
+
+
+Close a HeapMultiBufMP instance. 
+
+Closing an instance will free local memory consumed by the opened instance. All opened instances should be closed before the instance is deleted.
+
+
+\begin{DoxyParams}{Parameters}
+{\em handlePtr} & Pointer to handle returned from \hyperlink{_heap_multi_buf_m_p_8h_a0fe88a611f390024e0772876546084cc}{HeapMultiBufMP\_\-open}\\
+\hline
+\end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{_heap_multi_buf_m_p_8h_a0fe88a611f390024e0772876546084cc}{HeapMultiBufMP\_\-open} 
+\end{DoxySeeAlso}
+\index{HeapMultiBufMP.h@{HeapMultiBufMP.h}!HeapMultiBufMP\_\-create@{HeapMultiBufMP\_\-create}}
+\index{HeapMultiBufMP\_\-create@{HeapMultiBufMP\_\-create}!HeapMultiBufMP.h@{HeapMultiBufMP.h}}
+\paragraph[{HeapMultiBufMP\_\-create}]{\setlength{\rightskip}{0pt plus 5cm}{\bf HeapMultiBufMP\_\-Handle} HeapMultiBufMP\_\-create (
+\begin{DoxyParamCaption}
+\item[{const {\bf HeapMultiBufMP\_\-Params} $\ast$}]{ params}
+\end{DoxyParamCaption}
+)}\hfill\label{_heap_multi_buf_m_p_8h_a76b4a6dc8007ad99b598aa5a64b0d955}
+
+
+Create a HeapMultiBufMP instance. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em params} & HeapMultiBufMP parameters\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+HeapMultiBufMP Handle 
+\end{DoxyReturn}
+\index{HeapMultiBufMP.h@{HeapMultiBufMP.h}!HeapMultiBufMP\_\-delete@{HeapMultiBufMP\_\-delete}}
+\index{HeapMultiBufMP\_\-delete@{HeapMultiBufMP\_\-delete}!HeapMultiBufMP.h@{HeapMultiBufMP.h}}
+\paragraph[{HeapMultiBufMP\_\-delete}]{\setlength{\rightskip}{0pt plus 5cm}Int HeapMultiBufMP\_\-delete (
+\begin{DoxyParamCaption}
+\item[{{\bf HeapMultiBufMP\_\-Handle} $\ast$}]{ handlePtr}
+\end{DoxyParamCaption}
+)}\hfill\label{_heap_multi_buf_m_p_8h_aaa779c5601feba3b7519345823d0df7e}
+
+
+Delete a created HeapMultiBufMP instance. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em handlePtr} & Pointer to handle to delete. \\
+\hline
+\end{DoxyParams}
+\index{HeapMultiBufMP.h@{HeapMultiBufMP.h}!HeapMultiBufMP\_\-open@{HeapMultiBufMP\_\-open}}
+\index{HeapMultiBufMP\_\-open@{HeapMultiBufMP\_\-open}!HeapMultiBufMP.h@{HeapMultiBufMP.h}}
+\paragraph[{HeapMultiBufMP\_\-open}]{\setlength{\rightskip}{0pt plus 5cm}Int HeapMultiBufMP\_\-open (
+\begin{DoxyParamCaption}
+\item[{String}]{ name, }
+\item[{{\bf HeapMultiBufMP\_\-Handle} $\ast$}]{ handlePtr}
+\end{DoxyParamCaption}
+)}\hfill\label{_heap_multi_buf_m_p_8h_a0fe88a611f390024e0772876546084cc}
+
+
+Open a created HeapMultiBufMP instance. 
+
+Once an instance is created, an open can be performed. The open is used to gain access to the same HeapMultiBufMP instance. Generally an instance is created on one processor and opened on the other processor.
+
+The open returns a HeapMultiBufMP instance handle like the create, however the open does not initialize the shared memory. The supplied name is used to identify the created instance.
+
+Call \hyperlink{_heap_multi_buf_m_p_8h_a267f6b50f05a5c859ac38d207020381e}{HeapMultiBufMP\_\-close} when the opened instance is not longer needed.
+
+
+\begin{DoxyParams}{Parameters}
+{\em name} & Name of created HeapMultiBufMP instance \\
+\hline
+{\em handlePtr} & Pointer to HeapMultiBufMP handle to be opened\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+HeapMultiBufMP status
+\begin{DoxyItemize}
+\item \hyperlink{_heap_multi_buf_m_p_8h_ab1e8f168212f49a10090c1e0e88eb891}{HeapMultiBufMP\_\-S\_\-SUCCESS}: Heap successfully opened
+\item \hyperlink{_heap_multi_buf_m_p_8h_a9e65df2b0c5a166d3d38530d191f14d1}{HeapMultiBufMP\_\-E\_\-NOTFOUND}: Heap is not yet ready to be opened.
+\item \hyperlink{_heap_multi_buf_m_p_8h_aa539c8b8eaab1a246208b00d3cb95d89}{HeapMultiBufMP\_\-E\_\-FAIL}: A general failure has occurred
+\end{DoxyItemize}
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{_heap_multi_buf_m_p_8h_a267f6b50f05a5c859ac38d207020381e}{HeapMultiBufMP\_\-close} 
+\end{DoxySeeAlso}
+\index{HeapMultiBufMP.h@{HeapMultiBufMP.h}!HeapMultiBufMP\_\-Params\_\-init@{HeapMultiBufMP\_\-Params\_\-init}}
+\index{HeapMultiBufMP\_\-Params\_\-init@{HeapMultiBufMP\_\-Params\_\-init}!HeapMultiBufMP.h@{HeapMultiBufMP.h}}
+\paragraph[{HeapMultiBufMP\_\-Params\_\-init}]{\setlength{\rightskip}{0pt plus 5cm}Void HeapMultiBufMP\_\-Params\_\-init (
+\begin{DoxyParamCaption}
+\item[{{\bf HeapMultiBufMP\_\-Params} $\ast$}]{ params}
+\end{DoxyParamCaption}
+)}\hfill\label{_heap_multi_buf_m_p_8h_a0a3a33f3e29e6f78623ec7cb89d2c3a4}
+
+
+Initialize a HeapMultiBufMP parameters struct. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt out}  & {\em params} & Pointer to GateMP parameters \\
+\hline
+\end{DoxyParams}
+\index{HeapMultiBufMP.h@{HeapMultiBufMP.h}!HeapMultiBufMP\_\-alloc@{HeapMultiBufMP\_\-alloc}}
+\index{HeapMultiBufMP\_\-alloc@{HeapMultiBufMP\_\-alloc}!HeapMultiBufMP.h@{HeapMultiBufMP.h}}
+\paragraph[{HeapMultiBufMP\_\-alloc}]{\setlength{\rightskip}{0pt plus 5cm}Void$\ast$ HeapMultiBufMP\_\-alloc (
+\begin{DoxyParamCaption}
+\item[{{\bf HeapMultiBufMP\_\-Handle}}]{ handle, }
+\item[{SizeT}]{ size, }
+\item[{SizeT}]{ align}
+\end{DoxyParamCaption}
+)}\hfill\label{_heap_multi_buf_m_p_8h_a7a9a09acb3e7d1c942f1535f00bbad1e}
+
+
+Allocate a block of memory of specified size and alignment. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em handle} & Handle to previously created/opened instance. \\
+\hline
+{\em size} & Size to be allocated (in MADUs) \\
+\hline
+{\em align} & Alignment for allocation (power of 2)\\
+\hline
+\end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{_heap_multi_buf_m_p_8h_a1df398e57eed0e1fa1aa1035107adcbf}{HeapMultiBufMP\_\-free} 
+\end{DoxySeeAlso}
+\index{HeapMultiBufMP.h@{HeapMultiBufMP.h}!HeapMultiBufMP\_\-free@{HeapMultiBufMP\_\-free}}
+\index{HeapMultiBufMP\_\-free@{HeapMultiBufMP\_\-free}!HeapMultiBufMP.h@{HeapMultiBufMP.h}}
+\paragraph[{HeapMultiBufMP\_\-free}]{\setlength{\rightskip}{0pt plus 5cm}Void HeapMultiBufMP\_\-free (
+\begin{DoxyParamCaption}
+\item[{{\bf HeapMultiBufMP\_\-Handle}}]{ handle, }
+\item[{Ptr}]{ block, }
+\item[{SizeT}]{ size}
+\end{DoxyParamCaption}
+)}\hfill\label{_heap_multi_buf_m_p_8h_a1df398e57eed0e1fa1aa1035107adcbf}
+
+
+Frees a block of memory. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em handle} & Handle to previously created/opened instance. \\
+\hline
+{\em block} & Block of memory to be freed. \\
+\hline
+{\em size} & Size to be freed (in MADUs)\\
+\hline
+\end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{_heap_multi_buf_m_p_8h_a7a9a09acb3e7d1c942f1535f00bbad1e}{HeapMultiBufMP\_\-alloc} 
+\end{DoxySeeAlso}
+\index{HeapMultiBufMP.h@{HeapMultiBufMP.h}!HeapMultiBufMP\_\-getExtendedStats@{HeapMultiBufMP\_\-getExtendedStats}}
+\index{HeapMultiBufMP\_\-getExtendedStats@{HeapMultiBufMP\_\-getExtendedStats}!HeapMultiBufMP.h@{HeapMultiBufMP.h}}
+\paragraph[{HeapMultiBufMP\_\-getExtendedStats}]{\setlength{\rightskip}{0pt plus 5cm}Void HeapMultiBufMP\_\-getExtendedStats (
+\begin{DoxyParamCaption}
+\item[{{\bf HeapMultiBufMP\_\-Handle}}]{ handle, }
+\item[{{\bf HeapMultiBufMP\_\-ExtendedStats} $\ast$}]{ stats}
+\end{DoxyParamCaption}
+)}\hfill\label{_heap_multi_buf_m_p_8h_a386420101752537b59e12520aafd9b0d}
+
+
+Get extended memory statistics. 
+
+This function retrieves the extended statistics for a HeapMultiBufMP instance. It does not retrieve the standard Memory\_\-Stats information. Refer to \hyperlink{struct_heap_multi_buf_m_p___extended_stats}{HeapMultiBufMP\_\-ExtendedStats} for more information regarding what information is returned.
+
+
+\begin{DoxyParams}[1]{Parameters}
+ & {\em handle} & Handle to previously created/opened instance. \\
+\hline
+\mbox{\tt out}  & {\em stats} & ExtendedStats structure\\
+\hline
+\end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+
+\end{DoxySeeAlso}
+\index{HeapMultiBufMP.h@{HeapMultiBufMP.h}!HeapMultiBufMP\_\-getStats@{HeapMultiBufMP\_\-getStats}}
+\index{HeapMultiBufMP\_\-getStats@{HeapMultiBufMP\_\-getStats}!HeapMultiBufMP.h@{HeapMultiBufMP.h}}
+\paragraph[{HeapMultiBufMP\_\-getStats}]{\setlength{\rightskip}{0pt plus 5cm}Void HeapMultiBufMP\_\-getStats (
+\begin{DoxyParamCaption}
+\item[{{\bf HeapMultiBufMP\_\-Handle}}]{ handle, }
+\item[{Ptr}]{ stats}
+\end{DoxyParamCaption}
+)}\hfill\label{_heap_multi_buf_m_p_8h_ad1cbb150d20f6c9e12f8c5e13ab70c61}
+
+
+Get memory statistics. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+ & {\em handle} & Handle to previously created/opened instance. \\
+\hline
+\mbox{\tt out}  & {\em stats} & Memory statistics structure\\
+\hline
+\end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+
+\end{DoxySeeAlso}

@@ -1,0 +1,552 @@
+\subsection{GateMP.h File Reference}
+\label{_gate_m_p_8h}\index{GateMP.h@{GateMP.h}}
+
+
+\subsubsection{Detailed Description}
+Multiple processor gate that provides local and remote context protection. ============================================================================
+
+A GateMP instance can be used to enforce both local and remote context context protection. That is, entering a GateMP can prevent preemption by another thread running on the same processor and simultaneously prevent a remote processor from entering the same gate. GateMP's are typically used to protect reads/writes to a shared resource, such as shared memory.
+
+Creating a GateMP requires supplying the following configuration
+\begin{DoxyItemize}
+\item Instance name (see GateMP\_\-Params::name)
+\item Region id (see GateMP\_\-Params::regionId) In addition, the following parameters should be configured as necessary:
+\item The level of local protection (interrupt, thread, tasklet, process or none) can be configured using the GateMP\_\-Params::localProtect config parameter.
+\item The type of remote system gate that can be used. Most devices will typically have a single type of system gate so this configuration should typically be left alone. See GateMP\_\-Params::remoteProtect for more information.
+\end{DoxyItemize}
+
+Once created GateMP allows the gate to be opened on another processor using \hyperlink{_gate_m_p_8h_acefd091d723ca21a0a02e1e1d5600fc8}{GateMP\_\-open} and the name that was used in \hyperlink{_gate_m_p_8h_ad83d284487eb5d7996318c7e8d88cf82}{GateMP\_\-create}.
+
+A GateMP can be entered and left using \hyperlink{_gate_m_p_8h_a20a6cab18407f07cb1dbcba48de04cd3}{GateMP\_\-enter} and \hyperlink{_gate_m_p_8h_a622c40958deebda445715cd8e8b3ea34}{GateMP\_\-leave} like any other gate that implements the IGateProvider interface.
+
+GateMP has the following proxies -\/ RemoteSystemProxy, RemoteCustom1Proxy and RemoteCustom2Proxy which are automatically plugged with device-\/specific delegates that implement multiple processor mutexes using a variety of hardware mechanisms.
+
+GateMP creates a default system gate whose handle may be obtained using \hyperlink{_gate_m_p_8h_a6c09c820ed3852840f0ce3036a276687}{GateMP\_\-getDefaultRemote}. Most IPC modules typically use this gate by default if they require gates and no instance gate is configured by the user.
+
+The GateMP header should be included in an application as follows: 
+\begin{DoxyCode}
+  #include <ti/ipc/GateMP.h>
+\end{DoxyCode}
+
+
+\begin{DoxyVersion}{Version}
+0.00.01
+\end{DoxyVersion}
+============================================================================ This graph shows which files directly or indirectly include this file:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=400pt]{_gate_m_p_8h__dep__incl}
+\end{center}
+\end{figure}
+\subsubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct_gate_m_p___params}{GateMP\_\-Params}
+\begin{DoxyCompactList}\small\item\em Structure defining parameters for the GateMP module. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsubsection*{Defines}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{_gate_m_p_8h_a78c50bd892ebded475a145ae7bb71f39}{GateMP\_\-S\_\-BUSY}~2
+\begin{DoxyCompactList}\small\item\em The resource is still in use. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_gate_m_p_8h_a0f6606bbd36e2e502cbb967cee5bd086}{GateMP\_\-S\_\-ALREADYSETUP}~1
+\begin{DoxyCompactList}\small\item\em The module has been already setup. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_gate_m_p_8h_a1ffb641b2f80fe24940f930986cc6dee}{GateMP\_\-S\_\-SUCCESS}~0
+\begin{DoxyCompactList}\small\item\em Operation is successful. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_gate_m_p_8h_ac75ff3b36b981b6088d9ec294a36a875}{GateMP\_\-E\_\-FAIL}~-\/1
+\begin{DoxyCompactList}\small\item\em Generic failure. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_gate_m_p_8h_acf51ad78ae70ed3674cd379499d40fb9}{GateMP\_\-E\_\-INVALIDARG}~-\/2
+\begin{DoxyCompactList}\small\item\em Argument passed to function is invalid. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_gate_m_p_8h_a4565a3a4bdab37b2499fa79177297242}{GateMP\_\-E\_\-MEMORY}~-\/3
+\begin{DoxyCompactList}\small\item\em Operation resulted in memory failure. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_gate_m_p_8h_a20d3d7bbc6c7a5ef4372384072aad0b1}{GateMP\_\-E\_\-ALREADYEXISTS}~-\/4
+\begin{DoxyCompactList}\small\item\em The specified entity already exists. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_gate_m_p_8h_acdd82a5d634ec934ed7257eea8fb8d2c}{GateMP\_\-E\_\-NOTFOUND}~-\/5
+\begin{DoxyCompactList}\small\item\em Unable to find the specified entity. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_gate_m_p_8h_aaf80607f9e9ea4fba411e5693b0e8743}{GateMP\_\-E\_\-TIMEOUT}~-\/6
+\begin{DoxyCompactList}\small\item\em Operation timed out. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_gate_m_p_8h_a075d7c582f213e960e44c25ff138ad85}{GateMP\_\-E\_\-INVALIDSTATE}~-\/7
+\begin{DoxyCompactList}\small\item\em Module is not initialized. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_gate_m_p_8h_a2eac3b6964fe569e41231fb2fea8b18d}{GateMP\_\-E\_\-OSFAILURE}~-\/8
+\begin{DoxyCompactList}\small\item\em A failure occurred in an OS-\/specific call. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_gate_m_p_8h_ad07430b772c1d95c5ef2425b6c280fd9}{GateMP\_\-E\_\-RESOURCE}~-\/9
+\begin{DoxyCompactList}\small\item\em Specified resource is not available. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_gate_m_p_8h_a77205c8c44ab3edc4557cc4521cb3d04}{GateMP\_\-E\_\-RESTART}~-\/10
+\begin{DoxyCompactList}\small\item\em Operation was interrupted. Please restart the operation. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef enum \hyperlink{_gate_m_p_8h_a3877bd64627d7449d3687e8b06939652}{GateMP\_\-LocalProtect} \hyperlink{_gate_m_p_8h_accb7b6c936aebe10e31d909310398fe5}{GateMP\_\-LocalProtect}
+\begin{DoxyCompactList}\small\item\em A set of local context protection levels. \item\end{DoxyCompactList}\item 
+typedef enum \hyperlink{_gate_m_p_8h_a88716d5706d8fa8c6a3b9a4f023ef1d8}{GateMP\_\-RemoteProtect} \hyperlink{_gate_m_p_8h_a1400ba94db5b5fefd196649a9c9a4c63}{GateMP\_\-RemoteProtect}
+\begin{DoxyCompactList}\small\item\em Type of remote Gate. \item\end{DoxyCompactList}\item 
+typedef struct GateMP\_\-Object $\ast$ \hyperlink{_gate_m_p_8h_ad5bb259f928a14e98d973334bc60ebb3}{GateMP\_\-Handle}
+\begin{DoxyCompactList}\small\item\em GateMP\_\-Handle type. \item\end{DoxyCompactList}\item 
+typedef struct \hyperlink{struct_gate_m_p___params}{GateMP\_\-Params} \hyperlink{_gate_m_p_8h_aa87249c5e69b88bfaa4ee817cacd3b42}{GateMP\_\-Params}
+\begin{DoxyCompactList}\small\item\em Structure defining parameters for the GateMP module. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{_gate_m_p_8h_a3877bd64627d7449d3687e8b06939652}{GateMP\_\-LocalProtect} \{ \par
+\hyperlink{_gate_m_p_8h_a3877bd64627d7449d3687e8b06939652a4577e1162c081ed8019a349318ab3afe}{GateMP\_\-LocalProtect\_\-NONE} =  0, 
+\par
+\hyperlink{_gate_m_p_8h_a3877bd64627d7449d3687e8b06939652aa4c5dba40613d5436adb6c604bb8514f}{GateMP\_\-LocalProtect\_\-INTERRUPT} =  1, 
+\par
+\hyperlink{_gate_m_p_8h_a3877bd64627d7449d3687e8b06939652aabb3d9eb4b679ceebb537775d388f2b1}{GateMP\_\-LocalProtect\_\-TASKLET} =  2, 
+\par
+\hyperlink{_gate_m_p_8h_a3877bd64627d7449d3687e8b06939652a257bc8d4b8d6d19bdbe96cae37cbd908}{GateMP\_\-LocalProtect\_\-THREAD} =  3, 
+\par
+\hyperlink{_gate_m_p_8h_a3877bd64627d7449d3687e8b06939652aeec868d37052043812bc4c1829319a6d}{GateMP\_\-LocalProtect\_\-PROCESS} =  4
+ \}
+\begin{DoxyCompactList}\small\item\em A set of local context protection levels. \item\end{DoxyCompactList}\item 
+enum \hyperlink{_gate_m_p_8h_a88716d5706d8fa8c6a3b9a4f023ef1d8}{GateMP\_\-RemoteProtect} \{ \par
+\hyperlink{_gate_m_p_8h_a88716d5706d8fa8c6a3b9a4f023ef1d8a29b87b5258dbf5e387fc5a4ada3548ab}{GateMP\_\-RemoteProtect\_\-NONE} =  0, 
+\par
+\hyperlink{_gate_m_p_8h_a88716d5706d8fa8c6a3b9a4f023ef1d8aba4e153ee33cce1d32dc84254261c557}{GateMP\_\-RemoteProtect\_\-SYSTEM} =  1, 
+\par
+\hyperlink{_gate_m_p_8h_a88716d5706d8fa8c6a3b9a4f023ef1d8a2c1243e212dfe1dfce672b2d7556fd1d}{GateMP\_\-RemoteProtect\_\-CUSTOM1} =  2, 
+\par
+\hyperlink{_gate_m_p_8h_a88716d5706d8fa8c6a3b9a4f023ef1d8a997afc6350b832a6829ee004786aa8db}{GateMP\_\-RemoteProtect\_\-CUSTOM2} =  3
+ \}
+\begin{DoxyCompactList}\small\item\em Type of remote Gate. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+Int \hyperlink{_gate_m_p_8h_a0c64bfa32191b16de290787289e46481}{GateMP\_\-close} (\hyperlink{_gate_m_p_8h_ad5bb259f928a14e98d973334bc60ebb3}{GateMP\_\-Handle} $\ast$handlePtr)
+\begin{DoxyCompactList}\small\item\em Close an opened gate. \item\end{DoxyCompactList}\item 
+\hyperlink{_gate_m_p_8h_ad5bb259f928a14e98d973334bc60ebb3}{GateMP\_\-Handle} \hyperlink{_gate_m_p_8h_ad83d284487eb5d7996318c7e8d88cf82}{GateMP\_\-create} (const \hyperlink{struct_gate_m_p___params}{GateMP\_\-Params} $\ast$params)
+\begin{DoxyCompactList}\small\item\em Create a GateMP instance. \item\end{DoxyCompactList}\item 
+Int \hyperlink{_gate_m_p_8h_aed5bd2b4543a937c82aba23f9458983c}{GateMP\_\-delete} (\hyperlink{_gate_m_p_8h_ad5bb259f928a14e98d973334bc60ebb3}{GateMP\_\-Handle} $\ast$handlePtr)
+\begin{DoxyCompactList}\small\item\em Delete a created GateMP instance. \item\end{DoxyCompactList}\item 
+\hyperlink{_gate_m_p_8h_ad5bb259f928a14e98d973334bc60ebb3}{GateMP\_\-Handle} \hyperlink{_gate_m_p_8h_a6c09c820ed3852840f0ce3036a276687}{GateMP\_\-getDefaultRemote} (Void)
+\begin{DoxyCompactList}\small\item\em Get the default remote gate. \item\end{DoxyCompactList}\item 
+\hyperlink{_gate_m_p_8h_a3877bd64627d7449d3687e8b06939652}{GateMP\_\-LocalProtect} \hyperlink{_gate_m_p_8h_ace72dca8b36d6bcb16d931463cdcece1}{GateMP\_\-getLocalProtect} (\hyperlink{_gate_m_p_8h_ad5bb259f928a14e98d973334bc60ebb3}{GateMP\_\-Handle} handle)
+\begin{DoxyCompactList}\small\item\em Get the local protection level configured in a GateMP instance. \item\end{DoxyCompactList}\item 
+\hyperlink{_gate_m_p_8h_a88716d5706d8fa8c6a3b9a4f023ef1d8}{GateMP\_\-RemoteProtect} \hyperlink{_gate_m_p_8h_a6b36fa302c1dfa45c85806990c99774a}{GateMP\_\-getRemoteProtect} (\hyperlink{_gate_m_p_8h_ad5bb259f928a14e98d973334bc60ebb3}{GateMP\_\-Handle} handle)
+\begin{DoxyCompactList}\small\item\em Get the remote protection level configured in a GateMP instance. \item\end{DoxyCompactList}\item 
+Int \hyperlink{_gate_m_p_8h_acefd091d723ca21a0a02e1e1d5600fc8}{GateMP\_\-open} (String name, \hyperlink{_gate_m_p_8h_ad5bb259f928a14e98d973334bc60ebb3}{GateMP\_\-Handle} $\ast$handlePtr)
+\begin{DoxyCompactList}\small\item\em Open a created GateMP by name. \item\end{DoxyCompactList}\item 
+Void \hyperlink{_gate_m_p_8h_aa9ed943f88964311c2447777c3b330f4}{GateMP\_\-Params\_\-init} (\hyperlink{struct_gate_m_p___params}{GateMP\_\-Params} $\ast$params)
+\begin{DoxyCompactList}\small\item\em Initialize a GateMP parameters struct. \item\end{DoxyCompactList}\item 
+IArg \hyperlink{_gate_m_p_8h_a20a6cab18407f07cb1dbcba48de04cd3}{GateMP\_\-enter} (\hyperlink{_gate_m_p_8h_ad5bb259f928a14e98d973334bc60ebb3}{GateMP\_\-Handle} handle)
+\begin{DoxyCompactList}\small\item\em Enter the GateMP. \item\end{DoxyCompactList}\item 
+Void \hyperlink{_gate_m_p_8h_a622c40958deebda445715cd8e8b3ea34}{GateMP\_\-leave} (\hyperlink{_gate_m_p_8h_ad5bb259f928a14e98d973334bc60ebb3}{GateMP\_\-Handle} handle, IArg key)
+\begin{DoxyCompactList}\small\item\em Leave the GateMP. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsubsection{Define Documentation}
+\index{GateMP.h@{GateMP.h}!GateMP\_\-S\_\-BUSY@{GateMP\_\-S\_\-BUSY}}
+\index{GateMP\_\-S\_\-BUSY@{GateMP\_\-S\_\-BUSY}!GateMP.h@{GateMP.h}}
+\paragraph[{GateMP\_\-S\_\-BUSY}]{\setlength{\rightskip}{0pt plus 5cm}\#define GateMP\_\-S\_\-BUSY~2}\hfill\label{_gate_m_p_8h_a78c50bd892ebded475a145ae7bb71f39}
+
+
+The resource is still in use. 
+
+\index{GateMP.h@{GateMP.h}!GateMP\_\-S\_\-ALREADYSETUP@{GateMP\_\-S\_\-ALREADYSETUP}}
+\index{GateMP\_\-S\_\-ALREADYSETUP@{GateMP\_\-S\_\-ALREADYSETUP}!GateMP.h@{GateMP.h}}
+\paragraph[{GateMP\_\-S\_\-ALREADYSETUP}]{\setlength{\rightskip}{0pt plus 5cm}\#define GateMP\_\-S\_\-ALREADYSETUP~1}\hfill\label{_gate_m_p_8h_a0f6606bbd36e2e502cbb967cee5bd086}
+
+
+The module has been already setup. 
+
+\index{GateMP.h@{GateMP.h}!GateMP\_\-S\_\-SUCCESS@{GateMP\_\-S\_\-SUCCESS}}
+\index{GateMP\_\-S\_\-SUCCESS@{GateMP\_\-S\_\-SUCCESS}!GateMP.h@{GateMP.h}}
+\paragraph[{GateMP\_\-S\_\-SUCCESS}]{\setlength{\rightskip}{0pt plus 5cm}\#define GateMP\_\-S\_\-SUCCESS~0}\hfill\label{_gate_m_p_8h_a1ffb641b2f80fe24940f930986cc6dee}
+
+
+Operation is successful. 
+
+\index{GateMP.h@{GateMP.h}!GateMP\_\-E\_\-FAIL@{GateMP\_\-E\_\-FAIL}}
+\index{GateMP\_\-E\_\-FAIL@{GateMP\_\-E\_\-FAIL}!GateMP.h@{GateMP.h}}
+\paragraph[{GateMP\_\-E\_\-FAIL}]{\setlength{\rightskip}{0pt plus 5cm}\#define GateMP\_\-E\_\-FAIL~-\/1}\hfill\label{_gate_m_p_8h_ac75ff3b36b981b6088d9ec294a36a875}
+
+
+Generic failure. 
+
+\index{GateMP.h@{GateMP.h}!GateMP\_\-E\_\-INVALIDARG@{GateMP\_\-E\_\-INVALIDARG}}
+\index{GateMP\_\-E\_\-INVALIDARG@{GateMP\_\-E\_\-INVALIDARG}!GateMP.h@{GateMP.h}}
+\paragraph[{GateMP\_\-E\_\-INVALIDARG}]{\setlength{\rightskip}{0pt plus 5cm}\#define GateMP\_\-E\_\-INVALIDARG~-\/2}\hfill\label{_gate_m_p_8h_acf51ad78ae70ed3674cd379499d40fb9}
+
+
+Argument passed to function is invalid. 
+
+\index{GateMP.h@{GateMP.h}!GateMP\_\-E\_\-MEMORY@{GateMP\_\-E\_\-MEMORY}}
+\index{GateMP\_\-E\_\-MEMORY@{GateMP\_\-E\_\-MEMORY}!GateMP.h@{GateMP.h}}
+\paragraph[{GateMP\_\-E\_\-MEMORY}]{\setlength{\rightskip}{0pt plus 5cm}\#define GateMP\_\-E\_\-MEMORY~-\/3}\hfill\label{_gate_m_p_8h_a4565a3a4bdab37b2499fa79177297242}
+
+
+Operation resulted in memory failure. 
+
+\index{GateMP.h@{GateMP.h}!GateMP\_\-E\_\-ALREADYEXISTS@{GateMP\_\-E\_\-ALREADYEXISTS}}
+\index{GateMP\_\-E\_\-ALREADYEXISTS@{GateMP\_\-E\_\-ALREADYEXISTS}!GateMP.h@{GateMP.h}}
+\paragraph[{GateMP\_\-E\_\-ALREADYEXISTS}]{\setlength{\rightskip}{0pt plus 5cm}\#define GateMP\_\-E\_\-ALREADYEXISTS~-\/4}\hfill\label{_gate_m_p_8h_a20d3d7bbc6c7a5ef4372384072aad0b1}
+
+
+The specified entity already exists. 
+
+\index{GateMP.h@{GateMP.h}!GateMP\_\-E\_\-NOTFOUND@{GateMP\_\-E\_\-NOTFOUND}}
+\index{GateMP\_\-E\_\-NOTFOUND@{GateMP\_\-E\_\-NOTFOUND}!GateMP.h@{GateMP.h}}
+\paragraph[{GateMP\_\-E\_\-NOTFOUND}]{\setlength{\rightskip}{0pt plus 5cm}\#define GateMP\_\-E\_\-NOTFOUND~-\/5}\hfill\label{_gate_m_p_8h_acdd82a5d634ec934ed7257eea8fb8d2c}
+
+
+Unable to find the specified entity. 
+
+\index{GateMP.h@{GateMP.h}!GateMP\_\-E\_\-TIMEOUT@{GateMP\_\-E\_\-TIMEOUT}}
+\index{GateMP\_\-E\_\-TIMEOUT@{GateMP\_\-E\_\-TIMEOUT}!GateMP.h@{GateMP.h}}
+\paragraph[{GateMP\_\-E\_\-TIMEOUT}]{\setlength{\rightskip}{0pt plus 5cm}\#define GateMP\_\-E\_\-TIMEOUT~-\/6}\hfill\label{_gate_m_p_8h_aaf80607f9e9ea4fba411e5693b0e8743}
+
+
+Operation timed out. 
+
+\index{GateMP.h@{GateMP.h}!GateMP\_\-E\_\-INVALIDSTATE@{GateMP\_\-E\_\-INVALIDSTATE}}
+\index{GateMP\_\-E\_\-INVALIDSTATE@{GateMP\_\-E\_\-INVALIDSTATE}!GateMP.h@{GateMP.h}}
+\paragraph[{GateMP\_\-E\_\-INVALIDSTATE}]{\setlength{\rightskip}{0pt plus 5cm}\#define GateMP\_\-E\_\-INVALIDSTATE~-\/7}\hfill\label{_gate_m_p_8h_a075d7c582f213e960e44c25ff138ad85}
+
+
+Module is not initialized. 
+
+\index{GateMP.h@{GateMP.h}!GateMP\_\-E\_\-OSFAILURE@{GateMP\_\-E\_\-OSFAILURE}}
+\index{GateMP\_\-E\_\-OSFAILURE@{GateMP\_\-E\_\-OSFAILURE}!GateMP.h@{GateMP.h}}
+\paragraph[{GateMP\_\-E\_\-OSFAILURE}]{\setlength{\rightskip}{0pt plus 5cm}\#define GateMP\_\-E\_\-OSFAILURE~-\/8}\hfill\label{_gate_m_p_8h_a2eac3b6964fe569e41231fb2fea8b18d}
+
+
+A failure occurred in an OS-\/specific call. 
+
+\index{GateMP.h@{GateMP.h}!GateMP\_\-E\_\-RESOURCE@{GateMP\_\-E\_\-RESOURCE}}
+\index{GateMP\_\-E\_\-RESOURCE@{GateMP\_\-E\_\-RESOURCE}!GateMP.h@{GateMP.h}}
+\paragraph[{GateMP\_\-E\_\-RESOURCE}]{\setlength{\rightskip}{0pt plus 5cm}\#define GateMP\_\-E\_\-RESOURCE~-\/9}\hfill\label{_gate_m_p_8h_ad07430b772c1d95c5ef2425b6c280fd9}
+
+
+Specified resource is not available. 
+
+\index{GateMP.h@{GateMP.h}!GateMP\_\-E\_\-RESTART@{GateMP\_\-E\_\-RESTART}}
+\index{GateMP\_\-E\_\-RESTART@{GateMP\_\-E\_\-RESTART}!GateMP.h@{GateMP.h}}
+\paragraph[{GateMP\_\-E\_\-RESTART}]{\setlength{\rightskip}{0pt plus 5cm}\#define GateMP\_\-E\_\-RESTART~-\/10}\hfill\label{_gate_m_p_8h_a77205c8c44ab3edc4557cc4521cb3d04}
+
+
+Operation was interrupted. Please restart the operation. 
+
+
+
+\subsubsection{Typedef Documentation}
+\index{GateMP.h@{GateMP.h}!GateMP\_\-LocalProtect@{GateMP\_\-LocalProtect}}
+\index{GateMP\_\-LocalProtect@{GateMP\_\-LocalProtect}!GateMP.h@{GateMP.h}}
+\paragraph[{GateMP\_\-LocalProtect}]{\setlength{\rightskip}{0pt plus 5cm}typedef enum {\bf GateMP\_\-LocalProtect}  {\bf GateMP\_\-LocalProtect}}\hfill\label{_gate_m_p_8h_accb7b6c936aebe10e31d909310398fe5}
+
+
+A set of local context protection levels. 
+
+Each member corresponds to a specific local processor gates used for local protection.
+
+In Linux user mode, the following are the mapping for the constants
+\begin{DoxyItemize}
+\item INTERRUPT -\/$>$ \mbox{[}N/A\mbox{]}
+\item TASKLET -\/$>$ \mbox{[}N/A\mbox{]}
+\item THREAD -\/$>$ GateMutex
+\item PROCESS -\/$>$ GateMutex
+\end{DoxyItemize}
+
+In Linux kernel mode, the following are the mapping for the constants
+\begin{DoxyItemize}
+\item INTERRUPT -\/$>$ \mbox{[}Interrupts disabled\mbox{]}
+\item TASKLET -\/$>$ GateMutex
+\item THREAD -\/$>$ GateMutex
+\item PROCESS -\/$>$ GateMutex
+\end{DoxyItemize}
+
+For SYS/BIOS users, the following are the mappings for the constants
+\begin{DoxyItemize}
+\item INTERRUPT -\/$>$ GateAll: disables interrupts, Swis and Tasks
+\item TASKLET -\/$>$ GateSwi: disables Swis and Tasks
+\item THREAD -\/$>$ GateMutexPri: based on Semaphores
+\item PROCESS -\/$>$ GateMutexPri: based on Semaphores 
+\end{DoxyItemize}\index{GateMP.h@{GateMP.h}!GateMP\_\-RemoteProtect@{GateMP\_\-RemoteProtect}}
+\index{GateMP\_\-RemoteProtect@{GateMP\_\-RemoteProtect}!GateMP.h@{GateMP.h}}
+\paragraph[{GateMP\_\-RemoteProtect}]{\setlength{\rightskip}{0pt plus 5cm}typedef enum {\bf GateMP\_\-RemoteProtect}  {\bf GateMP\_\-RemoteProtect}}\hfill\label{_gate_m_p_8h_a1400ba94db5b5fefd196649a9c9a4c63}
+
+
+Type of remote Gate. 
+
+Each member corresponds to a specific type of remote gate. Each enum value corresponds to the following remote protection levels:
+\begin{DoxyItemize}
+\item NONE -\/$>$ No remote protection (the GateMP instance will exclusively offer local protection configured in GateMP\_\-Params::localProtect
+\item SYSTEM -\/$>$ Use the SYSTEM remote protection level (default for remote protection
+\item CUSTOM1 -\/$>$ Use the CUSTOM1 remote protection level
+\item CUSTOM2 -\/$>$ Use the CUSTOM2 remote protection level 
+\end{DoxyItemize}\index{GateMP.h@{GateMP.h}!GateMP\_\-Handle@{GateMP\_\-Handle}}
+\index{GateMP\_\-Handle@{GateMP\_\-Handle}!GateMP.h@{GateMP.h}}
+\paragraph[{GateMP\_\-Handle}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct GateMP\_\-Object$\ast$ {\bf GateMP\_\-Handle}}\hfill\label{_gate_m_p_8h_ad5bb259f928a14e98d973334bc60ebb3}
+
+
+GateMP\_\-Handle type. 
+
+\index{GateMP.h@{GateMP.h}!GateMP\_\-Params@{GateMP\_\-Params}}
+\index{GateMP\_\-Params@{GateMP\_\-Params}!GateMP.h@{GateMP.h}}
+\paragraph[{GateMP\_\-Params}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf GateMP\_\-Params}  {\bf GateMP\_\-Params}}\hfill\label{_gate_m_p_8h_aa87249c5e69b88bfaa4ee817cacd3b42}
+
+
+Structure defining parameters for the GateMP module. 
+
+
+
+\subsubsection{Enumeration Type Documentation}
+\index{GateMP.h@{GateMP.h}!GateMP\_\-LocalProtect@{GateMP\_\-LocalProtect}}
+\index{GateMP\_\-LocalProtect@{GateMP\_\-LocalProtect}!GateMP.h@{GateMP.h}}
+\paragraph[{GateMP\_\-LocalProtect}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf GateMP\_\-LocalProtect}}\hfill\label{_gate_m_p_8h_a3877bd64627d7449d3687e8b06939652}
+
+
+A set of local context protection levels. 
+
+Each member corresponds to a specific local processor gates used for local protection.
+
+In Linux user mode, the following are the mapping for the constants
+\begin{DoxyItemize}
+\item INTERRUPT -\/$>$ \mbox{[}N/A\mbox{]}
+\item TASKLET -\/$>$ \mbox{[}N/A\mbox{]}
+\item THREAD -\/$>$ GateMutex
+\item PROCESS -\/$>$ GateMutex
+\end{DoxyItemize}
+
+In Linux kernel mode, the following are the mapping for the constants
+\begin{DoxyItemize}
+\item INTERRUPT -\/$>$ \mbox{[}Interrupts disabled\mbox{]}
+\item TASKLET -\/$>$ GateMutex
+\item THREAD -\/$>$ GateMutex
+\item PROCESS -\/$>$ GateMutex
+\end{DoxyItemize}
+
+For SYS/BIOS users, the following are the mappings for the constants
+\begin{DoxyItemize}
+\item INTERRUPT -\/$>$ GateAll: disables interrupts, Swis and Tasks
+\item TASKLET -\/$>$ GateSwi: disables Swis and Tasks
+\item THREAD -\/$>$ GateMutexPri: based on Semaphores
+\item PROCESS -\/$>$ GateMutexPri: based on Semaphores 
+\end{DoxyItemize}\begin{Desc}
+\item[Enumerator: ]\par
+\begin{description}
+\index{GateMP\_\-LocalProtect\_\-NONE@{GateMP\_\-LocalProtect\_\-NONE}!GateMP.h@{GateMP.h}}\index{GateMP.h@{GateMP.h}!GateMP\_\-LocalProtect\_\-NONE@{GateMP\_\-LocalProtect\_\-NONE}}\item[{\em 
+GateMP\_\-LocalProtect\_\-NONE\label{_gate_m_p_8h_a3877bd64627d7449d3687e8b06939652a4577e1162c081ed8019a349318ab3afe}
+}]Use no local protection \index{GateMP\_\-LocalProtect\_\-INTERRUPT@{GateMP\_\-LocalProtect\_\-INTERRUPT}!GateMP.h@{GateMP.h}}\index{GateMP.h@{GateMP.h}!GateMP\_\-LocalProtect\_\-INTERRUPT@{GateMP\_\-LocalProtect\_\-INTERRUPT}}\item[{\em 
+GateMP\_\-LocalProtect\_\-INTERRUPT\label{_gate_m_p_8h_a3877bd64627d7449d3687e8b06939652aa4c5dba40613d5436adb6c604bb8514f}
+}]Use the INTERRUPT local protection level \index{GateMP\_\-LocalProtect\_\-TASKLET@{GateMP\_\-LocalProtect\_\-TASKLET}!GateMP.h@{GateMP.h}}\index{GateMP.h@{GateMP.h}!GateMP\_\-LocalProtect\_\-TASKLET@{GateMP\_\-LocalProtect\_\-TASKLET}}\item[{\em 
+GateMP\_\-LocalProtect\_\-TASKLET\label{_gate_m_p_8h_a3877bd64627d7449d3687e8b06939652aabb3d9eb4b679ceebb537775d388f2b1}
+}]Use the TASKLET local protection level \index{GateMP\_\-LocalProtect\_\-THREAD@{GateMP\_\-LocalProtect\_\-THREAD}!GateMP.h@{GateMP.h}}\index{GateMP.h@{GateMP.h}!GateMP\_\-LocalProtect\_\-THREAD@{GateMP\_\-LocalProtect\_\-THREAD}}\item[{\em 
+GateMP\_\-LocalProtect\_\-THREAD\label{_gate_m_p_8h_a3877bd64627d7449d3687e8b06939652a257bc8d4b8d6d19bdbe96cae37cbd908}
+}]Use the THREAD local protection level \index{GateMP\_\-LocalProtect\_\-PROCESS@{GateMP\_\-LocalProtect\_\-PROCESS}!GateMP.h@{GateMP.h}}\index{GateMP.h@{GateMP.h}!GateMP\_\-LocalProtect\_\-PROCESS@{GateMP\_\-LocalProtect\_\-PROCESS}}\item[{\em 
+GateMP\_\-LocalProtect\_\-PROCESS\label{_gate_m_p_8h_a3877bd64627d7449d3687e8b06939652aeec868d37052043812bc4c1829319a6d}
+}]Use the PROCESS local protection level \end{description}
+\end{Desc}
+
+\index{GateMP.h@{GateMP.h}!GateMP\_\-RemoteProtect@{GateMP\_\-RemoteProtect}}
+\index{GateMP\_\-RemoteProtect@{GateMP\_\-RemoteProtect}!GateMP.h@{GateMP.h}}
+\paragraph[{GateMP\_\-RemoteProtect}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf GateMP\_\-RemoteProtect}}\hfill\label{_gate_m_p_8h_a88716d5706d8fa8c6a3b9a4f023ef1d8}
+
+
+Type of remote Gate. 
+
+Each member corresponds to a specific type of remote gate. Each enum value corresponds to the following remote protection levels:
+\begin{DoxyItemize}
+\item NONE -\/$>$ No remote protection (the GateMP instance will exclusively offer local protection configured in GateMP\_\-Params::localProtect
+\item SYSTEM -\/$>$ Use the SYSTEM remote protection level (default for remote protection
+\item CUSTOM1 -\/$>$ Use the CUSTOM1 remote protection level
+\item CUSTOM2 -\/$>$ Use the CUSTOM2 remote protection level 
+\end{DoxyItemize}\begin{Desc}
+\item[Enumerator: ]\par
+\begin{description}
+\index{GateMP\_\-RemoteProtect\_\-NONE@{GateMP\_\-RemoteProtect\_\-NONE}!GateMP.h@{GateMP.h}}\index{GateMP.h@{GateMP.h}!GateMP\_\-RemoteProtect\_\-NONE@{GateMP\_\-RemoteProtect\_\-NONE}}\item[{\em 
+GateMP\_\-RemoteProtect\_\-NONE\label{_gate_m_p_8h_a88716d5706d8fa8c6a3b9a4f023ef1d8a29b87b5258dbf5e387fc5a4ada3548ab}
+}]No remote protection (the GateMP instance will exclusively offer local protection configured in GateMP\_\-Params::localProtect) \index{GateMP\_\-RemoteProtect\_\-SYSTEM@{GateMP\_\-RemoteProtect\_\-SYSTEM}!GateMP.h@{GateMP.h}}\index{GateMP.h@{GateMP.h}!GateMP\_\-RemoteProtect\_\-SYSTEM@{GateMP\_\-RemoteProtect\_\-SYSTEM}}\item[{\em 
+GateMP\_\-RemoteProtect\_\-SYSTEM\label{_gate_m_p_8h_a88716d5706d8fa8c6a3b9a4f023ef1d8aba4e153ee33cce1d32dc84254261c557}
+}]Use the SYSTEM remote protection level (default remote protection) \index{GateMP\_\-RemoteProtect\_\-CUSTOM1@{GateMP\_\-RemoteProtect\_\-CUSTOM1}!GateMP.h@{GateMP.h}}\index{GateMP.h@{GateMP.h}!GateMP\_\-RemoteProtect\_\-CUSTOM1@{GateMP\_\-RemoteProtect\_\-CUSTOM1}}\item[{\em 
+GateMP\_\-RemoteProtect\_\-CUSTOM1\label{_gate_m_p_8h_a88716d5706d8fa8c6a3b9a4f023ef1d8a2c1243e212dfe1dfce672b2d7556fd1d}
+}]Use the CUSTOM1 remote protection level \index{GateMP\_\-RemoteProtect\_\-CUSTOM2@{GateMP\_\-RemoteProtect\_\-CUSTOM2}!GateMP.h@{GateMP.h}}\index{GateMP.h@{GateMP.h}!GateMP\_\-RemoteProtect\_\-CUSTOM2@{GateMP\_\-RemoteProtect\_\-CUSTOM2}}\item[{\em 
+GateMP\_\-RemoteProtect\_\-CUSTOM2\label{_gate_m_p_8h_a88716d5706d8fa8c6a3b9a4f023ef1d8a997afc6350b832a6829ee004786aa8db}
+}]Use the CUSTOM2 remote protection level \end{description}
+\end{Desc}
+
+
+
+\subsubsection{Function Documentation}
+\index{GateMP.h@{GateMP.h}!GateMP\_\-close@{GateMP\_\-close}}
+\index{GateMP\_\-close@{GateMP\_\-close}!GateMP.h@{GateMP.h}}
+\paragraph[{GateMP\_\-close}]{\setlength{\rightskip}{0pt plus 5cm}Int GateMP\_\-close (
+\begin{DoxyParamCaption}
+\item[{{\bf GateMP\_\-Handle} $\ast$}]{ handlePtr}
+\end{DoxyParamCaption}
+)}\hfill\label{_gate_m_p_8h_a0c64bfa32191b16de290787289e46481}
+
+
+Close an opened gate. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in,out}  & {\em handlePtr} & Pointer to handle to opened GateMP instance\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+GateMP status 
+\end{DoxyReturn}
+\index{GateMP.h@{GateMP.h}!GateMP\_\-create@{GateMP\_\-create}}
+\index{GateMP\_\-create@{GateMP\_\-create}!GateMP.h@{GateMP.h}}
+\paragraph[{GateMP\_\-create}]{\setlength{\rightskip}{0pt plus 5cm}{\bf GateMP\_\-Handle} GateMP\_\-create (
+\begin{DoxyParamCaption}
+\item[{const {\bf GateMP\_\-Params} $\ast$}]{ params}
+\end{DoxyParamCaption}
+)}\hfill\label{_gate_m_p_8h_ad83d284487eb5d7996318c7e8d88cf82}
+
+
+Create a GateMP instance. 
+
+The params structure should be initialized using GateMP\_\-Params\_\-init.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em params} & GateMP parameters\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+GateMP Handle 
+\end{DoxyReturn}
+\index{GateMP.h@{GateMP.h}!GateMP\_\-delete@{GateMP\_\-delete}}
+\index{GateMP\_\-delete@{GateMP\_\-delete}!GateMP.h@{GateMP.h}}
+\paragraph[{GateMP\_\-delete}]{\setlength{\rightskip}{0pt plus 5cm}Int GateMP\_\-delete (
+\begin{DoxyParamCaption}
+\item[{{\bf GateMP\_\-Handle} $\ast$}]{ handlePtr}
+\end{DoxyParamCaption}
+)}\hfill\label{_gate_m_p_8h_aed5bd2b4543a937c82aba23f9458983c}
+
+
+Delete a created GateMP instance. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in,out}  & {\em handlePtr} & Pointer to GateMP handle\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+GateMP Status 
+\end{DoxyReturn}
+\index{GateMP.h@{GateMP.h}!GateMP\_\-getDefaultRemote@{GateMP\_\-getDefaultRemote}}
+\index{GateMP\_\-getDefaultRemote@{GateMP\_\-getDefaultRemote}!GateMP.h@{GateMP.h}}
+\paragraph[{GateMP\_\-getDefaultRemote}]{\setlength{\rightskip}{0pt plus 5cm}{\bf GateMP\_\-Handle} GateMP\_\-getDefaultRemote (
+\begin{DoxyParamCaption}
+\item[{Void}]{}
+\end{DoxyParamCaption}
+)}\hfill\label{_gate_m_p_8h_a6c09c820ed3852840f0ce3036a276687}
+
+
+Get the default remote gate. 
+
+\begin{DoxyReturn}{Returns}
+GateMP handle 
+\end{DoxyReturn}
+\index{GateMP.h@{GateMP.h}!GateMP\_\-getLocalProtect@{GateMP\_\-getLocalProtect}}
+\index{GateMP\_\-getLocalProtect@{GateMP\_\-getLocalProtect}!GateMP.h@{GateMP.h}}
+\paragraph[{GateMP\_\-getLocalProtect}]{\setlength{\rightskip}{0pt plus 5cm}{\bf GateMP\_\-LocalProtect} GateMP\_\-getLocalProtect (
+\begin{DoxyParamCaption}
+\item[{{\bf GateMP\_\-Handle}}]{ handle}
+\end{DoxyParamCaption}
+)}\hfill\label{_gate_m_p_8h_ace72dca8b36d6bcb16d931463cdcece1}
+
+
+Get the local protection level configured in a GateMP instance. 
+
+\begin{DoxyReturn}{Returns}
+GateMP\_\-LocalProtect corresponding to local protection level 
+\end{DoxyReturn}
+\index{GateMP.h@{GateMP.h}!GateMP\_\-getRemoteProtect@{GateMP\_\-getRemoteProtect}}
+\index{GateMP\_\-getRemoteProtect@{GateMP\_\-getRemoteProtect}!GateMP.h@{GateMP.h}}
+\paragraph[{GateMP\_\-getRemoteProtect}]{\setlength{\rightskip}{0pt plus 5cm}{\bf GateMP\_\-RemoteProtect} GateMP\_\-getRemoteProtect (
+\begin{DoxyParamCaption}
+\item[{{\bf GateMP\_\-Handle}}]{ handle}
+\end{DoxyParamCaption}
+)}\hfill\label{_gate_m_p_8h_a6b36fa302c1dfa45c85806990c99774a}
+
+
+Get the remote protection level configured in a GateMP instance. 
+
+\begin{DoxyReturn}{Returns}
+GateMP\_\-RemoteProtect corresponding to remote protection level 
+\end{DoxyReturn}
+\index{GateMP.h@{GateMP.h}!GateMP\_\-open@{GateMP\_\-open}}
+\index{GateMP\_\-open@{GateMP\_\-open}!GateMP.h@{GateMP.h}}
+\paragraph[{GateMP\_\-open}]{\setlength{\rightskip}{0pt plus 5cm}Int GateMP\_\-open (
+\begin{DoxyParamCaption}
+\item[{String}]{ name, }
+\item[{{\bf GateMP\_\-Handle} $\ast$}]{ handlePtr}
+\end{DoxyParamCaption}
+)}\hfill\label{_gate_m_p_8h_acefd091d723ca21a0a02e1e1d5600fc8}
+
+
+Open a created GateMP by name. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em name} & Name of the GateMP instance \\
+\hline
+\mbox{\tt out}  & {\em handlePtr} & Pointer to GateMP handle to be opened\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+GateMP status:
+\begin{DoxyItemize}
+\item \hyperlink{_gate_m_p_8h_acdd82a5d634ec934ed7257eea8fb8d2c}{GateMP\_\-E\_\-NOTFOUND}: open failed (name not found on any processor)
+\item \hyperlink{_gate_m_p_8h_ac75ff3b36b981b6088d9ec294a36a875}{GateMP\_\-E\_\-FAIL}: open failed (general failure occurred)
+\item \hyperlink{_gate_m_p_8h_a1ffb641b2f80fe24940f930986cc6dee}{GateMP\_\-S\_\-SUCCESS}: open successful 
+\end{DoxyItemize}
+\end{DoxyReturn}
+\index{GateMP.h@{GateMP.h}!GateMP\_\-Params\_\-init@{GateMP\_\-Params\_\-init}}
+\index{GateMP\_\-Params\_\-init@{GateMP\_\-Params\_\-init}!GateMP.h@{GateMP.h}}
+\paragraph[{GateMP\_\-Params\_\-init}]{\setlength{\rightskip}{0pt plus 5cm}Void GateMP\_\-Params\_\-init (
+\begin{DoxyParamCaption}
+\item[{{\bf GateMP\_\-Params} $\ast$}]{ params}
+\end{DoxyParamCaption}
+)}\hfill\label{_gate_m_p_8h_aa9ed943f88964311c2447777c3b330f4}
+
+
+Initialize a GateMP parameters struct. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt out}  & {\em params} & Pointer to GateMP parameters \\
+\hline
+\end{DoxyParams}
+\index{GateMP.h@{GateMP.h}!GateMP\_\-enter@{GateMP\_\-enter}}
+\index{GateMP\_\-enter@{GateMP\_\-enter}!GateMP.h@{GateMP.h}}
+\paragraph[{GateMP\_\-enter}]{\setlength{\rightskip}{0pt plus 5cm}IArg GateMP\_\-enter (
+\begin{DoxyParamCaption}
+\item[{{\bf GateMP\_\-Handle}}]{ handle}
+\end{DoxyParamCaption}
+)}\hfill\label{_gate_m_p_8h_a20a6cab18407f07cb1dbcba48de04cd3}
+
+
+Enter the GateMP. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em handle} & GateMP handle\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+key that must be used to leave the gate 
+\end{DoxyReturn}
+\index{GateMP.h@{GateMP.h}!GateMP\_\-leave@{GateMP\_\-leave}}
+\index{GateMP\_\-leave@{GateMP\_\-leave}!GateMP.h@{GateMP.h}}
+\paragraph[{GateMP\_\-leave}]{\setlength{\rightskip}{0pt plus 5cm}Void GateMP\_\-leave (
+\begin{DoxyParamCaption}
+\item[{{\bf GateMP\_\-Handle}}]{ handle, }
+\item[{IArg}]{ key}
+\end{DoxyParamCaption}
+)}\hfill\label{_gate_m_p_8h_a622c40958deebda445715cd8e8b3ea34}
+
+
+Leave the GateMP. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em handle} & GateMP handle \\
+\hline
+\mbox{\tt in}  & {\em key} & key returned from GateMP\_\-enter \\
+\hline
+\end{DoxyParams}

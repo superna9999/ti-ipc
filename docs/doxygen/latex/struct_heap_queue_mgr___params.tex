@@ -1,0 +1,59 @@
+\subsection{HeapQueueMgr\_\-Params Struct Reference}
+\label{struct_heap_queue_mgr___params}\index{HeapQueueMgr\_\-Params@{HeapQueueMgr\_\-Params}}
+
+
+Structure defining parameters for the HeapQueueMgr module.  
+
+
+
+
+{\ttfamily \#include $<$HeapQueueMgr.h$>$}
+
+\subsubsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+String \hyperlink{struct_heap_queue_mgr___params_a7824367589cfc4964c1c262225e349b5}{name}
+\item 
+UInt16 \hyperlink{struct_heap_queue_mgr___params_a8b3bb33eb02bcf2acd93993c23b17ccd}{regionId}
+\item 
+SizeT \hyperlink{struct_heap_queue_mgr___params_aeb3a83b8f0c08c05c5c250edf36b8bac}{blockSize}
+\item 
+UInt \hyperlink{struct_heap_queue_mgr___params_aa8c44bb82eb7424aa86e55a2c03dd170}{numBlocks}
+\end{DoxyCompactItemize}
+
+
+\subsubsection{Detailed Description}
+Structure defining parameters for the HeapQueueMgr module. 
+
+\subsubsection{Field Documentation}
+\index{HeapQueueMgr\_\-Params@{HeapQueueMgr\_\-Params}!name@{name}}
+\index{name@{name}!HeapQueueMgr_Params@{HeapQueueMgr\_\-Params}}
+\paragraph[{name}]{\setlength{\rightskip}{0pt plus 5cm}String {\bf HeapQueueMgr\_\-Params::name}}\hfill\label{struct_heap_queue_mgr___params_a7824367589cfc4964c1c262225e349b5}
+Name of this instance.
+
+The name (if not NULL) must be unique among all HeapQueueMgr instances in the entire system. When creating a new heap, it is necessary to supply an instance name.
+
+The name does not have to be persistent. The supplied string is copied into persistent memory. \index{HeapQueueMgr\_\-Params@{HeapQueueMgr\_\-Params}!regionId@{regionId}}
+\index{regionId@{regionId}!HeapQueueMgr_Params@{HeapQueueMgr\_\-Params}}
+\paragraph[{regionId}]{\setlength{\rightskip}{0pt plus 5cm}UInt16 {\bf HeapQueueMgr\_\-Params::regionId}}\hfill\label{struct_heap_queue_mgr___params_a8b3bb33eb02bcf2acd93993c23b17ccd}
+Shared region ID
+
+The index corresponding to the shared region from which shared memory will be allocated. \index{HeapQueueMgr\_\-Params@{HeapQueueMgr\_\-Params}!blockSize@{blockSize}}
+\index{blockSize@{blockSize}!HeapQueueMgr_Params@{HeapQueueMgr\_\-Params}}
+\paragraph[{blockSize}]{\setlength{\rightskip}{0pt plus 5cm}SizeT {\bf HeapQueueMgr\_\-Params::blockSize}}\hfill\label{struct_heap_queue_mgr___params_aeb3a83b8f0c08c05c5c250edf36b8bac}
+Size (in MAUs) of each block.
+
+HeapQueueMgr will round the blockSize up to the nearest multiple of the alignment, so the actual blockSize may be larger. When creating a HeapQueueMgr dynamically, this needs to be taken into account to determine the proper buffer size to pass in.
+
+Required parameter.
+
+The default size of the blocks is 0 MAUs. \index{HeapQueueMgr\_\-Params@{HeapQueueMgr\_\-Params}!numBlocks@{numBlocks}}
+\index{numBlocks@{numBlocks}!HeapQueueMgr_Params@{HeapQueueMgr\_\-Params}}
+\paragraph[{numBlocks}]{\setlength{\rightskip}{0pt plus 5cm}UInt {\bf HeapQueueMgr\_\-Params::numBlocks}}\hfill\label{struct_heap_queue_mgr___params_aa8c44bb82eb7424aa86e55a2c03dd170}
+Number of fixed-\/size blocks.
+
+This is a required parameter for all new HeapQueueMgr instances. 
+
+The documentation for this struct was generated from the following file:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{_heap_queue_mgr_8h}{HeapQueueMgr.h}\end{DoxyCompactItemize}

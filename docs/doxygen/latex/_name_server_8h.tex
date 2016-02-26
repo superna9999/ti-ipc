@@ -1,0 +1,651 @@
+\subsection{NameServer.h File Reference}
+\label{_name_server_8h}\index{NameServer.h@{NameServer.h}}
+
+
+\subsubsection{Detailed Description}
+NameServer Manager. ===========================================================================
+
+The NameServer module manages local name/value pairs that enables an application and other modules to store and retrieve values based on a name. The module supports different lengths of values. The \hyperlink{_name_server_8h_ad7d45ed8fe5bcd1f10da5914c8da39f5}{NameServer\_\-add} and \hyperlink{_name_server_8h_a5f1013e57e7c5da9f003063d70a76e01}{NameServer\_\-get} functions are for variable length values. The \hyperlink{_name_server_8h_ac130195a04a34dfa2daba6ec3fff65d6}{NameServer\_\-addUInt32} and \hyperlink{_name_server_8h_ac3b6fa4f8f0ed572f1a5f6b7cb05679e}{NameServer\_\-getUInt32} functions are optimized for UInt32 variables and constants.
+
+The NameServer module maintains thread-\/safety for the APIs. However, the NameServer APIs cannot be called from an interrupt (i.e. Hwi) context. However, it is safe to use the APIs in Swi's and Tasks.
+
+Each NameServer instance manages a different name/value table. This allows each table to be customized to meet the requirements of user: \begin{DoxyItemize}
+\item {\bfseries Size differences:} one table could allow long values (e.g. $>$ 32 bits) while another table could be used to store integers. This customization enables better memory usage. \item {\bfseries Performance:} improves search time when retrieving a name/value pair. \item {\bfseries Relax name uniqueness:} names in a specific table must be unique, but the same name can be used in different tables.\end{DoxyItemize}
+When adding a name/value pair, the name and value are copied into internal buffers in NameServer. To minimize runtime memory allocation these buffers can be allocated at creation time.
+
+NameServer maintains the name/values table in local memory (e.g. not shared memory). However the NameServer module can be used in a multiprocessor system.
+
+The NameServer module uses the MultiProc module for identifying the different processors. Which remote processors and the order they are queried is determined by the procId array in the \hyperlink{_name_server_8h_a5f1013e57e7c5da9f003063d70a76e01}{NameServer\_\-get} function.
+
+Currently there is no endian or wordsize conversion performed by the NameServer module. Also there is no asynchronous support at this time.
+
+The NameServer header should be included in an application as follows: 
+\begin{DoxyCode}
+  #include <ti/ipc/NameServer.h>
+\end{DoxyCode}
+ \subsubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct_name_server___params}{NameServer\_\-Params}
+\begin{DoxyCompactList}\small\item\em NameServer\_\-Handle type. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsubsection*{Defines}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{_name_server_8h_a57542b4fd6b5d46d78064ae92215bc4b}{NameServer\_\-S\_\-BUSY}~2
+\begin{DoxyCompactList}\small\item\em The resource is still in use. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_name_server_8h_a66224beb4a7f1cc92923a8fe630429ce}{NameServer\_\-S\_\-ALREADYSETUP}~1
+\begin{DoxyCompactList}\small\item\em The module has been already setup. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_name_server_8h_a49cbe5edf8e519b17e323d01431e8161}{NameServer\_\-S\_\-SUCCESS}~0
+\begin{DoxyCompactList}\small\item\em Operation is successful. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_name_server_8h_a2ffd6887c6aca49d73982fb226db679c}{NameServer\_\-E\_\-FAIL}~-\/1
+\begin{DoxyCompactList}\small\item\em Generic failure. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_name_server_8h_a213957efe13b0c8ec3d52e31a708b56f}{NameServer\_\-E\_\-INVALIDARG}~-\/2
+\begin{DoxyCompactList}\small\item\em Argument passed to function is invalid. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_name_server_8h_a917b53c5df7ca0d6ecdc29c269fa0c2c}{NameServer\_\-E\_\-MEMORY}~-\/3
+\begin{DoxyCompactList}\small\item\em Operation resulted in memory failure. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_name_server_8h_ac52dae450ec3de45caa3ce1fe143b46e}{NameServer\_\-E\_\-ALREADYEXISTS}~-\/4
+\begin{DoxyCompactList}\small\item\em The specified entity already exists. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_name_server_8h_a6af9a47d256473dbeb9653988603c36e}{NameServer\_\-E\_\-NOTFOUND}~-\/5
+\begin{DoxyCompactList}\small\item\em Unable to find the specified entity. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_name_server_8h_a0f8f1fb04f719120e127565d2c3aaa5c}{NameServer\_\-E\_\-TIMEOUT}~-\/6
+\begin{DoxyCompactList}\small\item\em Operation timed out. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_name_server_8h_af8382f12ca225820d75eee0b5b48f57f}{NameServer\_\-E\_\-INVALIDSTATE}~-\/7
+\begin{DoxyCompactList}\small\item\em Module is not initialized. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_name_server_8h_a1241686307312899fadce59ec251b237}{NameServer\_\-E\_\-OSFAILURE}~-\/8
+\begin{DoxyCompactList}\small\item\em A failure occurred in an OS-\/specific call. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_name_server_8h_afb9e082dbbf79808eb895db9b818e126}{NameServer\_\-E\_\-RESOURCE}~-\/9
+\begin{DoxyCompactList}\small\item\em Specified resource is not available. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_name_server_8h_acf390d38dd50b5ea5f4d58c6e892d8b6}{NameServer\_\-E\_\-RESTART}~-\/10
+\begin{DoxyCompactList}\small\item\em Operation was interrupted. Please restart the operation. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_name_server_8h_aee02296103cd2e162143d40c917697d7}{NameServer\_\-ALLOWGROWTH}~($\sim$0)
+\begin{DoxyCompactList}\small\item\em Allow dynamic growth of the NameServer instance table. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{_name_server_8h_afa52c74cc2d67bda4d5522418abb4585}{NameServer\_\-Params\_\-MAXNAMELEN}~16
+\begin{DoxyCompactList}\small\item\em The default maximum length of the name for the name/value pair. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct NameServer\_\-Object $\ast$ \hyperlink{_name_server_8h_a99fa93c4ee4169db90162b523d9152d4}{NameServer\_\-Handle}
+\begin{DoxyCompactList}\small\item\em NameServer handle type. \item\end{DoxyCompactList}\item 
+typedef struct \hyperlink{struct_name_server___params}{NameServer\_\-Params} \hyperlink{_name_server_8h_ad1c351b65dad7194f35c2ed9d7997b8d}{NameServer\_\-Params}
+\begin{DoxyCompactList}\small\item\em NameServer\_\-Handle type. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+Void \hyperlink{_name_server_8h_a9bb546e8a7d656ce5e919650febe4989}{NameServer\_\-Params\_\-init} (\hyperlink{struct_name_server___params}{NameServer\_\-Params} $\ast$params)
+\begin{DoxyCompactList}\small\item\em Initializes parameter structure. \item\end{DoxyCompactList}\item 
+\hyperlink{_name_server_8h_a99fa93c4ee4169db90162b523d9152d4}{NameServer\_\-Handle} \hyperlink{_name_server_8h_a7345e78debfbf6d5da6ae1603764429a}{NameServer\_\-create} (String name, const \hyperlink{struct_name_server___params}{NameServer\_\-Params} $\ast$params)
+\begin{DoxyCompactList}\small\item\em Creates a NameServer instance. \item\end{DoxyCompactList}\item 
+Int \hyperlink{_name_server_8h_a3419fc2bf3e6c34289c620cf9be38a04}{NameServer\_\-delete} (\hyperlink{_name_server_8h_a99fa93c4ee4169db90162b523d9152d4}{NameServer\_\-Handle} $\ast$handlePtr)
+\begin{DoxyCompactList}\small\item\em Deletes a NameServer instance. \item\end{DoxyCompactList}\item 
+\hyperlink{_name_server_8h_a99fa93c4ee4169db90162b523d9152d4}{NameServer\_\-Handle} \hyperlink{_name_server_8h_abaebe428fbf536448c99acb6faf25134}{NameServer\_\-getHandle} (String name)
+\begin{DoxyCompactList}\small\item\em Gets the NameServer handle given the name. \item\end{DoxyCompactList}\item 
+Ptr \hyperlink{_name_server_8h_ad7d45ed8fe5bcd1f10da5914c8da39f5}{NameServer\_\-add} (\hyperlink{_name_server_8h_a99fa93c4ee4169db90162b523d9152d4}{NameServer\_\-Handle} handle, String name, Ptr buf, UInt32 len)
+\begin{DoxyCompactList}\small\item\em Adds a variable length value into the local NameServer table. \item\end{DoxyCompactList}\item 
+Ptr \hyperlink{_name_server_8h_ac130195a04a34dfa2daba6ec3fff65d6}{NameServer\_\-addUInt32} (\hyperlink{_name_server_8h_a99fa93c4ee4169db90162b523d9152d4}{NameServer\_\-Handle} handle, String name, UInt32 value)
+\begin{DoxyCompactList}\small\item\em Adds a 32-\/bit value into the local NameServer table. \item\end{DoxyCompactList}\item 
+Int \hyperlink{_name_server_8h_a5f1013e57e7c5da9f003063d70a76e01}{NameServer\_\-get} (\hyperlink{_name_server_8h_a99fa93c4ee4169db90162b523d9152d4}{NameServer\_\-Handle} handle, String name, Ptr buf, UInt32 $\ast$len, UInt16 procId\mbox{[}$\,$\mbox{]})
+\begin{DoxyCompactList}\small\item\em Gets the variable value length by name. \item\end{DoxyCompactList}\item 
+Int \hyperlink{_name_server_8h_ac3b6fa4f8f0ed572f1a5f6b7cb05679e}{NameServer\_\-getUInt32} (\hyperlink{_name_server_8h_a99fa93c4ee4169db90162b523d9152d4}{NameServer\_\-Handle} handle, String name, Ptr buf, UInt16 procId\mbox{[}$\,$\mbox{]})
+\begin{DoxyCompactList}\small\item\em Gets a 32-\/bit value by name. \item\end{DoxyCompactList}\item 
+Int \hyperlink{_name_server_8h_a46d3826bc4ef4bc6cc45d5287c697122}{NameServer\_\-getLocal} (\hyperlink{_name_server_8h_a99fa93c4ee4169db90162b523d9152d4}{NameServer\_\-Handle} handle, String name, Ptr buf, UInt32 $\ast$len)
+\begin{DoxyCompactList}\small\item\em Gets the variable value length by name from the local table. \item\end{DoxyCompactList}\item 
+Int \hyperlink{_name_server_8h_a9e824f111db640d1bce81bfe25963b76}{NameServer\_\-getLocalUInt32} (\hyperlink{_name_server_8h_a99fa93c4ee4169db90162b523d9152d4}{NameServer\_\-Handle} handle, String name, Ptr buf)
+\begin{DoxyCompactList}\small\item\em Gets a 32-\/bit value by name from the local table. \item\end{DoxyCompactList}\item 
+Int \hyperlink{_name_server_8h_ab21d262bcfa187f21e235b36ce17d6de}{NameServer\_\-remove} (\hyperlink{_name_server_8h_a99fa93c4ee4169db90162b523d9152d4}{NameServer\_\-Handle} handle, String name)
+\begin{DoxyCompactList}\small\item\em Remove a name/value pair from the table. \item\end{DoxyCompactList}\item 
+Int \hyperlink{_name_server_8h_a84b6883f07de21bcaf8f4dbdc2e55e63}{NameServer\_\-removeEntry} (\hyperlink{_name_server_8h_a99fa93c4ee4169db90162b523d9152d4}{NameServer\_\-Handle} handle, Ptr entry)
+\begin{DoxyCompactList}\small\item\em Remove a name/value pair from the table. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsubsection{Define Documentation}
+\index{NameServer.h@{NameServer.h}!NameServer\_\-S\_\-BUSY@{NameServer\_\-S\_\-BUSY}}
+\index{NameServer\_\-S\_\-BUSY@{NameServer\_\-S\_\-BUSY}!NameServer.h@{NameServer.h}}
+\paragraph[{NameServer\_\-S\_\-BUSY}]{\setlength{\rightskip}{0pt plus 5cm}\#define NameServer\_\-S\_\-BUSY~2}\hfill\label{_name_server_8h_a57542b4fd6b5d46d78064ae92215bc4b}
+
+
+The resource is still in use. 
+
+\index{NameServer.h@{NameServer.h}!NameServer\_\-S\_\-ALREADYSETUP@{NameServer\_\-S\_\-ALREADYSETUP}}
+\index{NameServer\_\-S\_\-ALREADYSETUP@{NameServer\_\-S\_\-ALREADYSETUP}!NameServer.h@{NameServer.h}}
+\paragraph[{NameServer\_\-S\_\-ALREADYSETUP}]{\setlength{\rightskip}{0pt plus 5cm}\#define NameServer\_\-S\_\-ALREADYSETUP~1}\hfill\label{_name_server_8h_a66224beb4a7f1cc92923a8fe630429ce}
+
+
+The module has been already setup. 
+
+\index{NameServer.h@{NameServer.h}!NameServer\_\-S\_\-SUCCESS@{NameServer\_\-S\_\-SUCCESS}}
+\index{NameServer\_\-S\_\-SUCCESS@{NameServer\_\-S\_\-SUCCESS}!NameServer.h@{NameServer.h}}
+\paragraph[{NameServer\_\-S\_\-SUCCESS}]{\setlength{\rightskip}{0pt plus 5cm}\#define NameServer\_\-S\_\-SUCCESS~0}\hfill\label{_name_server_8h_a49cbe5edf8e519b17e323d01431e8161}
+
+
+Operation is successful. 
+
+\index{NameServer.h@{NameServer.h}!NameServer\_\-E\_\-FAIL@{NameServer\_\-E\_\-FAIL}}
+\index{NameServer\_\-E\_\-FAIL@{NameServer\_\-E\_\-FAIL}!NameServer.h@{NameServer.h}}
+\paragraph[{NameServer\_\-E\_\-FAIL}]{\setlength{\rightskip}{0pt plus 5cm}\#define NameServer\_\-E\_\-FAIL~-\/1}\hfill\label{_name_server_8h_a2ffd6887c6aca49d73982fb226db679c}
+
+
+Generic failure. 
+
+\index{NameServer.h@{NameServer.h}!NameServer\_\-E\_\-INVALIDARG@{NameServer\_\-E\_\-INVALIDARG}}
+\index{NameServer\_\-E\_\-INVALIDARG@{NameServer\_\-E\_\-INVALIDARG}!NameServer.h@{NameServer.h}}
+\paragraph[{NameServer\_\-E\_\-INVALIDARG}]{\setlength{\rightskip}{0pt plus 5cm}\#define NameServer\_\-E\_\-INVALIDARG~-\/2}\hfill\label{_name_server_8h_a213957efe13b0c8ec3d52e31a708b56f}
+
+
+Argument passed to function is invalid. 
+
+\index{NameServer.h@{NameServer.h}!NameServer\_\-E\_\-MEMORY@{NameServer\_\-E\_\-MEMORY}}
+\index{NameServer\_\-E\_\-MEMORY@{NameServer\_\-E\_\-MEMORY}!NameServer.h@{NameServer.h}}
+\paragraph[{NameServer\_\-E\_\-MEMORY}]{\setlength{\rightskip}{0pt plus 5cm}\#define NameServer\_\-E\_\-MEMORY~-\/3}\hfill\label{_name_server_8h_a917b53c5df7ca0d6ecdc29c269fa0c2c}
+
+
+Operation resulted in memory failure. 
+
+\index{NameServer.h@{NameServer.h}!NameServer\_\-E\_\-ALREADYEXISTS@{NameServer\_\-E\_\-ALREADYEXISTS}}
+\index{NameServer\_\-E\_\-ALREADYEXISTS@{NameServer\_\-E\_\-ALREADYEXISTS}!NameServer.h@{NameServer.h}}
+\paragraph[{NameServer\_\-E\_\-ALREADYEXISTS}]{\setlength{\rightskip}{0pt plus 5cm}\#define NameServer\_\-E\_\-ALREADYEXISTS~-\/4}\hfill\label{_name_server_8h_ac52dae450ec3de45caa3ce1fe143b46e}
+
+
+The specified entity already exists. 
+
+\index{NameServer.h@{NameServer.h}!NameServer\_\-E\_\-NOTFOUND@{NameServer\_\-E\_\-NOTFOUND}}
+\index{NameServer\_\-E\_\-NOTFOUND@{NameServer\_\-E\_\-NOTFOUND}!NameServer.h@{NameServer.h}}
+\paragraph[{NameServer\_\-E\_\-NOTFOUND}]{\setlength{\rightskip}{0pt plus 5cm}\#define NameServer\_\-E\_\-NOTFOUND~-\/5}\hfill\label{_name_server_8h_a6af9a47d256473dbeb9653988603c36e}
+
+
+Unable to find the specified entity. 
+
+\index{NameServer.h@{NameServer.h}!NameServer\_\-E\_\-TIMEOUT@{NameServer\_\-E\_\-TIMEOUT}}
+\index{NameServer\_\-E\_\-TIMEOUT@{NameServer\_\-E\_\-TIMEOUT}!NameServer.h@{NameServer.h}}
+\paragraph[{NameServer\_\-E\_\-TIMEOUT}]{\setlength{\rightskip}{0pt plus 5cm}\#define NameServer\_\-E\_\-TIMEOUT~-\/6}\hfill\label{_name_server_8h_a0f8f1fb04f719120e127565d2c3aaa5c}
+
+
+Operation timed out. 
+
+\index{NameServer.h@{NameServer.h}!NameServer\_\-E\_\-INVALIDSTATE@{NameServer\_\-E\_\-INVALIDSTATE}}
+\index{NameServer\_\-E\_\-INVALIDSTATE@{NameServer\_\-E\_\-INVALIDSTATE}!NameServer.h@{NameServer.h}}
+\paragraph[{NameServer\_\-E\_\-INVALIDSTATE}]{\setlength{\rightskip}{0pt plus 5cm}\#define NameServer\_\-E\_\-INVALIDSTATE~-\/7}\hfill\label{_name_server_8h_af8382f12ca225820d75eee0b5b48f57f}
+
+
+Module is not initialized. 
+
+\index{NameServer.h@{NameServer.h}!NameServer\_\-E\_\-OSFAILURE@{NameServer\_\-E\_\-OSFAILURE}}
+\index{NameServer\_\-E\_\-OSFAILURE@{NameServer\_\-E\_\-OSFAILURE}!NameServer.h@{NameServer.h}}
+\paragraph[{NameServer\_\-E\_\-OSFAILURE}]{\setlength{\rightskip}{0pt plus 5cm}\#define NameServer\_\-E\_\-OSFAILURE~-\/8}\hfill\label{_name_server_8h_a1241686307312899fadce59ec251b237}
+
+
+A failure occurred in an OS-\/specific call. 
+
+\index{NameServer.h@{NameServer.h}!NameServer\_\-E\_\-RESOURCE@{NameServer\_\-E\_\-RESOURCE}}
+\index{NameServer\_\-E\_\-RESOURCE@{NameServer\_\-E\_\-RESOURCE}!NameServer.h@{NameServer.h}}
+\paragraph[{NameServer\_\-E\_\-RESOURCE}]{\setlength{\rightskip}{0pt plus 5cm}\#define NameServer\_\-E\_\-RESOURCE~-\/9}\hfill\label{_name_server_8h_afb9e082dbbf79808eb895db9b818e126}
+
+
+Specified resource is not available. 
+
+\index{NameServer.h@{NameServer.h}!NameServer\_\-E\_\-RESTART@{NameServer\_\-E\_\-RESTART}}
+\index{NameServer\_\-E\_\-RESTART@{NameServer\_\-E\_\-RESTART}!NameServer.h@{NameServer.h}}
+\paragraph[{NameServer\_\-E\_\-RESTART}]{\setlength{\rightskip}{0pt plus 5cm}\#define NameServer\_\-E\_\-RESTART~-\/10}\hfill\label{_name_server_8h_acf390d38dd50b5ea5f4d58c6e892d8b6}
+
+
+Operation was interrupted. Please restart the operation. 
+
+\index{NameServer.h@{NameServer.h}!NameServer\_\-ALLOWGROWTH@{NameServer\_\-ALLOWGROWTH}}
+\index{NameServer\_\-ALLOWGROWTH@{NameServer\_\-ALLOWGROWTH}!NameServer.h@{NameServer.h}}
+\paragraph[{NameServer\_\-ALLOWGROWTH}]{\setlength{\rightskip}{0pt plus 5cm}\#define NameServer\_\-ALLOWGROWTH~($\sim$0)}\hfill\label{_name_server_8h_aee02296103cd2e162143d40c917697d7}
+
+
+Allow dynamic growth of the NameServer instance table. 
+
+\index{NameServer.h@{NameServer.h}!NameServer\_\-Params\_\-MAXNAMELEN@{NameServer\_\-Params\_\-MAXNAMELEN}}
+\index{NameServer\_\-Params\_\-MAXNAMELEN@{NameServer\_\-Params\_\-MAXNAMELEN}!NameServer.h@{NameServer.h}}
+\paragraph[{NameServer\_\-Params\_\-MAXNAMELEN}]{\setlength{\rightskip}{0pt plus 5cm}\#define NameServer\_\-Params\_\-MAXNAMELEN~16}\hfill\label{_name_server_8h_afa52c74cc2d67bda4d5522418abb4585}
+
+
+The default maximum length of the name for the name/value pair. 
+
+
+
+\subsubsection{Typedef Documentation}
+\index{NameServer.h@{NameServer.h}!NameServer\_\-Handle@{NameServer\_\-Handle}}
+\index{NameServer\_\-Handle@{NameServer\_\-Handle}!NameServer.h@{NameServer.h}}
+\paragraph[{NameServer\_\-Handle}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct NameServer\_\-Object$\ast$ {\bf NameServer\_\-Handle}}\hfill\label{_name_server_8h_a99fa93c4ee4169db90162b523d9152d4}
+
+
+NameServer handle type. 
+
+\index{NameServer.h@{NameServer.h}!NameServer\_\-Params@{NameServer\_\-Params}}
+\index{NameServer\_\-Params@{NameServer\_\-Params}!NameServer.h@{NameServer.h}}
+\paragraph[{NameServer\_\-Params}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf NameServer\_\-Params}  {\bf NameServer\_\-Params}}\hfill\label{_name_server_8h_ad1c351b65dad7194f35c2ed9d7997b8d}
+
+
+NameServer\_\-Handle type. 
+
+
+
+\subsubsection{Function Documentation}
+\index{NameServer.h@{NameServer.h}!NameServer\_\-Params\_\-init@{NameServer\_\-Params\_\-init}}
+\index{NameServer\_\-Params\_\-init@{NameServer\_\-Params\_\-init}!NameServer.h@{NameServer.h}}
+\paragraph[{NameServer\_\-Params\_\-init}]{\setlength{\rightskip}{0pt plus 5cm}Void NameServer\_\-Params\_\-init (
+\begin{DoxyParamCaption}
+\item[{{\bf NameServer\_\-Params} $\ast$}]{ params}
+\end{DoxyParamCaption}
+)}\hfill\label{_name_server_8h_a9bb546e8a7d656ce5e919650febe4989}
+
+
+Initializes parameter structure. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em params} & Instance param structure\\
+\hline
+\end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{_name_server_8h_a7345e78debfbf6d5da6ae1603764429a}{NameServer\_\-create} 
+\end{DoxySeeAlso}
+\index{NameServer.h@{NameServer.h}!NameServer\_\-create@{NameServer\_\-create}}
+\index{NameServer\_\-create@{NameServer\_\-create}!NameServer.h@{NameServer.h}}
+\paragraph[{NameServer\_\-create}]{\setlength{\rightskip}{0pt plus 5cm}{\bf NameServer\_\-Handle} NameServer\_\-create (
+\begin{DoxyParamCaption}
+\item[{String}]{ name, }
+\item[{const {\bf NameServer\_\-Params} $\ast$}]{ params}
+\end{DoxyParamCaption}
+)}\hfill\label{_name_server_8h_a7345e78debfbf6d5da6ae1603764429a}
+
+
+Creates a NameServer instance. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em name} & Instance name \\
+\hline
+{\em params} & Instance param structure\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+NameServer handle
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{_name_server_8h_a3419fc2bf3e6c34289c620cf9be38a04}{NameServer\_\-delete} 
+\end{DoxySeeAlso}
+\index{NameServer.h@{NameServer.h}!NameServer\_\-delete@{NameServer\_\-delete}}
+\index{NameServer\_\-delete@{NameServer\_\-delete}!NameServer.h@{NameServer.h}}
+\paragraph[{NameServer\_\-delete}]{\setlength{\rightskip}{0pt plus 5cm}Int NameServer\_\-delete (
+\begin{DoxyParamCaption}
+\item[{{\bf NameServer\_\-Handle} $\ast$}]{ handlePtr}
+\end{DoxyParamCaption}
+)}\hfill\label{_name_server_8h_a3419fc2bf3e6c34289c620cf9be38a04}
+
+
+Deletes a NameServer instance. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em handlePtr} & Pointer to a NameServer handle\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Status
+\begin{DoxyItemize}
+\item \hyperlink{_name_server_8h_a49cbe5edf8e519b17e323d01431e8161}{NameServer\_\-S\_\-SUCCESS}: Instance successfully deleted
+\item \hyperlink{_name_server_8h_a2ffd6887c6aca49d73982fb226db679c}{NameServer\_\-E\_\-FAIL}: Instance delete failed
+\end{DoxyItemize}
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{_name_server_8h_a7345e78debfbf6d5da6ae1603764429a}{NameServer\_\-create} 
+\end{DoxySeeAlso}
+\index{NameServer.h@{NameServer.h}!NameServer\_\-getHandle@{NameServer\_\-getHandle}}
+\index{NameServer\_\-getHandle@{NameServer\_\-getHandle}!NameServer.h@{NameServer.h}}
+\paragraph[{NameServer\_\-getHandle}]{\setlength{\rightskip}{0pt plus 5cm}{\bf NameServer\_\-Handle} NameServer\_\-getHandle (
+\begin{DoxyParamCaption}
+\item[{String}]{ name}
+\end{DoxyParamCaption}
+)}\hfill\label{_name_server_8h_abaebe428fbf536448c99acb6faf25134}
+
+
+Gets the NameServer handle given the name. 
+
+Each NameServer instance has a name. The name and this function can be used by the remote driver module to aid in queries to remote processors. This function allows the caller to get the local handle based on the instance name.
+
+For example, when a remote driver sends a request to the remote processor, it probably contains the name of the instance to query. The receiving remote driver uses that name to obtain the handle for the local NameServer instance in question. Then that instance can be queried for the name/value pair.
+
+This function does not query remote processors.
+
+
+\begin{DoxyParams}{Parameters}
+{\em name} & Name of instance\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+NameServer handle 
+\end{DoxyReturn}
+\index{NameServer.h@{NameServer.h}!NameServer\_\-add@{NameServer\_\-add}}
+\index{NameServer\_\-add@{NameServer\_\-add}!NameServer.h@{NameServer.h}}
+\paragraph[{NameServer\_\-add}]{\setlength{\rightskip}{0pt plus 5cm}Ptr NameServer\_\-add (
+\begin{DoxyParamCaption}
+\item[{{\bf NameServer\_\-Handle}}]{ handle, }
+\item[{String}]{ name, }
+\item[{Ptr}]{ buf, }
+\item[{UInt32}]{ len}
+\end{DoxyParamCaption}
+)}\hfill\label{_name_server_8h_ad7d45ed8fe5bcd1f10da5914c8da39f5}
+
+
+Adds a variable length value into the local NameServer table. 
+
+This function adds a variable length value into the local table. If the NameServer\_\-Params::checkExisting flag was true on creation, this function searches the table to make sure the name does not already exist. If it does, the name/value pair is not added and the \hyperlink{_name_server_8h_ac52dae450ec3de45caa3ce1fe143b46e}{NameServer\_\-E\_\-ALREADYEXISTS} error is returned.
+
+There is memory allocation during this function if NameServer\_\-Params::maxRuntimeEntries is set to \hyperlink{_name_server_8h_aee02296103cd2e162143d40c917697d7}{NameServer\_\-ALLOWGROWTH}.
+
+This function copies the name and buffer into the name/value table, so they do not need to be persistent after the call.
+
+The function does not query remote processors to make sure the name is unique.
+
+
+\begin{DoxyParams}{Parameters}
+{\em handle} & Instance handle \\
+\hline
+{\em name} & Name for the name/value pair \\
+\hline
+{\em buf} & Pointer to value for the name/value pair \\
+\hline
+{\em len} & length of the value\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Unique entry identifier
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{_name_server_8h_ac130195a04a34dfa2daba6ec3fff65d6}{NameServer\_\-addUInt32}, \hyperlink{_name_server_8h_a5f1013e57e7c5da9f003063d70a76e01}{NameServer\_\-get}, 
+\end{DoxySeeAlso}
+\index{NameServer.h@{NameServer.h}!NameServer\_\-addUInt32@{NameServer\_\-addUInt32}}
+\index{NameServer\_\-addUInt32@{NameServer\_\-addUInt32}!NameServer.h@{NameServer.h}}
+\paragraph[{NameServer\_\-addUInt32}]{\setlength{\rightskip}{0pt plus 5cm}Ptr NameServer\_\-addUInt32 (
+\begin{DoxyParamCaption}
+\item[{{\bf NameServer\_\-Handle}}]{ handle, }
+\item[{String}]{ name, }
+\item[{UInt32}]{ value}
+\end{DoxyParamCaption}
+)}\hfill\label{_name_server_8h_ac130195a04a34dfa2daba6ec3fff65d6}
+
+
+Adds a 32-\/bit value into the local NameServer table. 
+
+This function adds a 32-\/bit value into the local table. This function is simply a specialized \hyperlink{_name_server_8h_ad7d45ed8fe5bcd1f10da5914c8da39f5}{NameServer\_\-add()} function that allows a convenient way to add UInt32 bit values without needing to specify the address of a UInt32 local variable.
+
+If the NameServer\_\-Params::checkExisting flag was true on creation, this function searches the table to make sure the name does not already exist. If it does, the name/value pair is not added and the \hyperlink{_name_server_8h_ac52dae450ec3de45caa3ce1fe143b46e}{NameServer\_\-E\_\-ALREADYEXISTS} error is returned.
+
+This function copies the name into the name/value table.
+
+There is memory allocation during this function if NameServer\_\-Params::maxRuntimeEntries is set to \hyperlink{_name_server_8h_aee02296103cd2e162143d40c917697d7}{NameServer\_\-ALLOWGROWTH}.
+
+The function does not query remote processors to make sure the name is unique.
+
+
+\begin{DoxyParams}{Parameters}
+{\em handle} & Instance handle \\
+\hline
+{\em name} & Name for the name/value pair \\
+\hline
+{\em value} & Value for the name/value pair\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Unique entry identifier
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{_name_server_8h_ad7d45ed8fe5bcd1f10da5914c8da39f5}{NameServer\_\-add}, \hyperlink{_name_server_8h_ac3b6fa4f8f0ed572f1a5f6b7cb05679e}{NameServer\_\-getUInt32} 
+\end{DoxySeeAlso}
+\index{NameServer.h@{NameServer.h}!NameServer\_\-get@{NameServer\_\-get}}
+\index{NameServer\_\-get@{NameServer\_\-get}!NameServer.h@{NameServer.h}}
+\paragraph[{NameServer\_\-get}]{\setlength{\rightskip}{0pt plus 5cm}Int NameServer\_\-get (
+\begin{DoxyParamCaption}
+\item[{{\bf NameServer\_\-Handle}}]{ handle, }
+\item[{String}]{ name, }
+\item[{Ptr}]{ buf, }
+\item[{UInt32 $\ast$}]{ len, }
+\item[{UInt16}]{ procId\mbox{[}$\,$\mbox{]}}
+\end{DoxyParamCaption}
+)}\hfill\label{_name_server_8h_a5f1013e57e7c5da9f003063d70a76e01}
+
+
+Gets the variable value length by name. 
+
+If the name is found, the value is copied into the value argument, the number of MAUs copied is returned in len, and a success status is returned.
+
+If the name is not found, zero is returned in len, the contents of value are not modified. Not finding a name is not considered an error.
+
+For NameServer to work across processors, each processor must must be assigned a unique id. Because remote NameServer requests usually employ the use of notifications, it is good practice to sleep/wait between successive NameServer\_\-get\mbox{[}UInt32\mbox{]} operations if polling on the success of this call. This helps ensure that remote cores are not inundated by a flood of incoming notifications and helps reduce the possiblity of deadlocks.
+
+The processors to query is determined by the procId array. The array is used to specify which processors to query and the order. The processor ids are determined via the MultiProc module. The following are the valid settings for the procId array: \begin{DoxyItemize}
+\item {\bfseries NULL:} denotes that the local table is searched first, then all remote processors in ascending order by MultiProc id. \item {\bfseries Filled in array:} The NameServer will search the processors in the order given in the array. The end of the list must be denoted by the \hyperlink{_multi_proc_8h_a94a1d14527833bc8294407634d5495d9}{MultiProc\_\-INVALIDID} value.\end{DoxyItemize}
+
+\begin{DoxyCode}
+  UInt16 queryList[4] = {3, 2, 4, MultiProc_INVALIDID};
+  count = NameServer_get(handle, "foo", &value, &len, queryList);
+\end{DoxyCode}
+
+
+The \hyperlink{_name_server_8h_a46d3826bc4ef4bc6cc45d5287c697122}{NameServer\_\-getLocal()} call can be used for searching the local table only.
+
+
+\begin{DoxyParams}{Parameters}
+{\em handle} & Instance handle \\
+\hline
+{\em name} & Name to query \\
+\hline
+{\em buf} & Pointer where the value is returned \\
+\hline
+{\em len} & Pointer for input/output length. \\
+\hline
+{\em procId} & Array of processor(s) to query\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+NameServer status:
+\begin{DoxyItemize}
+\item \hyperlink{_name_server_8h_a49cbe5edf8e519b17e323d01431e8161}{NameServer\_\-S\_\-SUCCESS}: Successfully found entry
+\item \hyperlink{_name_server_8h_a6af9a47d256473dbeb9653988603c36e}{NameServer\_\-E\_\-NOTFOUND}: Entry was not found, len unchanged
+\item \hyperlink{_name_server_8h_a2ffd6887c6aca49d73982fb226db679c}{NameServer\_\-E\_\-FAIL}: Error searching for entry
+\end{DoxyItemize}
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{_name_server_8h_ad7d45ed8fe5bcd1f10da5914c8da39f5}{NameServer\_\-add}, \hyperlink{_name_server_8h_a46d3826bc4ef4bc6cc45d5287c697122}{NameServer\_\-getLocal} 
+\end{DoxySeeAlso}
+\index{NameServer.h@{NameServer.h}!NameServer\_\-getUInt32@{NameServer\_\-getUInt32}}
+\index{NameServer\_\-getUInt32@{NameServer\_\-getUInt32}!NameServer.h@{NameServer.h}}
+\paragraph[{NameServer\_\-getUInt32}]{\setlength{\rightskip}{0pt plus 5cm}Int NameServer\_\-getUInt32 (
+\begin{DoxyParamCaption}
+\item[{{\bf NameServer\_\-Handle}}]{ handle, }
+\item[{String}]{ name, }
+\item[{Ptr}]{ buf, }
+\item[{UInt16}]{ procId\mbox{[}$\,$\mbox{]}}
+\end{DoxyParamCaption}
+)}\hfill\label{_name_server_8h_ac3b6fa4f8f0ed572f1a5f6b7cb05679e}
+
+
+Gets a 32-\/bit value by name. 
+
+If the name is found, the value is copied into the value argument, and a success status is returned.
+
+If the name is not found, the contents of value are not modified. Not finding a name is not considered an error.
+
+For NameServer to work across processors, each processor must must be assigned a unique id. Because remote NameServer requests usually employ the use of notifications, it is good practice to sleep/wait between successive NameServer\_\-get\mbox{[}UInt32\mbox{]} operations if polling on the success of this call. This helps ensure that remote cores are not inundated by a flood of incoming notifications and helps reduce the possiblity of deadlocks.
+
+The processors to query is determined by the procId array. The array is used to specify which processors to query and the order. The processor ids are determined via the MultiProc module. The following are the valid settings for the procId array: \begin{DoxyItemize}
+\item {\bfseries NULL:} denotes that the local table is searched first, then all remote processors in ascending order by MultiProc id. \item {\bfseries Filled in array:} The NameServer will search the processors in the order given in the array. The end of the list must be denoted by the \hyperlink{_multi_proc_8h_a94a1d14527833bc8294407634d5495d9}{MultiProc\_\-INVALIDID} value.\end{DoxyItemize}
+
+\begin{DoxyCode}
+  UInt16 queryList[4] = {3, 2, 4, MultiProc_INVALIDID};
+  count = NameServer_getUInt32(handle, "foo", &value, queryList);
+\end{DoxyCode}
+
+
+The \hyperlink{_name_server_8h_a46d3826bc4ef4bc6cc45d5287c697122}{NameServer\_\-getLocal()} call can be used for searching the local table only. 
+\begin{DoxyParams}{Parameters}
+{\em handle} & Instance handle \\
+\hline
+{\em name} & Name to query \\
+\hline
+{\em buf} & Pointer where the value is returned \\
+\hline
+{\em procId} & Array of processor(s) to query\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Status
+\begin{DoxyItemize}
+\item \hyperlink{_name_server_8h_a49cbe5edf8e519b17e323d01431e8161}{NameServer\_\-S\_\-SUCCESS}: Successfully found entry
+\item \hyperlink{_name_server_8h_a6af9a47d256473dbeb9653988603c36e}{NameServer\_\-E\_\-NOTFOUND}: Entry was not found
+\item \hyperlink{_name_server_8h_a2ffd6887c6aca49d73982fb226db679c}{NameServer\_\-E\_\-FAIL}: Error searching for entry
+\end{DoxyItemize}
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{_name_server_8h_ac130195a04a34dfa2daba6ec3fff65d6}{NameServer\_\-addUInt32}, \hyperlink{_name_server_8h_a9e824f111db640d1bce81bfe25963b76}{NameServer\_\-getLocalUInt32} 
+\end{DoxySeeAlso}
+\index{NameServer.h@{NameServer.h}!NameServer\_\-getLocal@{NameServer\_\-getLocal}}
+\index{NameServer\_\-getLocal@{NameServer\_\-getLocal}!NameServer.h@{NameServer.h}}
+\paragraph[{NameServer\_\-getLocal}]{\setlength{\rightskip}{0pt plus 5cm}Int NameServer\_\-getLocal (
+\begin{DoxyParamCaption}
+\item[{{\bf NameServer\_\-Handle}}]{ handle, }
+\item[{String}]{ name, }
+\item[{Ptr}]{ buf, }
+\item[{UInt32 $\ast$}]{ len}
+\end{DoxyParamCaption}
+)}\hfill\label{_name_server_8h_a46d3826bc4ef4bc6cc45d5287c697122}
+
+
+Gets the variable value length by name from the local table. 
+
+If the name is found, the value is copied into the value argument, the number of MAUs copied is returned in len, and a success status is returned.
+
+If the name is not found, zero is returned in len, a fail status is returned and the contents of value are not modified. Not finding a name is not considered an error.
+
+This function only searches the local name/value table.
+
+
+\begin{DoxyParams}{Parameters}
+{\em handle} & Instance handle \\
+\hline
+{\em name} & Name to query \\
+\hline
+{\em buf} & Pointer where the value is returned \\
+\hline
+{\em len} & Length of the value\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Status
+\begin{DoxyItemize}
+\item \hyperlink{_name_server_8h_a49cbe5edf8e519b17e323d01431e8161}{NameServer\_\-S\_\-SUCCESS}: Successfully found entry, len holds amount of data retrieved.
+\item \hyperlink{_name_server_8h_a6af9a47d256473dbeb9653988603c36e}{NameServer\_\-E\_\-NOTFOUND}: Entry was not found, len remains unchanged.
+\end{DoxyItemize}
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{_name_server_8h_ad7d45ed8fe5bcd1f10da5914c8da39f5}{NameServer\_\-add}, \hyperlink{_name_server_8h_a5f1013e57e7c5da9f003063d70a76e01}{NameServer\_\-get} 
+\end{DoxySeeAlso}
+\index{NameServer.h@{NameServer.h}!NameServer\_\-getLocalUInt32@{NameServer\_\-getLocalUInt32}}
+\index{NameServer\_\-getLocalUInt32@{NameServer\_\-getLocalUInt32}!NameServer.h@{NameServer.h}}
+\paragraph[{NameServer\_\-getLocalUInt32}]{\setlength{\rightskip}{0pt plus 5cm}Int NameServer\_\-getLocalUInt32 (
+\begin{DoxyParamCaption}
+\item[{{\bf NameServer\_\-Handle}}]{ handle, }
+\item[{String}]{ name, }
+\item[{Ptr}]{ buf}
+\end{DoxyParamCaption}
+)}\hfill\label{_name_server_8h_a9e824f111db640d1bce81bfe25963b76}
+
+
+Gets a 32-\/bit value by name from the local table. 
+
+If the name is found, the 32-\/bit value is copied into buf and NameServer\_\-S\_\-SUCCESS is returned.
+
+If the name is not found, zero is copied into buf and NameServer\_\-E\_\-NOTFOUND is returned.
+
+This function only searches the local name/value table.
+
+
+\begin{DoxyParams}{Parameters}
+{\em handle} & Instance handle \\
+\hline
+{\em name} & Name to query \\
+\hline
+{\em buf} & Pointer where the value is returned\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Status
+\begin{DoxyItemize}
+\item \hyperlink{_name_server_8h_a49cbe5edf8e519b17e323d01431e8161}{NameServer\_\-S\_\-SUCCESS}: Successfully found entry
+\item \hyperlink{_name_server_8h_a6af9a47d256473dbeb9653988603c36e}{NameServer\_\-E\_\-NOTFOUND}: Entry was not found
+\end{DoxyItemize}
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{_name_server_8h_ac130195a04a34dfa2daba6ec3fff65d6}{NameServer\_\-addUInt32}, \hyperlink{_name_server_8h_ac3b6fa4f8f0ed572f1a5f6b7cb05679e}{NameServer\_\-getUInt32} 
+\end{DoxySeeAlso}
+\index{NameServer.h@{NameServer.h}!NameServer\_\-remove@{NameServer\_\-remove}}
+\index{NameServer\_\-remove@{NameServer\_\-remove}!NameServer.h@{NameServer.h}}
+\paragraph[{NameServer\_\-remove}]{\setlength{\rightskip}{0pt plus 5cm}Int NameServer\_\-remove (
+\begin{DoxyParamCaption}
+\item[{{\bf NameServer\_\-Handle}}]{ handle, }
+\item[{String}]{ name}
+\end{DoxyParamCaption}
+)}\hfill\label{_name_server_8h_ab21d262bcfa187f21e235b36ce17d6de}
+
+
+Remove a name/value pair from the table. 
+
+This function removes a name/value pair from the table.
+
+If NameServer\_\-Params::maxRuntimeEntries is set to \hyperlink{_name_server_8h_aee02296103cd2e162143d40c917697d7}{NameServer\_\-ALLOWGROWTH}, memory will be freed which was allocated in \hyperlink{_name_server_8h_ad7d45ed8fe5bcd1f10da5914c8da39f5}{NameServer\_\-add()}. Otherwise, no memory is freed during this call. The entry in the table is simply emptied. When another \hyperlink{_name_server_8h_ad7d45ed8fe5bcd1f10da5914c8da39f5}{NameServer\_\-add()} occurs, it will reuse the empty entry.
+
+
+\begin{DoxyParams}{Parameters}
+{\em handle} & Instance handle \\
+\hline
+{\em name} & Name to remove\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Status
+\begin{DoxyItemize}
+\item \hyperlink{_name_server_8h_a49cbe5edf8e519b17e323d01431e8161}{NameServer\_\-S\_\-SUCCESS}: Successfully removed entry or entry does not exists
+\item \hyperlink{_name_server_8h_a2ffd6887c6aca49d73982fb226db679c}{NameServer\_\-E\_\-FAIL}: Operation failed
+\end{DoxyItemize}
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{_name_server_8h_ad7d45ed8fe5bcd1f10da5914c8da39f5}{NameServer\_\-add} 
+\end{DoxySeeAlso}
+\index{NameServer.h@{NameServer.h}!NameServer\_\-removeEntry@{NameServer\_\-removeEntry}}
+\index{NameServer\_\-removeEntry@{NameServer\_\-removeEntry}!NameServer.h@{NameServer.h}}
+\paragraph[{NameServer\_\-removeEntry}]{\setlength{\rightskip}{0pt plus 5cm}Int NameServer\_\-removeEntry (
+\begin{DoxyParamCaption}
+\item[{{\bf NameServer\_\-Handle}}]{ handle, }
+\item[{Ptr}]{ entry}
+\end{DoxyParamCaption}
+)}\hfill\label{_name_server_8h_a84b6883f07de21bcaf8f4dbdc2e55e63}
+
+
+Remove a name/value pair from the table. 
+
+This function removes an entry from the table based on the unique identifier returned from \hyperlink{_name_server_8h_ad7d45ed8fe5bcd1f10da5914c8da39f5}{NameServer\_\-add()} or \hyperlink{_name_server_8h_ac130195a04a34dfa2daba6ec3fff65d6}{NameServer\_\-addUInt32()}.
+
+If NameServer\_\-Params::maxRuntimeEntries is set to \hyperlink{_name_server_8h_aee02296103cd2e162143d40c917697d7}{NameServer\_\-ALLOWGROWTH}, memory will be freed which was allocated in \hyperlink{_name_server_8h_ad7d45ed8fe5bcd1f10da5914c8da39f5}{NameServer\_\-add()}. Otherwise, no memory is freed during this call. The entry in the table is simply emptied. When another \hyperlink{_name_server_8h_ad7d45ed8fe5bcd1f10da5914c8da39f5}{NameServer\_\-add()} occurs, it will reuse the empty entry.
+
+Once an Entry is removed from the NameServer table, it cannot be removed again (just like you cannot free the same block of memory twice).
+
+
+\begin{DoxyParams}{Parameters}
+{\em handle} & Instance handle \\
+\hline
+{\em entry} & Pointer to entry to be removed\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Status
+\begin{DoxyItemize}
+\item \hyperlink{_name_server_8h_a49cbe5edf8e519b17e323d01431e8161}{NameServer\_\-S\_\-SUCCESS}: Successfully removed entry or entry does not exists
+\item \hyperlink{_name_server_8h_a2ffd6887c6aca49d73982fb226db679c}{NameServer\_\-E\_\-FAIL}: Operation failed
+\end{DoxyItemize}
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{_name_server_8h_ad7d45ed8fe5bcd1f10da5914c8da39f5}{NameServer\_\-add} 
+\end{DoxySeeAlso}

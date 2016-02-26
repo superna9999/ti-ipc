@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  This file conforms to the DTD xdc/bld/build.dtd -->
+<package name="ti.sdo.ipc.examples.multicore.evm667x" version="1, 0, 0, 0" producerId="undefined">
+    <units>
+    </units>
+    <sources>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_evm6678_core0/release/notify_multicore_pe66.c"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_evm6670_core0/release/notify_multicore_pe66.c"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_evm6657_core0/release/notify_multicore_pe66.c"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_evm6678_core0/release/message_multicore_pe66.c"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_evm6670_core0/release/message_multicore_pe66.c"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_evm6657_core0/release/message_multicore_pe66.c"/>
+        <srcFile name="notify_multicore.c"/>
+        <srcFile name="message_multicore.c"/>
+    </sources>
+    <configscripts>
+        <srcFile name="notify_multicore.cfg"/>
+        <srcFile name="message_multicore.cfg"/>
+    </configscripts>
+    <makefiles>
+        <srcFile name="package.mak" src="package.bld"/>
+        <srcFile name="package/package.xdc.dep" src="package.xdc"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_evm6678_core0/release/notify_multicore_pe66.mak" src="package.bld"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_evm6678_core0/release/notify_multicore_pe66.oe66.dep" src="package/cfg/ti_sdo_ipc_examples_platforms_evm6678_core0/release/notify_multicore_pe66.c"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_evm6678_core0/release/notify_multicore_pe66.dep" src="package/cfg/ti_sdo_ipc_examples_platforms_evm6678_core0/release/notify_multicore_pe66.cfg"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_evm6670_core0/release/notify_multicore_pe66.mak" src="package.bld"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_evm6670_core0/release/notify_multicore_pe66.oe66.dep" src="package/cfg/ti_sdo_ipc_examples_platforms_evm6670_core0/release/notify_multicore_pe66.c"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_evm6670_core0/release/notify_multicore_pe66.dep" src="package/cfg/ti_sdo_ipc_examples_platforms_evm6670_core0/release/notify_multicore_pe66.cfg"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_evm6657_core0/release/notify_multicore_pe66.mak" src="package.bld"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_evm6657_core0/release/notify_multicore_pe66.oe66.dep" src="package/cfg/ti_sdo_ipc_examples_platforms_evm6657_core0/release/notify_multicore_pe66.c"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_evm6657_core0/release/notify_multicore_pe66.dep" src="package/cfg/ti_sdo_ipc_examples_platforms_evm6657_core0/release/notify_multicore_pe66.cfg"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_evm6678_core0/release/message_multicore_pe66.mak" src="package.bld"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_evm6678_core0/release/message_multicore_pe66.oe66.dep" src="package/cfg/ti_sdo_ipc_examples_platforms_evm6678_core0/release/message_multicore_pe66.c"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_evm6678_core0/release/message_multicore_pe66.dep" src="package/cfg/ti_sdo_ipc_examples_platforms_evm6678_core0/release/message_multicore_pe66.cfg"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_evm6670_core0/release/message_multicore_pe66.mak" src="package.bld"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_evm6670_core0/release/message_multicore_pe66.oe66.dep" src="package/cfg/ti_sdo_ipc_examples_platforms_evm6670_core0/release/message_multicore_pe66.c"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_evm6670_core0/release/message_multicore_pe66.dep" src="package/cfg/ti_sdo_ipc_examples_platforms_evm6670_core0/release/message_multicore_pe66.cfg"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_evm6657_core0/release/message_multicore_pe66.mak" src="package.bld"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_evm6657_core0/release/message_multicore_pe66.oe66.dep" src="package/cfg/ti_sdo_ipc_examples_platforms_evm6657_core0/release/message_multicore_pe66.c"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_evm6657_core0/release/message_multicore_pe66.dep" src="package/cfg/ti_sdo_ipc_examples_platforms_evm6657_core0/release/message_multicore_pe66.cfg"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_evm6678_core0/release/notify_multicore.xe66.mak" src="package.bld"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_evm6678_core0/release/notify_multicore/notify_multicore.oe66.dep" src="notify_multicore.c"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_evm6670_core0/release/notify_multicore.xe66.mak" src="package.bld"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_evm6670_core0/release/notify_multicore/notify_multicore.oe66.dep" src="notify_multicore.c"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_evm6657_core0/release/notify_multicore.xe66.mak" src="package.bld"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_evm6657_core0/release/notify_multicore/notify_multicore.oe66.dep" src="notify_multicore.c"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_evm6678_core0/release/message_multicore.xe66.mak" src="package.bld"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_evm6678_core0/release/message_multicore/message_multicore.oe66.dep" src="message_multicore.c"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_evm6670_core0/release/message_multicore.xe66.mak" src="package.bld"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_evm6670_core0/release/message_multicore/message_multicore.oe66.dep" src="message_multicore.c"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_evm6657_core0/release/message_multicore.xe66.mak" src="package.bld"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_evm6657_core0/release/message_multicore/message_multicore.oe66.dep" src="message_multicore.c"/>
+        <srcFile name="package/rel/ti_sdo_ipc_examples_multicore_evm667x.tar.gz.dep" src="package/rel/ti_sdo_ipc_examples_multicore_evm667x.xdc.inc"/>
+    </makefiles>
+    <targets>
+        <target name="ti.targets.elf.C66"
+            version="ti.targets.elf.C66{1,0,7.2,0"
+            platform="ti.sdo.ipc.examples.platforms.evm6678.core0"
+            isa="66"
+            suffix="e66"
+            rootDir="/db/toolsrc/library/tools/vendors/ti/c6x/7.2.0/Linux"
+            os="undefined"
+            rts="ti.targets.rts6000">
+            <model endian="little"
+                codeModel="undefined"
+                dataModel="undefined"/>
+        </target>
+    </targets>
+    <libraries>
+    </libraries>
+    <configurations>
+    <configuration name="ti_sdo_ipc_examples_platforms_evm6678_core0/release/notify_multicore"
+        pname="ti_sdo_ipc_examples_platforms_evm6678_core0/release/notify_multicore.pe66"
+        target="ti.targets.elf.C66"
+        platform="ti.sdo.ipc.examples.platforms.evm6678.core0"
+        profile="release"
+        isPartial="false"
+        xCfgScript="package/cfg/ti_sdo_ipc_examples_platforms_evm6678_core0/release/notify_multicore_pe66.cfg"
+        xCfgPrefix="package/cfg/ti_sdo_ipc_examples_platforms_evm6678_core0/release/notify_multicore_pe66"
+        cfgScript="notify_multicore.cfg"
+        />
+    <configuration name="ti_sdo_ipc_examples_platforms_evm6670_core0/release/notify_multicore"
+        pname="ti_sdo_ipc_examples_platforms_evm6670_core0/release/notify_multicore.pe66"
+        target="ti.targets.elf.C66"
+        platform="ti.sdo.ipc.examples.platforms.evm6670.core0"
+        profile="release"
+        isPartial="false"
+        xCfgScript="package/cfg/ti_sdo_ipc_examples_platforms_evm6670_core0/release/notify_multicore_pe66.cfg"
+        xCfgPrefix="package/cfg/ti_sdo_ipc_examples_platforms_evm6670_core0/release/notify_multicore_pe66"
+        cfgScript="notify_multicore.cfg"
+        />
+    <configuration name="ti_sdo_ipc_examples_platforms_evm6657_core0/release/notify_multicore"
+        pname="ti_sdo_ipc_examples_platforms_evm6657_core0/release/notify_multicore.pe66"
+        target="ti.targets.elf.C66"
+        platform="ti.sdo.ipc.examples.platforms.evm6657.core0"
+        profile="release"
+        isPartial="false"
+        xCfgScript="package/cfg/ti_sdo_ipc_examples_platforms_evm6657_core0/release/notify_multicore_pe66.cfg"
+        xCfgPrefix="package/cfg/ti_sdo_ipc_examples_platforms_evm6657_core0/release/notify_multicore_pe66"
+        cfgScript="notify_multicore.cfg"
+        />
+    <configuration name="ti_sdo_ipc_examples_platforms_evm6678_core0/release/message_multicore"
+        pname="ti_sdo_ipc_examples_platforms_evm6678_core0/release/message_multicore.pe66"
+        target="ti.targets.elf.C66"
+        platform="ti.sdo.ipc.examples.platforms.evm6678.core0"
+        profile="release"
+        isPartial="false"
+        xCfgScript="package/cfg/ti_sdo_ipc_examples_platforms_evm6678_core0/release/message_multicore_pe66.cfg"
+        xCfgPrefix="package/cfg/ti_sdo_ipc_examples_platforms_evm6678_core0/release/message_multicore_pe66"
+        cfgScript="message_multicore.cfg"
+        />
+    <configuration name="ti_sdo_ipc_examples_platforms_evm6670_core0/release/message_multicore"
+        pname="ti_sdo_ipc_examples_platforms_evm6670_core0/release/message_multicore.pe66"
+        target="ti.targets.elf.C66"
+        platform="ti.sdo.ipc.examples.platforms.evm6670.core0"
+        profile="release"
+        isPartial="false"
+        xCfgScript="package/cfg/ti_sdo_ipc_examples_platforms_evm6670_core0/release/message_multicore_pe66.cfg"
+        xCfgPrefix="package/cfg/ti_sdo_ipc_examples_platforms_evm6670_core0/release/message_multicore_pe66"
+        cfgScript="message_multicore.cfg"
+        />
+    <configuration name="ti_sdo_ipc_examples_platforms_evm6657_core0/release/message_multicore"
+        pname="ti_sdo_ipc_examples_platforms_evm6657_core0/release/message_multicore.pe66"
+        target="ti.targets.elf.C66"
+        platform="ti.sdo.ipc.examples.platforms.evm6657.core0"
+        profile="release"
+        isPartial="false"
+        xCfgScript="package/cfg/ti_sdo_ipc_examples_platforms_evm6657_core0/release/message_multicore_pe66.cfg"
+        xCfgPrefix="package/cfg/ti_sdo_ipc_examples_platforms_evm6657_core0/release/message_multicore_pe66"
+        cfgScript="message_multicore.cfg"
+        />
+    </configurations>
+    <executables>
+    <executable name="ti_sdo_ipc_examples_platforms_evm6678_core0/release/notify_multicore"
+        pname="ti_sdo_ipc_examples_platforms_evm6678_core0/release/notify_multicore.xe66"
+        target="ti.targets.elf.C66"
+        platform="ti.sdo.ipc.examples.platforms.evm6678.core0"
+        profile="release"
+        xCfgScript="package/cfg/ti_sdo_ipc_examples_platforms_evm6678_core0/release/notify_multicore_pe66.cfg"
+        xCfgPrefix="package/cfg/ti_sdo_ipc_examples_platforms_evm6678_core0/release/notify_multicore_pe66"
+        cfgScript="notify_multicore.cfg"
+        />
+    <executable name="ti_sdo_ipc_examples_platforms_evm6670_core0/release/notify_multicore"
+        pname="ti_sdo_ipc_examples_platforms_evm6670_core0/release/notify_multicore.xe66"
+        target="ti.targets.elf.C66"
+        platform="ti.sdo.ipc.examples.platforms.evm6670.core0"
+        profile="release"
+        xCfgScript="package/cfg/ti_sdo_ipc_examples_platforms_evm6670_core0/release/notify_multicore_pe66.cfg"
+        xCfgPrefix="package/cfg/ti_sdo_ipc_examples_platforms_evm6670_core0/release/notify_multicore_pe66"
+        cfgScript="notify_multicore.cfg"
+        />
+    <executable name="ti_sdo_ipc_examples_platforms_evm6657_core0/release/notify_multicore"
+        pname="ti_sdo_ipc_examples_platforms_evm6657_core0/release/notify_multicore.xe66"
+        target="ti.targets.elf.C66"
+        platform="ti.sdo.ipc.examples.platforms.evm6657.core0"
+        profile="release"
+        xCfgScript="package/cfg/ti_sdo_ipc_examples_platforms_evm6657_core0/release/notify_multicore_pe66.cfg"
+        xCfgPrefix="package/cfg/ti_sdo_ipc_examples_platforms_evm6657_core0/release/notify_multicore_pe66"
+        cfgScript="notify_multicore.cfg"
+        />
+    <executable name="ti_sdo_ipc_examples_platforms_evm6678_core0/release/message_multicore"
+        pname="ti_sdo_ipc_examples_platforms_evm6678_core0/release/message_multicore.xe66"
+        target="ti.targets.elf.C66"
+        platform="ti.sdo.ipc.examples.platforms.evm6678.core0"
+        profile="release"
+        xCfgScript="package/cfg/ti_sdo_ipc_examples_platforms_evm6678_core0/release/message_multicore_pe66.cfg"
+        xCfgPrefix="package/cfg/ti_sdo_ipc_examples_platforms_evm6678_core0/release/message_multicore_pe66"
+        cfgScript="message_multicore.cfg"
+        />
+    <executable name="ti_sdo_ipc_examples_platforms_evm6670_core0/release/message_multicore"
+        pname="ti_sdo_ipc_examples_platforms_evm6670_core0/release/message_multicore.xe66"
+        target="ti.targets.elf.C66"
+        platform="ti.sdo.ipc.examples.platforms.evm6670.core0"
+        profile="release"
+        xCfgScript="package/cfg/ti_sdo_ipc_examples_platforms_evm6670_core0/release/message_multicore_pe66.cfg"
+        xCfgPrefix="package/cfg/ti_sdo_ipc_examples_platforms_evm6670_core0/release/message_multicore_pe66"
+        cfgScript="message_multicore.cfg"
+        />
+    <executable name="ti_sdo_ipc_examples_platforms_evm6657_core0/release/message_multicore"
+        pname="ti_sdo_ipc_examples_platforms_evm6657_core0/release/message_multicore.xe66"
+        target="ti.targets.elf.C66"
+        platform="ti.sdo.ipc.examples.platforms.evm6657.core0"
+        profile="release"
+        xCfgScript="package/cfg/ti_sdo_ipc_examples_platforms_evm6657_core0/release/message_multicore_pe66.cfg"
+        xCfgPrefix="package/cfg/ti_sdo_ipc_examples_platforms_evm6657_core0/release/message_multicore_pe66"
+        cfgScript="message_multicore.cfg"
+        />
+    </executables>
+    <tests>
+    <test exeName="ti_sdo_ipc_examples_platforms_evm6678_core0/release/notify_multicore.xe66"
+        args=""
+        groupName="regress"
+        refOutput="golden/notify_multicore.k"
+        refExitCode="0"
+        execArgs="-t%2060"
+        />
+    <test exeName="ti_sdo_ipc_examples_platforms_evm6678_core0/release/notify_multicore.xe66"
+        args=""
+        groupName="ti_sdo_ipc_examples_platforms_evm6678_core0/release/notify_multicore.xe66"
+        refOutput="undefined"
+        refExitCode="0"
+        execArgs="-t%2060"
+        />
+    <test exeName="ti_sdo_ipc_examples_platforms_evm6670_core0/release/notify_multicore.xe66"
+        args=""
+        groupName="regress"
+        refOutput="golden/notify_multicore.k"
+        refExitCode="0"
+        execArgs="-t%2060"
+        />
+    <test exeName="ti_sdo_ipc_examples_platforms_evm6670_core0/release/notify_multicore.xe66"
+        args=""
+        groupName="ti_sdo_ipc_examples_platforms_evm6670_core0/release/notify_multicore.xe66"
+        refOutput="undefined"
+        refExitCode="0"
+        execArgs="-t%2060"
+        />
+    <test exeName="ti_sdo_ipc_examples_platforms_evm6657_core0/release/notify_multicore.xe66"
+        args=""
+        groupName="regress"
+        refOutput="golden/notify_multicore.k"
+        refExitCode="0"
+        execArgs="-t%2060"
+        />
+    <test exeName="ti_sdo_ipc_examples_platforms_evm6657_core0/release/notify_multicore.xe66"
+        args=""
+        groupName="ti_sdo_ipc_examples_platforms_evm6657_core0/release/notify_multicore.xe66"
+        refOutput="undefined"
+        refExitCode="0"
+        execArgs="-t%2060"
+        />
+    <test exeName="ti_sdo_ipc_examples_platforms_evm6678_core0/release/message_multicore.xe66"
+        args=""
+        groupName="regress"
+        refOutput="golden/message_multicore.k"
+        refExitCode="0"
+        execArgs="-t%2060"
+        />
+    <test exeName="ti_sdo_ipc_examples_platforms_evm6678_core0/release/message_multicore.xe66"
+        args=""
+        groupName="ti_sdo_ipc_examples_platforms_evm6678_core0/release/message_multicore.xe66"
+        refOutput="undefined"
+        refExitCode="0"
+        execArgs="-t%2060"
+        />
+    <test exeName="ti_sdo_ipc_examples_platforms_evm6670_core0/release/message_multicore.xe66"
+        args=""
+        groupName="regress"
+        refOutput="golden/message_multicore.k"
+        refExitCode="0"
+        execArgs="-t%2060"
+        />
+    <test exeName="ti_sdo_ipc_examples_platforms_evm6670_core0/release/message_multicore.xe66"
+        args=""
+        groupName="ti_sdo_ipc_examples_platforms_evm6670_core0/release/message_multicore.xe66"
+        refOutput="undefined"
+        refExitCode="0"
+        execArgs="-t%2060"
+        />
+    <test exeName="ti_sdo_ipc_examples_platforms_evm6657_core0/release/message_multicore.xe66"
+        args=""
+        groupName="regress"
+        refOutput="golden/message_multicore.k"
+        refExitCode="0"
+        execArgs="-t%2060"
+        />
+    <test exeName="ti_sdo_ipc_examples_platforms_evm6657_core0/release/message_multicore.xe66"
+        args=""
+        groupName="ti_sdo_ipc_examples_platforms_evm6657_core0/release/message_multicore.xe66"
+        refOutput="undefined"
+        refExitCode="0"
+        execArgs="-t%2060"
+        />
+    </tests>
+    <releases relDir="package/rel/">
+    <release name="ti_sdo_ipc_examples_multicore_evm667x"
+        pname="../../../../../../../exports/ti_sdo_ipc_examples_multicore_evm667x.tar.gz"
+        label="default"
+        relScript="tisb/release/filters/copyright.rel">
+        <file name="package/package.bld.xml"/>
+        <file name="package/package.ext.xml"/>
+        <file name="package/package.rel.dot"/>
+        <file name="package/build.cfg"/>
+        <file name="package/package.xdc.inc"/>
+        <file name="package.bld"/>
+        <file name="readme.txt"/>
+        <file name="message_multicore.k"/>
+        <file name="notify_multicore.k"/>
+        <file name="package/cfg/ti_sdo_ipc_examples_platforms_evm6678_core0/release/notify_multicore_pe66.xdc.inc"/>
+        <file name="package/cfg/ti_sdo_ipc_examples_platforms_evm6678_core0/release/notify_multicore_pe66.cfg"/>
+        <file name="package/cfg/ti_sdo_ipc_examples_platforms_evm6678_core0/release/notify_multicore_pe66.c"/>
+        <file name="package/cfg/ti_sdo_ipc_examples_platforms_evm6670_core0/release/notify_multicore_pe66.xdc.inc"/>
+        <file name="package/cfg/ti_sdo_ipc_examples_platforms_evm6670_core0/release/notify_multicore_pe66.cfg"/>
+        <file name="package/cfg/ti_sdo_ipc_examples_platforms_evm6670_core0/release/notify_multicore_pe66.c"/>
+        <file name="package/cfg/ti_sdo_ipc_examples_platforms_evm6657_core0/release/notify_multicore_pe66.xdc.inc"/>
+        <file name="package/cfg/ti_sdo_ipc_examples_platforms_evm6657_core0/release/notify_multicore_pe66.cfg"/>
+        <file name="package/cfg/ti_sdo_ipc_examples_platforms_evm6657_core0/release/notify_multicore_pe66.c"/>
+        <file name="package/cfg/ti_sdo_ipc_examples_platforms_evm6678_core0/release/message_multicore_pe66.xdc.inc"/>
+        <file name="package/cfg/ti_sdo_ipc_examples_platforms_evm6678_core0/release/message_multicore_pe66.cfg"/>
+        <file name="package/cfg/ti_sdo_ipc_examples_platforms_evm6678_core0/release/message_multicore_pe66.c"/>
+        <file name="package/cfg/ti_sdo_ipc_examples_platforms_evm6670_core0/release/message_multicore_pe66.xdc.inc"/>
+        <file name="package/cfg/ti_sdo_ipc_examples_platforms_evm6670_core0/release/message_multicore_pe66.cfg"/>
+        <file name="package/cfg/ti_sdo_ipc_examples_platforms_evm6670_core0/release/message_multicore_pe66.c"/>
+        <file name="package/cfg/ti_sdo_ipc_examples_platforms_evm6657_core0/release/message_multicore_pe66.xdc.inc"/>
+        <file name="package/cfg/ti_sdo_ipc_examples_platforms_evm6657_core0/release/message_multicore_pe66.cfg"/>
+        <file name="package/cfg/ti_sdo_ipc_examples_platforms_evm6657_core0/release/message_multicore_pe66.c"/>
+        <file name="notify_multicore.c"/>
+        <file name="message_multicore.c"/>
+    </release>
+    </releases>
+    <repositories>
+    </repositories>
+</package>

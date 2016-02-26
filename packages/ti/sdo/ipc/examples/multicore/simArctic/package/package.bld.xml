@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  This file conforms to the DTD xdc/bld/build.dtd -->
+<package name="ti.sdo.ipc.examples.multicore.simArctic" version="1, 0, 0, 0" producerId="undefined">
+    <units>
+    </units>
+    <sources>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_simArctic_arp32/release/notify_arp32_pearp32.c"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_simArctic_dsp/release/notify_dsp_p674.c"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_simArctic_arp32/release/message_arp32_pearp32.c"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_simArctic_dsp/release/message_dsp_p674.c"/>
+        <srcFile name="notify_multicore.c"/>
+        <srcFile name="message_multicore.c"/>
+    </sources>
+    <configscripts>
+        <srcFile name="notify_arp32.cfg"/>
+        <srcFile name="notify_dsp.cfg"/>
+        <srcFile name="message_arp32.cfg"/>
+        <srcFile name="message_dsp.cfg"/>
+    </configscripts>
+    <makefiles>
+        <srcFile name="package.mak" src="package.bld"/>
+        <srcFile name="package/package.xdc.dep" src="package.xdc"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_simArctic_arp32/release/notify_arp32_pearp32.mak" src="package.bld"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_simArctic_arp32/release/notify_arp32_pearp32.oearp32.dep" src="package/cfg/ti_sdo_ipc_examples_platforms_simArctic_arp32/release/notify_arp32_pearp32.c"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_simArctic_arp32/release/notify_arp32_pearp32.dep" src="package/cfg/ti_sdo_ipc_examples_platforms_simArctic_arp32/release/notify_arp32_pearp32.cfg"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_simArctic_dsp/release/notify_dsp_p674.mak" src="package.bld"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_simArctic_dsp/release/notify_dsp_p674.o674.dep" src="package/cfg/ti_sdo_ipc_examples_platforms_simArctic_dsp/release/notify_dsp_p674.c"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_simArctic_dsp/release/notify_dsp_p674.dep" src="package/cfg/ti_sdo_ipc_examples_platforms_simArctic_dsp/release/notify_dsp_p674.cfg"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_simArctic_arp32/release/message_arp32_pearp32.mak" src="package.bld"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_simArctic_arp32/release/message_arp32_pearp32.oearp32.dep" src="package/cfg/ti_sdo_ipc_examples_platforms_simArctic_arp32/release/message_arp32_pearp32.c"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_simArctic_arp32/release/message_arp32_pearp32.dep" src="package/cfg/ti_sdo_ipc_examples_platforms_simArctic_arp32/release/message_arp32_pearp32.cfg"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_simArctic_dsp/release/message_dsp_p674.mak" src="package.bld"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_simArctic_dsp/release/message_dsp_p674.o674.dep" src="package/cfg/ti_sdo_ipc_examples_platforms_simArctic_dsp/release/message_dsp_p674.c"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_simArctic_dsp/release/message_dsp_p674.dep" src="package/cfg/ti_sdo_ipc_examples_platforms_simArctic_dsp/release/message_dsp_p674.cfg"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_simArctic_arp32/release/notify_arp32.xearp32.mak" src="package.bld"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_simArctic_arp32/release/notify_arp32/notify_multicore.oearp32.dep" src="notify_multicore.c"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_simArctic_dsp/release/notify_dsp.x674.mak" src="package.bld"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_simArctic_dsp/release/notify_dsp/notify_multicore.o674.dep" src="notify_multicore.c"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_simArctic_arp32/release/message_arp32.xearp32.mak" src="package.bld"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_simArctic_arp32/release/message_arp32/message_multicore.oearp32.dep" src="message_multicore.c"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_simArctic_dsp/release/message_dsp.x674.mak" src="package.bld"/>
+        <srcFile name="package/cfg/ti_sdo_ipc_examples_platforms_simArctic_dsp/release/message_dsp/message_multicore.o674.dep" src="message_multicore.c"/>
+        <srcFile name="package/rel/ti_sdo_ipc_examples_multicore_simArctic.tar.gz.dep" src="package/rel/ti_sdo_ipc_examples_multicore_simArctic.xdc.inc"/>
+    </makefiles>
+    <targets>
+        <target name="ti.targets.arp32.elf.ARP32"
+            version="ti.targets.arp32.elf.ARP32{1,0,1.0,0,1"
+            platform="ti.sdo.ipc.examples.platforms.simArctic.arp32"
+            isa="arp32"
+            suffix="earp32"
+            rootDir="/db/toolsrc/library/tools/vendors/ti/arp32/1.0.0B1/Linux"
+            os="undefined"
+            rts="ti.targets.arp32.rts">
+            <model endian="little"
+                codeModel="undefined"
+                dataModel="undefined"/>
+        </target>
+        <target name="ti.targets.C674"
+            version="ti.targets.C674{1,0,7.0,0"
+            platform="ti.sdo.ipc.examples.platforms.evmTI816X.dsp"
+            isa="674"
+            suffix="674"
+            rootDir="/db/toolsrc/library/tools/vendors/ti/c6x/7.0.0/Linux"
+            os="undefined"
+            rts="ti.targets.rts6000">
+            <model endian="little"
+                codeModel="undefined"
+                dataModel="undefined"/>
+        </target>
+    </targets>
+    <libraries>
+    </libraries>
+    <configurations>
+    <configuration name="ti_sdo_ipc_examples_platforms_simArctic_arp32/release/notify_arp32"
+        pname="ti_sdo_ipc_examples_platforms_simArctic_arp32/release/notify_arp32.pearp32"
+        target="ti.targets.arp32.elf.ARP32"
+        platform="ti.sdo.ipc.examples.platforms.simArctic.arp32"
+        profile="release"
+        isPartial="false"
+        xCfgScript="package/cfg/ti_sdo_ipc_examples_platforms_simArctic_arp32/release/notify_arp32_pearp32.cfg"
+        xCfgPrefix="package/cfg/ti_sdo_ipc_examples_platforms_simArctic_arp32/release/notify_arp32_pearp32"
+        cfgScript="notify_arp32.cfg"
+        />
+    <configuration name="ti_sdo_ipc_examples_platforms_simArctic_dsp/release/notify_dsp"
+        pname="ti_sdo_ipc_examples_platforms_simArctic_dsp/release/notify_dsp.p674"
+        target="ti.targets.C674"
+        platform="ti.sdo.ipc.examples.platforms.simArctic.dsp"
+        profile="release"
+        isPartial="false"
+        xCfgScript="package/cfg/ti_sdo_ipc_examples_platforms_simArctic_dsp/release/notify_dsp_p674.cfg"
+        xCfgPrefix="package/cfg/ti_sdo_ipc_examples_platforms_simArctic_dsp/release/notify_dsp_p674"
+        cfgScript="notify_dsp.cfg"
+        />
+    <configuration name="ti_sdo_ipc_examples_platforms_simArctic_arp32/release/message_arp32"
+        pname="ti_sdo_ipc_examples_platforms_simArctic_arp32/release/message_arp32.pearp32"
+        target="ti.targets.arp32.elf.ARP32"
+        platform="ti.sdo.ipc.examples.platforms.simArctic.arp32"
+        profile="release"
+        isPartial="false"
+        xCfgScript="package/cfg/ti_sdo_ipc_examples_platforms_simArctic_arp32/release/message_arp32_pearp32.cfg"
+        xCfgPrefix="package/cfg/ti_sdo_ipc_examples_platforms_simArctic_arp32/release/message_arp32_pearp32"
+        cfgScript="message_arp32.cfg"
+        />
+    <configuration name="ti_sdo_ipc_examples_platforms_simArctic_dsp/release/message_dsp"
+        pname="ti_sdo_ipc_examples_platforms_simArctic_dsp/release/message_dsp.p674"
+        target="ti.targets.C674"
+        platform="ti.sdo.ipc.examples.platforms.simArctic.dsp"
+        profile="release"
+        isPartial="false"
+        xCfgScript="package/cfg/ti_sdo_ipc_examples_platforms_simArctic_dsp/release/message_dsp_p674.cfg"
+        xCfgPrefix="package/cfg/ti_sdo_ipc_examples_platforms_simArctic_dsp/release/message_dsp_p674"
+        cfgScript="message_dsp.cfg"
+        />
+    </configurations>
+    <executables>
+    <executable name="ti_sdo_ipc_examples_platforms_simArctic_arp32/release/notify_arp32"
+        pname="ti_sdo_ipc_examples_platforms_simArctic_arp32/release/notify_arp32.xearp32"
+        target="ti.targets.arp32.elf.ARP32"
+        platform="ti.sdo.ipc.examples.platforms.simArctic.arp32"
+        profile="release"
+        xCfgScript="package/cfg/ti_sdo_ipc_examples_platforms_simArctic_arp32/release/notify_arp32_pearp32.cfg"
+        xCfgPrefix="package/cfg/ti_sdo_ipc_examples_platforms_simArctic_arp32/release/notify_arp32_pearp32"
+        cfgScript="notify_arp32.cfg"
+        />
+    <executable name="ti_sdo_ipc_examples_platforms_simArctic_dsp/release/notify_dsp"
+        pname="ti_sdo_ipc_examples_platforms_simArctic_dsp/release/notify_dsp.x674"
+        target="ti.targets.C674"
+        platform="ti.sdo.ipc.examples.platforms.simArctic.dsp"
+        profile="release"
+        xCfgScript="package/cfg/ti_sdo_ipc_examples_platforms_simArctic_dsp/release/notify_dsp_p674.cfg"
+        xCfgPrefix="package/cfg/ti_sdo_ipc_examples_platforms_simArctic_dsp/release/notify_dsp_p674"
+        cfgScript="notify_dsp.cfg"
+        />
+    <executable name="ti_sdo_ipc_examples_platforms_simArctic_arp32/release/message_arp32"
+        pname="ti_sdo_ipc_examples_platforms_simArctic_arp32/release/message_arp32.xearp32"
+        target="ti.targets.arp32.elf.ARP32"
+        platform="ti.sdo.ipc.examples.platforms.simArctic.arp32"
+        profile="release"
+        xCfgScript="package/cfg/ti_sdo_ipc_examples_platforms_simArctic_arp32/release/message_arp32_pearp32.cfg"
+        xCfgPrefix="package/cfg/ti_sdo_ipc_examples_platforms_simArctic_arp32/release/message_arp32_pearp32"
+        cfgScript="message_arp32.cfg"
+        />
+    <executable name="ti_sdo_ipc_examples_platforms_simArctic_dsp/release/message_dsp"
+        pname="ti_sdo_ipc_examples_platforms_simArctic_dsp/release/message_dsp.x674"
+        target="ti.targets.C674"
+        platform="ti.sdo.ipc.examples.platforms.simArctic.dsp"
+        profile="release"
+        xCfgScript="package/cfg/ti_sdo_ipc_examples_platforms_simArctic_dsp/release/message_dsp_p674.cfg"
+        xCfgPrefix="package/cfg/ti_sdo_ipc_examples_platforms_simArctic_dsp/release/message_dsp_p674"
+        cfgScript="message_dsp.cfg"
+        />
+    </executables>
+    <tests>
+    <test exeName="ti_sdo_ipc_examples_platforms_simArctic_arp32/release/notify_arp32.xearp32"
+        args=""
+        groupName="regress"
+        refOutput="golden/notify_arp32.k"
+        refExitCode="0"
+        execArgs="-t%2060"
+        />
+    <test exeName="ti_sdo_ipc_examples_platforms_simArctic_arp32/release/notify_arp32.xearp32"
+        args=""
+        groupName="ti_sdo_ipc_examples_platforms_simArctic_arp32/release/notify_arp32.xearp32"
+        refOutput="undefined"
+        refExitCode="0"
+        execArgs="-t%2060"
+        />
+    <test exeName="ti_sdo_ipc_examples_platforms_simArctic_dsp/release/notify_dsp.x674"
+        args=""
+        groupName="regress"
+        refOutput="golden/notify_dsp.k"
+        refExitCode="0"
+        execArgs="-t%2060"
+        />
+    <test exeName="ti_sdo_ipc_examples_platforms_simArctic_dsp/release/notify_dsp.x674"
+        args=""
+        groupName="ti_sdo_ipc_examples_platforms_simArctic_dsp/release/notify_dsp.x674"
+        refOutput="undefined"
+        refExitCode="0"
+        execArgs="-t%2060"
+        />
+    <test exeName="ti_sdo_ipc_examples_platforms_simArctic_arp32/release/message_arp32.xearp32"
+        args=""
+        groupName="regress"
+        refOutput="golden/message_arp32.k"
+        refExitCode="0"
+        execArgs="-t%2060"
+        />
+    <test exeName="ti_sdo_ipc_examples_platforms_simArctic_arp32/release/message_arp32.xearp32"
+        args=""
+        groupName="ti_sdo_ipc_examples_platforms_simArctic_arp32/release/message_arp32.xearp32"
+        refOutput="undefined"
+        refExitCode="0"
+        execArgs="-t%2060"
+        />
+    <test exeName="ti_sdo_ipc_examples_platforms_simArctic_dsp/release/message_dsp.x674"
+        args=""
+        groupName="regress"
+        refOutput="golden/message_dsp.k"
+        refExitCode="0"
+        execArgs="-t%2060"
+        />
+    <test exeName="ti_sdo_ipc_examples_platforms_simArctic_dsp/release/message_dsp.x674"
+        args=""
+        groupName="ti_sdo_ipc_examples_platforms_simArctic_dsp/release/message_dsp.x674"
+        refOutput="undefined"
+        refExitCode="0"
+        execArgs="-t%2060"
+        />
+    </tests>
+    <releases relDir="package/rel/">
+    <release name="ti_sdo_ipc_examples_multicore_simArctic"
+        pname="../../../../../../../exports/ti_sdo_ipc_examples_multicore_simArctic.tar.gz"
+        label="default"
+        relScript="tisb/release/filters/copyright.rel">
+        <file name="package/package.bld.xml"/>
+        <file name="package/package.ext.xml"/>
+        <file name="package/package.rel.dot"/>
+        <file name="package/build.cfg"/>
+        <file name="package/package.xdc.inc"/>
+        <file name="package.bld"/>
+        <file name="readme.txt"/>
+        <file name="package/cfg/ti_sdo_ipc_examples_platforms_simArctic_arp32/release/notify_arp32_pearp32.xdc.inc"/>
+        <file name="package/cfg/ti_sdo_ipc_examples_platforms_simArctic_arp32/release/notify_arp32_pearp32.cfg"/>
+        <file name="package/cfg/ti_sdo_ipc_examples_platforms_simArctic_arp32/release/notify_arp32_pearp32.c"/>
+        <file name="package/cfg/ti_sdo_ipc_examples_platforms_simArctic_dsp/release/notify_dsp_p674.xdc.inc"/>
+        <file name="package/cfg/ti_sdo_ipc_examples_platforms_simArctic_dsp/release/notify_dsp_p674.cfg"/>
+        <file name="package/cfg/ti_sdo_ipc_examples_platforms_simArctic_dsp/release/notify_dsp_p674.c"/>
+        <file name="package/cfg/ti_sdo_ipc_examples_platforms_simArctic_arp32/release/message_arp32_pearp32.xdc.inc"/>
+        <file name="package/cfg/ti_sdo_ipc_examples_platforms_simArctic_arp32/release/message_arp32_pearp32.cfg"/>
+        <file name="package/cfg/ti_sdo_ipc_examples_platforms_simArctic_arp32/release/message_arp32_pearp32.c"/>
+        <file name="package/cfg/ti_sdo_ipc_examples_platforms_simArctic_dsp/release/message_dsp_p674.xdc.inc"/>
+        <file name="package/cfg/ti_sdo_ipc_examples_platforms_simArctic_dsp/release/message_dsp_p674.cfg"/>
+        <file name="package/cfg/ti_sdo_ipc_examples_platforms_simArctic_dsp/release/message_dsp_p674.c"/>
+        <file name="notify_multicore.c"/>
+        <file name="message_multicore.c"/>
+    </release>
+    </releases>
+    <repositories>
+    </repositories>
+</package>

@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  This file conforms to the DTD xdc/bld/build.dtd -->
+<package name="ti.sdo.ipc.examples.multicore.evmF28M35x" version="1, 0, 0, 0" producerId="undefined">
+    <units>
+    </units>
+    <sources>
+        <srcFile name="package/cfg/release/message_c28_p28FP.c"/>
+        <srcFile name="package/cfg/release/message_m3_pem3.c"/>
+        <srcFile name="package/cfg/release/notify_c28_p28FP.c"/>
+        <srcFile name="package/cfg/release/notify_m3_pem3.c"/>
+        <srcFile name="message_f28m35x.c"/>
+        <srcFile name="notify_f28m35x.c"/>
+    </sources>
+    <configscripts>
+        <srcFile name="message_c28.cfg"/>
+        <srcFile name="message_m3.cfg"/>
+        <srcFile name="notify_c28.cfg"/>
+        <srcFile name="notify_m3.cfg"/>
+    </configscripts>
+    <makefiles>
+        <srcFile name="package.mak" src="package.bld"/>
+        <srcFile name="package/package.xdc.dep" src="package.xdc"/>
+        <srcFile name="package/cfg/release/message_c28_p28FP.mak" src="package.bld"/>
+        <srcFile name="package/cfg/release/message_c28_p28FP.o28FP.dep" src="package/cfg/release/message_c28_p28FP.c"/>
+        <srcFile name="package/cfg/release/message_c28_p28FP.dep" src="package/cfg/release/message_c28_p28FP.cfg"/>
+        <srcFile name="package/cfg/release/message_m3_pem3.mak" src="package.bld"/>
+        <srcFile name="package/cfg/release/message_m3_pem3.oem3.dep" src="package/cfg/release/message_m3_pem3.c"/>
+        <srcFile name="package/cfg/release/message_m3_pem3.dep" src="package/cfg/release/message_m3_pem3.cfg"/>
+        <srcFile name="package/cfg/release/notify_c28_p28FP.mak" src="package.bld"/>
+        <srcFile name="package/cfg/release/notify_c28_p28FP.o28FP.dep" src="package/cfg/release/notify_c28_p28FP.c"/>
+        <srcFile name="package/cfg/release/notify_c28_p28FP.dep" src="package/cfg/release/notify_c28_p28FP.cfg"/>
+        <srcFile name="package/cfg/release/notify_m3_pem3.mak" src="package.bld"/>
+        <srcFile name="package/cfg/release/notify_m3_pem3.oem3.dep" src="package/cfg/release/notify_m3_pem3.c"/>
+        <srcFile name="package/cfg/release/notify_m3_pem3.dep" src="package/cfg/release/notify_m3_pem3.cfg"/>
+        <srcFile name="package/cfg/release/message_c28.x28FP.mak" src="package.bld"/>
+        <srcFile name="package/cfg/release/message_c28/message_f28m35x.o28FP.dep" src="message_f28m35x.c"/>
+        <srcFile name="package/cfg/release/message_m3.xem3.mak" src="package.bld"/>
+        <srcFile name="package/cfg/release/message_m3/message_f28m35x.oem3.dep" src="message_f28m35x.c"/>
+        <srcFile name="package/cfg/release/notify_c28.x28FP.mak" src="package.bld"/>
+        <srcFile name="package/cfg/release/notify_c28/notify_f28m35x.o28FP.dep" src="notify_f28m35x.c"/>
+        <srcFile name="package/cfg/release/notify_m3.xem3.mak" src="package.bld"/>
+        <srcFile name="package/cfg/release/notify_m3/notify_f28m35x.oem3.dep" src="notify_f28m35x.c"/>
+        <srcFile name="package/rel/ti_sdo_ipc_examples_multicore_evmF28M35x.tar.gz.dep" src="package/rel/ti_sdo_ipc_examples_multicore_evmF28M35x.xdc.inc"/>
+    </makefiles>
+    <targets>
+        <target name="ti.targets.C28_float"
+            version="ti.targets.C28_float{1,0,5.2,3"
+            platform="ti.platforms.concertoC28:F28M35H52C1:1"
+            isa="28FP"
+            suffix="28FP"
+            rootDir="/db/toolsrc/library/tools/vendors/ti/c28/5.2.3/Linux"
+            os="undefined"
+            rts="ti.targets.rts2800">
+            <model endian="little"
+                codeModel="undefined"
+                dataModel="large"/>
+        </target>
+        <target name="ti.targets.arm.elf.M3"
+            version="ti.targets.arm.elf.M3{1,0,4.9,0"
+            platform="ti.platforms.concertoM3:F28M35H52C1:1"
+            isa="v7M"
+            suffix="em3"
+            rootDir="/db/toolsrc/library/tools/vendors/ti/arm/4.9.0/Linux"
+            os="undefined"
+            rts="ti.targets.arm.rtsarm">
+            <model endian="little"
+                codeModel="thumb2"
+                dataModel="undefined"/>
+        </target>
+    </targets>
+    <libraries>
+    </libraries>
+    <configurations>
+    <configuration name="release/message_c28"
+        pname="release/message_c28.p28FP"
+        target="ti.targets.C28_float"
+        platform="ti.platforms.concertoC28:F28M35H52C1:1"
+        profile="release"
+        isPartial="false"
+        xCfgScript="package/cfg/release/message_c28_p28FP.cfg"
+        xCfgPrefix="package/cfg/release/message_c28_p28FP"
+        cfgScript="message_c28.cfg"
+        />
+    <configuration name="release/message_m3"
+        pname="release/message_m3.pem3"
+        target="ti.targets.arm.elf.M3"
+        platform="ti.platforms.concertoM3:F28M35H52C1:1"
+        profile="release"
+        isPartial="false"
+        xCfgScript="package/cfg/release/message_m3_pem3.cfg"
+        xCfgPrefix="package/cfg/release/message_m3_pem3"
+        cfgScript="message_m3.cfg"
+        />
+    <configuration name="release/notify_c28"
+        pname="release/notify_c28.p28FP"
+        target="ti.targets.C28_float"
+        platform="ti.platforms.concertoC28:F28M35H52C1:1"
+        profile="release"
+        isPartial="false"
+        xCfgScript="package/cfg/release/notify_c28_p28FP.cfg"
+        xCfgPrefix="package/cfg/release/notify_c28_p28FP"
+        cfgScript="notify_c28.cfg"
+        />
+    <configuration name="release/notify_m3"
+        pname="release/notify_m3.pem3"
+        target="ti.targets.arm.elf.M3"
+        platform="ti.platforms.concertoM3:F28M35H52C1:1"
+        profile="release"
+        isPartial="false"
+        xCfgScript="package/cfg/release/notify_m3_pem3.cfg"
+        xCfgPrefix="package/cfg/release/notify_m3_pem3"
+        cfgScript="notify_m3.cfg"
+        />
+    </configurations>
+    <executables>
+    <executable name="release/message_c28"
+        pname="release/message_c28.x28FP"
+        target="ti.targets.C28_float"
+        platform="ti.platforms.concertoC28:F28M35H52C1:1"
+        profile="release"
+        xCfgScript="package/cfg/release/message_c28_p28FP.cfg"
+        xCfgPrefix="package/cfg/release/message_c28_p28FP"
+        cfgScript="message_c28.cfg"
+        />
+    <executable name="release/message_m3"
+        pname="release/message_m3.xem3"
+        target="ti.targets.arm.elf.M3"
+        platform="ti.platforms.concertoM3:F28M35H52C1:1"
+        profile="release"
+        xCfgScript="package/cfg/release/message_m3_pem3.cfg"
+        xCfgPrefix="package/cfg/release/message_m3_pem3"
+        cfgScript="message_m3.cfg"
+        />
+    <executable name="release/notify_c28"
+        pname="release/notify_c28.x28FP"
+        target="ti.targets.C28_float"
+        platform="ti.platforms.concertoC28:F28M35H52C1:1"
+        profile="release"
+        xCfgScript="package/cfg/release/notify_c28_p28FP.cfg"
+        xCfgPrefix="package/cfg/release/notify_c28_p28FP"
+        cfgScript="notify_c28.cfg"
+        />
+    <executable name="release/notify_m3"
+        pname="release/notify_m3.xem3"
+        target="ti.targets.arm.elf.M3"
+        platform="ti.platforms.concertoM3:F28M35H52C1:1"
+        profile="release"
+        xCfgScript="package/cfg/release/notify_m3_pem3.cfg"
+        xCfgPrefix="package/cfg/release/notify_m3_pem3"
+        cfgScript="notify_m3.cfg"
+        />
+    </executables>
+    <tests>
+    <test exeName="release/message_c28.x28FP"
+        args=""
+        groupName="regress"
+        refOutput="golden/message_c28.k"
+        refExitCode="0"
+        execArgs="-t%2060"
+        />
+    <test exeName="release/message_c28.x28FP"
+        args=""
+        groupName="release/message_c28.x28FP"
+        refOutput="undefined"
+        refExitCode="0"
+        execArgs="-t%2060"
+        />
+    <test exeName="release/message_m3.xem3"
+        args=""
+        groupName="regress"
+        refOutput="golden/message_m3.k"
+        refExitCode="0"
+        execArgs="-t%2060"
+        />
+    <test exeName="release/message_m3.xem3"
+        args=""
+        groupName="release/message_m3.xem3"
+        refOutput="undefined"
+        refExitCode="0"
+        execArgs="-t%2060"
+        />
+    <test exeName="release/notify_c28.x28FP"
+        args=""
+        groupName="regress"
+        refOutput="golden/notify_c28.k"
+        refExitCode="0"
+        execArgs="-t%2060"
+        />
+    <test exeName="release/notify_c28.x28FP"
+        args=""
+        groupName="release/notify_c28.x28FP"
+        refOutput="undefined"
+        refExitCode="0"
+        execArgs="-t%2060"
+        />
+    <test exeName="release/notify_m3.xem3"
+        args=""
+        groupName="regress"
+        refOutput="golden/notify_m3.k"
+        refExitCode="0"
+        execArgs="-t%2060"
+        />
+    <test exeName="release/notify_m3.xem3"
+        args=""
+        groupName="release/notify_m3.xem3"
+        refOutput="undefined"
+        refExitCode="0"
+        execArgs="-t%2060"
+        />
+    </tests>
+    <releases relDir="package/rel/">
+    <release name="ti_sdo_ipc_examples_multicore_evmF28M35x"
+        pname="../../../../../../../exports/ti_sdo_ipc_examples_multicore_evmF28M35x.tar.gz"
+        label="default"
+        relScript="tisb/release/filters/copyright.rel">
+        <file name="package/package.bld.xml"/>
+        <file name="package/package.ext.xml"/>
+        <file name="package/package.rel.dot"/>
+        <file name="package/build.cfg"/>
+        <file name="package/package.xdc.inc"/>
+        <file name="package.bld"/>
+        <file name="package/cfg/release/message_c28_p28FP.xdc.inc"/>
+        <file name="package/cfg/release/message_c28_p28FP.cfg"/>
+        <file name="package/cfg/release/message_c28_p28FP.c"/>
+        <file name="package/cfg/release/message_m3_pem3.xdc.inc"/>
+        <file name="package/cfg/release/message_m3_pem3.cfg"/>
+        <file name="package/cfg/release/message_m3_pem3.c"/>
+        <file name="package/cfg/release/notify_c28_p28FP.xdc.inc"/>
+        <file name="package/cfg/release/notify_c28_p28FP.cfg"/>
+        <file name="package/cfg/release/notify_c28_p28FP.c"/>
+        <file name="package/cfg/release/notify_m3_pem3.xdc.inc"/>
+        <file name="package/cfg/release/notify_m3_pem3.cfg"/>
+        <file name="package/cfg/release/notify_m3_pem3.c"/>
+        <file name="message_f28m35x.c"/>
+        <file name="notify_f28m35x.c"/>
+    </release>
+    </releases>
+    <repositories>
+    </repositories>
+</package>

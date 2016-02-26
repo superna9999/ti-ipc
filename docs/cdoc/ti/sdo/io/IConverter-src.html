@@ -1,0 +1,195 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html><head><title>interface ti.sdo.io.IConverter</title>
+<meta name="googlebot" content="noindex,nofollow">
+<link rel="stylesheet" type="text/css" href="../../../src.css"/>
+</head>
+<body>
+<pre class=src>
+     1    <span class="comment">/* --COPYRIGHT--,BSD
+</span>     2    <span class="comment"> * Copyright (c) $(CPYYEAR), Texas Instruments Incorporated
+</span>     3    <span class="comment"> * All rights reserved.
+</span>     4    <span class="comment"> *
+</span>     5    <span class="comment"> * Redistribution and use in source and binary forms, with or without
+</span>     6    <span class="comment"> * modification, are permitted provided that the following conditions
+</span>     7    <span class="comment"> * are met:
+</span>     8    <span class="comment"> *
+</span>     9    <span class="comment"> * *  Redistributions of source code must retain the above copyright
+</span>    10    <span class="comment"> *    notice, this list of conditions and the following disclaimer.
+</span>    11    <span class="comment"> *
+</span>    12    <span class="comment"> * *  Redistributions in binary form must reproduce the above copyright
+</span>    13    <span class="comment"> *    notice, this list of conditions and the following disclaimer in the
+</span>    14    <span class="comment"> *    documentation and/or other materials provided with the distribution.
+</span>    15    <span class="comment"> *
+</span>    16    <span class="comment"> * *  Neither the name of Texas Instruments Incorporated nor the names of
+</span>    17    <span class="comment"> *    its contributors may be used to endorse or promote products derived
+</span>    18    <span class="comment"> *    from this software without specific prior written permission.
+</span>    19    <span class="comment"> *
+</span>    20    <span class="comment"> * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+</span>    21    <span class="comment"> * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+</span>    22    <span class="comment"> * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+</span>    23    <span class="comment"> * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+</span>    24    <span class="comment"> * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+</span>    25    <span class="comment"> * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+</span>    26    <span class="comment"> * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+</span>    27    <span class="comment"> * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+</span>    28    <span class="comment"> * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+</span>    29    <span class="comment"> * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+</span>    30    <span class="comment"> * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+</span>    31    <span class="comment"> * --/COPYRIGHT--*/</span>
+    32    <span class="comment">/*
+</span>    33    <span class="comment"> *  ======== IConverter.xdc ========
+</span>    34    <span class="comment"> *
+</span>    35    <span class="comment"> *! Revision History
+</span>    36    <span class="comment"> *! ================
+</span>    37    <span class="comment"> *! 28-Apr-2008 nitya   review update
+</span>    38    <span class="comment"> */</span>
+    39    
+    40    import xdc.runtime.Error;
+    41     
+    42    <span class="xdoc">/*!
+</span>    43    <span class="xdoc"> *  Interface defining an IConverter
+</span>    44    <span class="xdoc"> *
+</span>    45    <span class="xdoc"> *  This interfaces allows applications to "stack" functionality on top
+</span>    46    <span class="xdoc"> *  of a driver. Modules that implement this interface can manipulate data
+</span>    47    <span class="xdoc"> *  coming to and from a driver. Simple scaling, fixed to float or float to
+</span>    48    <span class="xdoc"> *  fixed transformations can be done using IConverters without major changes
+</span>    49    <span class="xdoc"> *  in the application.
+</span>    50    <span class="xdoc"> *
+</span>    51    <span class="xdoc"> *  IConverters can only be used along with the {<b>@link</b> Stream} module.
+</span>    52    <span class="xdoc"> *  
+</span>    53    <span class="xdoc"> *  Stream maintains a name table of {<b>@link</b> IConverter} handles. 
+</span>    54    <span class="xdoc"> *  This table is used by Stream to create an IO stack. The name passed to
+</span>    55    <span class="xdoc"> *  {<b>@link</b> Stream#create} is usually of the form "/scale/uart". This name may
+</span>    56    <span class="xdoc"> *  correspond to the following IO stack.
+</span>    57    <span class="xdoc"> *
+</span>    58    <span class="xdoc"> *         Stream Instance
+</span>    59    <span class="xdoc"> *
+</span>    60    <span class="xdoc"> *                 |
+</span>    61    <span class="xdoc">
+</span>    62    <span class="xdoc"> *                 V
+</span>    63    <span class="xdoc"> *
+</span>    64    <span class="xdoc"> *         IConverter Instance (/scale)
+</span>    65    <span class="xdoc"> *
+</span>    66    <span class="xdoc"> *                 |
+</span>    67    <span class="xdoc"> *
+</span>    68    <span class="xdoc"> *                 V
+</span>    69    <span class="xdoc"> *
+</span>    70    <span class="xdoc"> *         IDriver Instance (/uart)
+</span>    71    <span class="xdoc"> *
+</span>    72    <span class="xdoc"> *  In this case the Stream requires "/scale" to be in its IConverter table 
+</span>    73    <span class="xdoc"> *  and "/uart" to be in {<b>@link</b> DriverTable}. The IConverter table associates
+</span>    74    <span class="xdoc"> *  a name with an IConverter Handle. Note that these names have to be of the
+</span>    75    <span class="xdoc"> *  form "/name1".
+</span>    76    <span class="xdoc"> *
+</span>    77    <span class="xdoc"> *  There may be several other IConverters such as a 
+</span>    78    <span class="xdoc"> *  {<b>@link</b> ti.sdo.io.converters.Transformer} instance in the stack.
+</span>    79    <span class="xdoc"> *
+</span>    80    <span class="xdoc"> *  IConverter implementation follows a simple asynchronous issue/reclaim
+</span>    81    <span class="xdoc"> *  model. Once an instance of an IConverter is created it accepts IO
+</span>    82    <span class="xdoc"> *  packets through the {<b>@link</b> #issue} function. Issue ALWAYS results in a 
+</span>    83    <span class="xdoc"> *  callback when IO completes or an error occurs.
+</span>    84    <span class="xdoc"> *
+</span>    85    <span class="xdoc"> *  The IConverter device above it in the stack or the {<b>@link</b> Stream} 
+</span>    86    <span class="xdoc"> *  module will call {<b>@link</b> #reclaim} to get the packet back.
+</span>    87    <span class="xdoc"> *
+</span>    88    <span class="xdoc"> *  {<b>@link</b> ti.sdo.io.DriverTypes#ControlCmd} are sent to the IConverters or the 
+</span>    89    <span class="xdoc"> *  underlying drivers using {<b>@link</b> #control} function.
+</span>    90    <span class="xdoc"> *
+</span>    91    <span class="xdoc"> *  Only  packets with {<b>@link</b> ti.sdo.io.DriverTypes#READ} and 
+</span>    92    <span class="xdoc"> *  {<b>@link</b> ti.sdo.io.DriverTypes#WRITE} are operated on by IConverter. Other 
+</span>    93    <span class="xdoc"> *  commands are passed down.
+</span>    94    <span class="xdoc"> */</span>
+    95    
+    96     
+    97    <span class=key>interface</span> IConverter
+    98    {
+    99        <span class="xdoc">/*!
+</span>   100    <span class="xdoc">     *  ======== Q_TERMINATING ========
+</span>   101    <span class="xdoc">     *  Terminating quality.
+</span>   102    <span class="xdoc">     *
+</span>   103    <span class="xdoc">     *  Implementations with this "quality" can be at the bottom of the IO
+</span>   104    <span class="xdoc">     *  stack
+</span>   105    <span class="xdoc">     */</span>
+   106        <span class=key>const</span> Int Q_TERMINATING = 1;
+   107        
+   108        <span class="xdoc">/*!
+</span>   109    <span class="xdoc">     *  Typedef for callback function.
+</span>   110    <span class="xdoc">     *
+</span>   111    <span class="xdoc">     *  The IConverter instance lower in the stack will invoke this callback 
+</span>   112    <span class="xdoc">     *  whenever an I/O operation completes.
+</span>   113    <span class="xdoc">     */</span>
+   114        <span class=key>typedef</span> Void (*DoneFxn)(UArg);
+   115    
+   116    <span class=key>instance</span>:
+   117        
+   118        <span class="xdoc">/*! ======== open ========
+</span>   119    <span class="xdoc">     *  Opens the IConverter Instance.
+</span>   120    <span class="xdoc">     *
+</span>   121    <span class="xdoc">     *  This is called at runtime after the IConverter instance has been
+</span>   122    <span class="xdoc">     *  created. This function opens the IConverter instance lower in the
+</span>   123    <span class="xdoc">     *  stack and gives its callback function and arg.
+</span>   124    <span class="xdoc">     *
+</span>   125    <span class="xdoc">     *  <b>@param(name)</b>        remaining name
+</span>   126    <span class="xdoc">     *  <b>@param(mode)</b>        DriverTypes_INPUT/OUTPUT
+</span>   127    <span class="xdoc">     *  <b>@param(chanParams)</b>  channel params for driver at the bottom of stack
+</span>   128    <span class="xdoc">     *  <b>@param(cbFxn)</b>       callback function
+</span>   129    <span class="xdoc">     *  <b>@param(cbArg)</b>       callback function arg
+</span>   130    <span class="xdoc">     *  <b>@param(eb)</b>          error block
+</span>   131    <span class="xdoc">     */</span>
+   132        Void open(String name, UInt mode, UArg chanParams, 
+   133            DoneFxn cbFxn, UArg cbArg, Error.Block *eb);
+   134    
+   135        <span class="xdoc">/*! ======== close ========
+</span>   136    <span class="xdoc">     *  Close an IConverter Instance.
+</span>   137    <span class="xdoc">     *
+</span>   138    <span class="xdoc">     *  <b>@param(eb)</b>       error block
+</span>   139    <span class="xdoc">     */</span>
+   140        Void close( Error.Block *eb);
+   141               
+   142        <span class="xdoc">/*! ======== issue ========
+</span>   143    <span class="xdoc">     *  Issue a packet for IO.
+</span>   144    <span class="xdoc">     *
+</span>   145    <span class="xdoc">     *  The IConverter might work on the buffer of data if the mode is
+</span>   146    <span class="xdoc">     *  {<b>@link</b> ti.sdo.io.DriverTypes#OUTPUT} and call the issue function for the
+</span>   147    <span class="xdoc">     *  IConverter lower in the stack. Some IConverters may be the last in
+</span>   148    <span class="xdoc">     *  the IO stack. issue() always results in a callback.
+</span>   149    <span class="xdoc">     *
+</span>   150    <span class="xdoc">     *  <b>@param(packet)</b>      IO packet
+</span>   151    <span class="xdoc">     *  <b>@param(eb)</b>          Error Block
+</span>   152    <span class="xdoc">     */</span>
+   153        Void issue(DriverTypes.Packet *packet, Error.Block *eb);
+   154    
+   155        <span class="xdoc">/*! ======== reclaim ========
+</span>   156    <span class="xdoc">     *  Reclaim a previously issued packet.
+</span>   157    <span class="xdoc">     *
+</span>   158    <span class="xdoc">     *  The IConverter will call the reclaim function for the
+</span>   159    <span class="xdoc">     *  IConverter lower in the stack. It may work on the buffer of data 
+</span>   160    <span class="xdoc">     *  returned if the mode is {<b>@link</b> ti.sdo.io.DriverTypes#INPUT}.
+</span>   161    <span class="xdoc">     *
+</span>   162    <span class="xdoc">     *  <b>@param(packetp)</b>   pointer to returned packet
+</span>   163    <span class="xdoc">     *  <b>@param(eb)</b>        Error Block
+</span>   164    <span class="xdoc">     */</span>
+   165        Void reclaim(DriverTypes.Packet **packetp, Error.Block *eb);
+   166    
+   167        <span class="xdoc">/*! ======== control ========
+</span>   168    <span class="xdoc">     *  Send a control command.
+</span>   169    <span class="xdoc">     *
+</span>   170    <span class="xdoc">     *  The IConverter will respond to command meant for it and pass down all
+</span>   171    <span class="xdoc">     *  others.
+</span>   172    <span class="xdoc">     *
+</span>   173    <span class="xdoc">     *  <b>@param(cmd)</b>    control cmd
+</span>   174    <span class="xdoc">     *  <b>@param(cmdArg)</b> control cmd arg
+</span>   175    <span class="xdoc">     *  <b>@param(eb)</b>     error block
+</span>   176    <span class="xdoc">     */</span>
+   177        Void control(DriverTypes.ControlCmd cmd, UArg cmdArg, Error.Block *eb);
+   178        
+   179        <span class="xdoc">/*!
+</span>   180    <span class="xdoc">     * ======== query ========
+</span>   181    <span class="xdoc">     * Query for qualities supported.
+</span>   182    <span class="xdoc">     *
+</span>   183    <span class="xdoc">     *  <b>@param(qual)</b>    quality to be tested     
+</span>   184    <span class="xdoc">     */</span>
+   185        Bool query(Int qual);
+   186    }
+</pre>
+</body></html>
